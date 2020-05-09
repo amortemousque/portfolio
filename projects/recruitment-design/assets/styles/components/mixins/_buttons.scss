@@ -1,0 +1,110 @@
+@mixin btn-outline($color) {
+  @include media-breakpoint-up(sm) {
+    $value : map-get($theme-colors, $color);
+    @include button-outline-variant($value, get-color-yiq($value));
+    @include make-grid-sized-prop('height', 1);
+    border: none;
+    justify-content: center;
+    padding: 0px;
+    .fa  {
+      font-size: 1.4rem;
+      margin-right: 1rem;
+    }
+    span {
+      z-index: 2;
+      display: inline-block;
+      padding: 0 0.5rem;
+    }
+    &:before, &:after {
+      content: " ";
+      display: initial;
+      flex-basis: 100%;
+      justify-content: center;
+      display: flex;
+      background-color: $value;
+      height: 2px;
+      width: 2.5rem;
+      transition: flex-basis 0.3s ease 0.3s, height 0.3s ease 0s, margin-right 0.3s ease 0.1s,  margin-left 0.3s ease 0.1s;
+      z-index: 1;
+    }
+
+    &[data-line="false"] {
+      @include make-padding-grid((0.25, 0.5));
+      &:before, &::after {
+        display: none !important;
+      }
+    }
+    &:hover {
+      background-color: transparent;
+      &::before, &::after {
+        flex-basis: 100%;
+        @include make-grid-sized-prop('height', 0.8);
+       transition: flex-basis 0.3s, height 0.3s ease 0.3s, margin-right 0.3s, margin-left 0.3s;
+      }
+      &::before {
+        margin-right: -50%;
+      }
+      &::after {
+        margin-left: -50%;
+      }
+    }
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    @include btn($color);
+  }
+
+}
+
+@mixin btn($color) {
+  $value : map-get($theme-colors, $color);
+  @include button-variant($value, #fff);
+  border: none;
+
+  &:before, &::after {
+    background-color: get-color-yiq($value);
+    margin-right: 1rem;
+    margin-left: 1rem;
+    width: 1.5rem;
+  }
+}
+
+@mixin btn-lg() {
+  @include button-size($input-btn-padding-y-lg, $input-btn-padding-x-lg, $btn-font-size, $line-height-lg, $btn-border-radius-lg);
+  @include make-padding-grid((0.35, 0.2));
+  @include media-breakpoint-down(sm) {
+    @include button-size($input-btn-padding-y-lg, $input-btn-padding-x-lg, $mobile-btn-font-size, $line-height-lg, $btn-border-radius-lg);
+  }
+}
+
+@mixin btn-unstyled() {
+  background: none;
+  border: none;
+}
+
+@mixin btn-xl() {
+  @include button-size($input-btn-padding-y-sm, $input-btn-padding-x-sm, $font-size-sm, $line-height-sm, $btn-border-radius-sm);
+  @include make-padding-grid((0.5, 1));
+}
+
+@mixin btn-sm() {
+  @include button-size($input-btn-padding-y-sm, $input-btn-padding-x-sm, $font-size-sm, $line-height-sm, $btn-border-radius-sm);
+}
+
+@mixin btn-plus() {
+  @include make-shape-square(0.66);
+  display: block;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: transparent;
+  border: none;
+  font-family: $font-family-monospace;
+  content: '+';
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 2.5vw;
+  line-height: 2.75vw;
+}

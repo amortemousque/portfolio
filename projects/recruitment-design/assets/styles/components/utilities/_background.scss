@@ -1,0 +1,99 @@
+.bg-cover {
+  @include make-bg-cover();
+}
+.bg-dark {
+  color: $white;
+
+  .blockquote-display-2 {
+    color: $gray-300;
+  }
+}
+
+@each $pattern, $value in $bg-pattern-images {
+  .bg-pattern-#{$pattern} {
+    background-image: $value !important;
+  }
+}
+
+.bg-middle-dark {
+  @include make-bg-pattern-middle-2();  
+}
+
+.bg-half-white-bottom {
+  position: relative;
+  background: transparent !important;
+  &::after {
+    content: " ";
+    width: 100%;
+    position: absolute;
+    height: 50%;
+    z-index: -1;
+    bottom: 0;
+    left: 0;
+    background-color: $white;
+  }
+}
+
+.bg-half-white-top {
+  position: relative;
+  &::before {
+    content: " ";
+    width: 100%;
+    position: absolute;
+    height: 50%;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    background-color: $white;
+  }
+}
+
+.bg-third-white-top {
+  position: relative;
+  background: transparent !important;
+
+  &::before {
+    content: " ";
+    width: 100%;
+    position: absolute;
+    height: 33.33%;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    background-color: $white;
+  }
+}
+
+
+
+@include media-breakpoint-up(sm) {
+  .fullscreen-desktop {
+    height: 100%;
+    width: 100%;
+    min-width: $fullscreen-min-width;
+    min-height: $fullscreen-min-height;
+  }
+  .fullscreen-desktop.fullscreen-stretch {
+    padding-top:15%;
+    margin-top:-3%;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .fullscreen-desktop {
+      .block  {
+          margin-top: 30%;
+      }
+      padding-bottom: 30%;
+  }
+  .fullscreen-desktop.fullscreen-stretch {
+      .block  {
+          margin-top: 80%;
+      }
+      margin-top: 45%;
+  }
+}
+
+.background-image-none {
+  background-image: none !important;
+}

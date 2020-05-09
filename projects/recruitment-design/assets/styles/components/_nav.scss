@@ -1,0 +1,224 @@
+.nav-link {
+  text-align: center;
+}
+
+.nav-link small {
+  font-size: $font-size-base;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.nav-link:hover small {
+  color: $white;
+}
+
+.nav-sm .nav-link small {
+  font-size: $font-size-base-upper;
+}
+
+.nav-sm .nav-link {
+  padding: 1rem 1rem;
+}
+
+.nav-link[data-toggle="tab"] {
+  opacity: 0.5;
+}
+.nav-link.active[data-toggle="tab"] {
+  opacity: 1;
+}
+
+.nav-menu {
+  @include list-unstyled();
+  @include make-padding-grid((1,0));
+  display: flex;
+  justify-content: center;  
+  .nav-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .nav-header {
+    display: inline;
+    padding: 0;    
+    margin-right: 2rem;    
+  }
+  .nav-body {
+    display: flex;    
+    padding: 0;
+    margin: 0;    
+    list-style: none;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .nav-link {
+    @include make-padding-grid((0,0.25));
+    display: inline-flex;
+    text-transform: uppercase;
+    font-size: 75%;
+    align-items: center;
+    color: theme-color('dark');
+  }
+  .nav-label {
+    display: inline-flex;
+    align-items: center;
+    color: theme-color('dark');
+    margin: 0px;
+  }
+  .nav-link {
+    opacity: 0.5;
+    position: relative;
+    transition: all 0.5s;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-h5-font-size;
+      margin-bottom: 2rem;
+    }      
+    &::before {
+      content: " ";
+      @include make-width-grid(0);
+      position: absolute;
+      transition: all 0.5s;
+    }
+    &.active, &:hover {
+      padding-left: 3rem;
+      opacity: 1;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        padding-left: 0;  
+      }    
+    }
+    &.active::before, &:hover::before {
+      @include make-width-grid(0.5);
+      background-color: theme-color('dark');
+      margin-left: 0.5rem;
+      margin-top: 0.1rem;      
+      height: 2px;
+      left: 0;
+      transition: 0.5s;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        @include make-width-grid(2);
+        width: 2rem;
+        margin-left: -3rem;
+      }
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.nav-#{$color} {
+      .nav-label {
+        color: theme-color($color);
+      }
+      .nav-link {
+        opacity: 0.5;
+        color: theme-color($color);
+        &.active, &:hover {
+          opacity: 1;
+          color: theme-color($color);
+        }
+        &.active::before, &:hover::before {
+          background-color: theme-color($color);
+        }
+      }
+    }
+  }
+
+}
+
+.nav-socials {
+  @include list-unstyled();
+  display: flex;
+  padding: 0;
+  justify-content: center;
+
+  a + a {
+    @include make-margin-grid((0,0,0,0.5));
+  }
+  &.nav-socials-floating {
+    position: sticky;
+    top: 10px;
+  }
+  &.a2a_kit {
+    a + a {
+      margin: 0px 0 10px 0;
+    }
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    @include clear-width();
+    font-size: $mobile-navsocial-1-font-size;
+    width: 100%;
+    a, a + a {
+      @include make-margin-grid((0, 1));
+    }
+  }
+}
+
+.nav-socials-display-2 {
+  display: inline-flex;
+  @include make-padding-grid(0.3);
+  flex-direction: column;
+  border: 1px solid $gray-400;
+  margin: auto;
+  width: auto;
+  align-items: stretch;
+  a {
+    @include make-margin-grid((0, 0, 0.25, 0));
+  }
+
+  a:last-child {
+    @include make-margin-grid((0, 0, 0, 0));
+  }
+
+  .a2a_svg {
+    height: auto !important;
+    line-height: initial !important;
+    width: $navsocial-1-font-size !important;
+    display: block;
+  }
+
+  .a2a_label {
+    display: none;
+  }
+}
+
+.nav-zapper {
+  @include list-unstyled();
+  display: flex;
+  padding: 0;
+  justify-content: center;
+
+  &.nav-zapper-floating {
+    position: sticky;
+    top: 10px;
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    @include clear-width();
+    font-size: $mobile-navsocial-1-font-size;
+    width: 100%;
+    a, a + a {
+      @include make-margin-grid((0, 1));
+    }
+  }
+}
+
+.nav-zapper-display-2 {
+  display: inline-flex;
+  padding: 0;
+  flex-direction: column;
+  border: 0;
+  margin: auto;
+  width: auto;
+  align-items: stretch;  
+}
+
+.aside-floating {
+  position: absolute;
+}

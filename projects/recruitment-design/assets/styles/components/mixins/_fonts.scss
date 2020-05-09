@@ -1,0 +1,21 @@
+@mixin font-size-range($xs, $md, $xxl) {
+  $min: map-get($grid-breakpoints, 'md');
+  $max: map-get($grid-breakpoints, 'xxl');
+  font-size: #{$xs};
+  @include media-breakpoint-up('md') {
+    $a: ($xxl - $md) * 100 / ($max - $min);
+    $b: $md - ($min * $a / 100);
+    font-size: calc(#{$a}vw + #{$b});
+  }
+  @include media-breakpoint-up('xxl') {
+    font-size: #{$xxl};
+  }
+}
+
+@mixin font-size($size) {
+  $range: map-get($font-size-range, $size);
+  $xs: map-get($range, xs);
+  $md: map-get($range, md);
+  $xxl: map-get($range, xxl);
+  @include font-size-range($xs, $md, $xxl);
+}

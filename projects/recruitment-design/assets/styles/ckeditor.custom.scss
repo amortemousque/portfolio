@@ -1,0 +1,18 @@
+@import "vendor/bootstrap/functions";
+@import "vendor/bootstrap/variables";
+@import "vendor/bootstrap/mixins";
+@import "components/functions";
+@import "components/variables";
+@import "components/mixins";
+
+html {
+  /* RATIO ~O.58 * vw in ckeditor context / total page */ 
+  font-size: calc(2.16vw + 1.72px);
+  @media (min-width: 928px) {
+    font-size: 21px;
+  }
+}
+
+body.cke_editable {
+  @include make-padding-grid((0, 1, 0, 1));
+}

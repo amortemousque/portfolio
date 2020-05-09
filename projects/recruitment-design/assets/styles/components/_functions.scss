@@ -1,0 +1,35 @@
+
+// Retreive color Sass maps
+@function get-reverse-color($key: "blue") {
+  @return map-get($reverse-theme-colors-keys, $key);
+}
+
+// Color contrast
+@mixin color-yiq($color) {
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1100;
+
+  @if ($yiq >= 150) {
+    color: #111;
+  } @else {
+    color: #fff;
+  }
+}
+
+// Color contrast
+@function get-color-yiq($color) {
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1100;
+
+  @if ($yiq >= 150) {
+    @return #111;
+  } @else {
+    @return #fff;
+  }
+}

@@ -1,0 +1,97 @@
+.cke_editable {
+	@include make-padding-grid((0, 6, 0, 6));
+	@include make-margin-grid((1, 0, 0, 0));
+	@include media-breakpoint-down(sm) {
+	  @include make-padding-grid(($mobile-article-padding, $mobile-article-padding, 0, $mobile-article-padding));
+	}
+	
+	a {
+		color: theme-color('secondary');
+	}
+	a:hover {
+		color: theme-color('primary');
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+	  margin-bottom: 2rem;
+	  margin-top: 1rem;
+	}
+	h1 {
+		font-family: $font-family-secondary;
+    font-size: 3.8rem;
+    line-height: 3.4rem;
+	}
+	h2 {
+    font-size: 2.8rem;
+    line-height: 2.8rem;
+	}
+	h2 {
+    font-size: 2.8rem;
+    line-height: 2.8rem;
+	}
+	h2 {
+    font-size: 2.8rem;
+    line-height: 2.8rem;
+	}
+  
+	blockquote {
+	  padding-left: 1rem;
+	  padding-right: 1rem;
+	  margin: 2.5rem auto;
+		display: block;
+		p {
+			display: inline;
+			color: inherit;
+		}
+	}
+  
+	p {
+	  margin-bottom: 2rem;      
+	  color: $text-muted;
+	}
+  
+	ul {
+	  @extend .list-display-1 ;
+	  color: $text-muted;
+	  margin-bottom: 2rem;      
+	}
+  
+	img {
+	  max-width: 100%;
+	}
+}
+
+@each $pattern, $value in $bg-pattern-images {
+	.block-pattern-#{$pattern} {
+		@include make-bg-pattern($pattern);
+		background-repeat: repeat;
+		@include make-margin-grid((0, 0, 1, 0));
+		@include make-padding-grid((1));
+		color: theme-color('light');
+	}
+	.block-#{$pattern} {
+		background-color: map-get($theme-colors, $pattern);
+		@include make-margin-grid((0, 0, 1, 0));
+		@include make-padding-grid((1));
+		color: theme-color('light');
+	}
+}
+.block-light {
+	background-color: map-get($theme-colors, 'light');
+	@include make-margin-grid((0, 0, 1, 0));
+	@include make-padding-grid((1));
+	color: theme-color('dark');
+}
+.block-middle-dark {
+	@include make-bg-pattern-middle-2();
+	@include make-margin-grid((0, 0, 1, 0));
+	@include make-padding-grid((1));
+	color: theme-color('light');
+}
+
+.cke_panel_container, .cke_panel_listItem, body.cke_editable.cke_editable_themed.cke_contents_ltr.cke_show_borders {
+	background: white;
+}
+.cke_panel_listItem a {
+	font-size: 16px;
+}

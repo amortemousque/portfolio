@@ -1,0 +1,500 @@
+// Card slider with carrousel
+.carousel {
+  @include make-row();
+  flex-direction: row;
+  &.carousel-reverse {
+    flex-direction: row-reverse;
+  }
+  .carousel-header {
+    @include make-layer-middle();
+    align-self: flex-start;
+    background-color: $white;
+    color: theme-color('dark');
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid(($mobile-carousel-padding, $mobile-carousel-padding, 0, $mobile-carousel-padding));
+      background: none;
+      color: theme-color('light');
+    }
+    p:last-child() {
+      margin-bottom: 0;
+    }
+  }
+  .carousel-title {
+    margin: 0;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-grid-sized-gutter('margin-bottom', 1);
+    }
+  }
+  .carousel-subtitle {
+    font-size: $font-size-base-upper;
+    font-weight: 400;
+    text-transform: uppercase;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-font-size-base-upper;
+    }
+  }
+  .carousel-body {
+    display: block;
+    position: relative;
+    p:last-child() {
+      margin-bottom: 0;
+    }
+  }
+  .carousel-item {
+    @include make-layer-middle();
+  }
+  //LAPTOP
+  @include media-breakpoint-up(sm) {
+    @each $color, $value in $theme-colors {
+      &.carousel-#{$color}  {
+        $reverse-color: get-reverse-color($color);
+        .carousel-header  {
+          @include make-bg-pattern($color);
+          color: get-color-yiq($value);
+        }
+      }
+    }
+  }
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    .carousel-link {
+      margin-top: 3rem;
+    }
+    @each $color, $value in $theme-colors {
+      &.carousel-#{$color}  {
+        .carousel-subtitle {
+          color: theme-color($color);
+        }
+      }
+    }
+  }
+}
+
+/** DEFAULT CAROUSEL **/
+.carousel.carousel-display-1 {
+  @include media-breakpoint-up(sm) {
+    .carousel-header {
+      @include make-shape-square(11);
+      @include make-padding-grid((2.5, 2));
+      @include make-margin-grid((0, 0, 0, 2));
+    }
+    &.carousel-reverse .carousel-header {
+      @include make-margin-grid((0, 2, 0, 0));
+    }
+    .carousel-body {
+      @include make-width-grid(17);
+      @include make-margin-grid((-4, 1, 0, 6));
+    }
+    &.carousel-reverse .carousel-body {
+      @include make-margin-grid((-4, 6, 0, 1));
+    }
+    .carousel-slide-figure {
+      @include make-margin-grid((0.5, 0.5, 0.5, 0));
+    }
+    &.carousel-reverse .carousel-slide-figure {
+      @include make-margin-grid((0.5, 0, 0.5, 0.5));
+    }
+    .carousel-slide {
+      justify-content: space-between; /*Needed for animations. Before : flex-start;*/
+      .carousel-slide-body {
+        @include make-shape(10.5, 8.7);
+        @include make-padding-grid((0, 2));
+        @include make-bg-pattern('dark');
+      }
+    }
+    &.carousel-reverse .carousel-slide {
+      justify-content: flex-end;
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.carousel-#{$color} .carousel-slide  {
+      $reverse-color: get-reverse-color($color);
+      .carousel-title  {
+        color: theme-color($color);
+      }
+      .btn  {
+        @include btn-outline($color);
+      }
+    }
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    .carousel-slide-figure {
+      display: none;
+    }
+    @each $color, $value in $theme-colors {
+      &.carousel-#{$color}  {
+        @include make-bg-pattern('dark');
+        .carousel-subtitle {
+          color: theme-color($color);
+        }
+      }
+    }
+  }
+
+  .carousel-indicators {
+    z-index: 102;
+  }
+}
+
+/** CAROUSEL QUOTES **/
+.carousel.carousel-display-2 {
+  @include media-breakpoint-up(sm) {
+    .carousel-header {
+      @include make-row();
+      @include make-shape-square(7);
+      @include make-padding-grid((1));
+      @include make-margin-grid((0, 6, 0, 11));
+      @include make-layer-middle(10);
+      flex-direction: column;
+      justify-content: center;
+    }
+    &.carousel-reverse .carousel-header {
+      @include make-margin-grid((0, 11, 0, 6));
+    }
+    .carousel-body {
+      @include make-shape(24, 11);
+      @include make-margin-grid((-3, 0, 0, 0));
+      overflow: hidden;
+    }
+    .carousel-slide {
+      @include make-width-grid(24);
+      display: flex;
+      .carousel-slide-figure {
+        @include make-shape(13, 11);
+        @include make-clip-left();
+      }
+      .carousel-slide-body {
+        @include make-padding-grid((0, 2, 1, 1.5));
+        justify-content: flex-end;
+      }
+    }
+    &.carousel-reverse .carousel-slide {
+      .carousel-slide-figure {
+        @include make-clip-right();
+      }
+      .carousel-slide-body {
+        @include make-padding-grid((4, 1.5, 1, 1));
+        text-align: right;
+        .quote::before {
+          display: inline;
+        }
+        .quote::after {
+          margin-left: 0;
+        }
+      }
+    }
+
+    .carousel-controls {
+      @include make-margin-grid((-1, 8, 0, 9));
+    }
+    &.carousel-reverse .carousel-controls {
+      @include make-padding-grid((0, 1, 0, 0));
+      @include make-margin-grid((-1, 9, 0, 8));
+    }
+    .carousel-indicators-line {
+      @include make-margin-grid((0, 0, 0, 14.5));
+    }
+    &.carousel-reverse .carousel-indicators-line {
+      @include make-margin-grid((0, 14.5, 0, 0));
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .carousel-slide-figure {
+      @include make-shape(20, 16);
+      @include make-clip-left();
+    }
+    .carousel-slide-body {
+      @include make-padding-grid((2, $mobile-carousel-padding + 0.5, 0, $mobile-carousel-padding + 0.5));
+    }
+    .carousel-controls {
+      @include make-margin-grid((19, 0, 0, 0));
+    }
+  }
+
+}
+
+/** CAROUSEL MEDIA ARTICLE **/
+.carousel.carousel-display-3 {
+  @include media-breakpoint-up(sm) {
+    @include make-width-grid(12);
+    .carousel-header {
+      @include make-row();
+      @include make-shape-square(5.5);
+      @include make-padding-grid((1));
+      @include make-layer-middle(10);
+      margin-left: auto;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    &.carousel-reverse .carousel-header {
+      margin-left: 0px;
+      margin-right: auto;
+    }
+    .carousel-body {
+      @include make-shape(12, 7);
+      @include make-margin-grid((-1.5, 0, 0, 0));
+      overflow: hidden;
+    }
+    .carousel-slide {
+      .carousel-slide-figure {
+        @include make-shape-square(8);
+      }
+      .carousel-slide-body {
+        @include make-padding-grid((2, 0, 1, 1));
+        justify-content: center;
+        width: auto;
+        flex: 1;
+      }
+    }
+    &.carousel-reverse .carousel-slide {
+      .carousel-slide-body {
+        @include make-padding-grid((2, 1, 1, 0));
+      }
+    }
+    .carousel-controls {
+      @include make-margin-grid((-1, 4, 0, 4));
+    }
+    &.carousel-reverse .carousel-controls {
+      @include make-padding-grid((0, 1, 0, 0));
+    }
+    .carousel-indicators-line {
+      @include make-margin-grid((-0.5, 0, 0, 9));
+    }
+    &.carousel-reverse .carousel-indicators-line {
+      @include make-margin-grid((0, 9, 0, 0));
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    .carousel-header {
+      @include make-width-grid(24);
+    }
+    .carousel-slide-figure {
+      @include make-shape-square(17);
+      @include make-margin-grid((1, $mobile-carousel-padding, 2, $mobile-carousel-padding));
+    }
+    .carousel-slide-body {
+      @include make-padding-grid((0, $mobile-carousel-padding, 0, $mobile-carousel-padding));
+      text-align: center;
+    }
+    .carousel-controls {
+      margin-top: 57%;
+      .carousel-control-next-icon {
+        top: -3vw !important;
+        left: -4vw;
+      }
+    }
+    @each $color, $value in $theme-colors {
+      &.carousel-#{$color}  {
+        @include make-bg-pattern($color);
+        .carousel-slide-body {
+          color: get-color-yiq($value);
+        }
+        .carousel-indicators-line li {
+          background-color: get-color-yiq($value);
+        }
+      }
+    }
+  }
+}
+
+
+/** CAROUSSEL DOMAIN INTERVENTION **/
+.carousel.carousel-display-4 {
+  //LAPTOP
+  @include media-breakpoint-up(sm) {
+    .carousel-header {
+      @include make-row();
+      @include make-shape(20, 7);
+      @include make-padding-grid((1));
+      @include make-layer-middle(1);
+      margin: 0 auto;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    &.carousel-reverse .carousel-header {
+      @include make-margin-grid((0, 11, 0, 6));
+    }
+    .carousel-body {
+      @include make-width-grid(22);
+      @include make-margin-grid((-1, auto, 0, auto));
+      overflow: hidden;
+    }
+    .carousel-slide {
+      display: flex;
+      .carousel-slide-body {
+        @include make-padding-grid((2, 2, 1, 2.5));
+        justify-content: space-between;
+        flex: 1;
+        display: flex;
+        flex-direction: row;    
+      }
+      .carousel-slide-figure {
+        @include make-shape(11, 9);
+        @include make-clip-left();
+      }
+    }
+    &.carousel-reverse .carousel-slide {
+      .carousel-slide-figure {
+        @include make-clip-right();
+      }
+      .carousel-slide-body {
+        @include make-padding-grid((4, 1.5, 1, 1));
+        text-align: right;
+        .quote::before {
+          display: inline;
+        }
+        .quote::after {
+          margin-left: 0;
+        }
+      }
+    }
+    .carousel-controls {
+      @include make-margin-grid((-1, 8, 0, 9));
+    }
+    &.carousel-reverse .carousel-controls {
+      @include make-padding-grid((0, 1, 0, 0));
+      @include make-margin-grid((-1, 9, 0, 8));
+    }
+    .carousel-indicators-line {
+      @include make-margin-grid((0, 0, 0, 12));
+    }
+    &.carousel-reverse .carousel-indicators-line {
+      @include make-margin-grid((0, 14.5, 0, 0));
+    }
+    .number  {
+      position: absolute;
+      @include make-grid-sized-prop('left', -1);
+    }
+  }
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    .number  {
+      @include make-grid-sized-gutter('margin-right', 0.5);
+    }
+    .carousel-header {
+      @include make-padding-grid(($mobile-carousel-padding, $mobile-carousel-padding, 10, $mobile-carousel-padding));
+    }
+    .carousel-body {
+      @include make-grid-sized-gutter('margin-top', -7);
+      @include clear-shape();
+    }
+    .carousel-controls {
+      @include make-grid-sized-gutter('margin-top', 17.8);
+    }
+    .carousel-slide {
+      display: flex;
+      .carousel-slide-body {
+        @include make-padding-grid((2, $mobile-carousel-padding, $mobile-carousel-padding, $mobile-carousel-padding));
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+      }
+      .carousel-slide-figure {
+        @include make-shape(20, 18);
+        @include make-clip-left();
+      }
+    }
+
+
+    @each $color, $value in $theme-colors {
+      &.carousel-#{$color}  {
+        $reverse-color: get-reverse-color($color);
+        .carousel-header  {
+          @include make-bg-pattern($color);
+          color: get-color-yiq($value);
+        }
+        .carousel-subtitle {
+          color: get-color-yiq($value);
+        }
+      }
+    }
+  }
+}
+
+
+/** CAROUSEL REDUCED **/
+.carousel.carousel-display-5 {
+  @include media-breakpoint-up(sm) {
+    .carousel-body {
+      @include make-shape(14, 7);
+      @include make-margin-grid((0, 0, 0, 0));
+      overflow: hidden;
+    }
+    .carousel-slide {
+      display: flex;
+      .carousel-slide-figure {
+        @include make-shape(7, 7);
+      }
+      .carousel-slide-body {
+        @include make-padding-grid((0, 0.5, 1, 0.5));
+        justify-content: flex-end;
+      }
+    }
+    &.carousel-reverse .carousel-slide {
+      .carousel-slide-body {
+        @include make-padding-grid((4, 1.5, 1, 1));
+        text-align: right;
+        .quote::before {
+          display: inline;
+        }
+        .quote::after {
+          margin-left: 0;
+        }
+      }
+    }
+    .card-wrapper {
+      background-color: transparent !important;
+    }
+    .carousel-controls {
+      @include make-margin-grid((-2, 8, 0, 5));
+    }
+    &.carousel-reverse .carousel-controls {
+      @include make-padding-grid((0, 1, 0, 0));
+      @include make-margin-grid((-1, 9, 0, 8));
+    }
+    .carousel-indicators-line {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    &.carousel-reverse .carousel-indicators-line {
+      @include make-margin-grid((0, 7, 0, 0));
+    }
+  }
+  .blockquote-footer {
+    color: theme-color('dark');
+  }
+  @include media-breakpoint-down(sm) {
+    .carousel-slide-figure {
+      @include make-shape(20, 16);
+      @include make-clip-left();
+    }
+    .carousel-slide-body {
+      @include make-padding-grid((2, $mobile-carousel-padding + 0.5, 0, $mobile-carousel-padding + 0.5));
+    }
+    .carousel-controls {
+      @include make-margin-grid((8, 0, 0, 0));
+    }
+  }
+
+}
+.article-2col .carousel-wrapper {
+  border-bottom: 1px solid $gray-200;
+  padding: 0 0 2rem 0;
+}
+
+.bg-dark {
+  .carousel-indicators-line li {
+  background-color: theme-color('light');
+  }
+}

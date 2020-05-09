@@ -1,0 +1,63 @@
+.btn {
+  @include make-padding-grid((0.25, 0));
+  cursor: pointer;
+  font-size: $btn-font-size;
+  font-family: $font-family-primary;
+  background-color: transparent;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 0;
+  &:before, &::after {
+    content: " ";
+    display: block;
+    background-color: theme-color('dark');
+    height: 2px;
+    width: 2rem;
+  }
+  &[data-line="false"] {
+    @include make-padding-grid((0.25, 0.5));
+    &:before, &::after {
+      display: none !important;
+    }
+  }
+
+  // MOBILE
+  @include media-breakpoint-down(sm) {
+    @include make-padding-grid((0.7, 0));
+    font-weight: 300;
+    font-size: $mobile-btn-font-size;
+    &:before, &::after {
+      height: 1px;
+      width: 2.3rem;
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include btn-outline($color);
+  }
+  .btn-#{$color} {
+    @include btn($color);
+  }
+}
+
+.btn-xl {
+  @include btn-xl();
+}
+
+.btn-floating {
+  @include btn-outline('light');  
+  display: none;
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  z-index: 10;
+  @include media-breakpoint-down(sm) {
+    display: flex;
+  }
+}

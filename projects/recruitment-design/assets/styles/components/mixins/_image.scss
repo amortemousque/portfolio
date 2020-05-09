@@ -1,0 +1,14 @@
+
+@mixin make-clip-right() {
+  -webkit-clip-path: url(../assets/images/clipPath.svg#coverRightPoly);
+  clip-path: url(../assets/images/clipPath.svg#coverRightPoly);
+  -webkit-clip-path: polygon(0% 0%, 84.6% 0%, 84.6% 46.1%, 100% 46.1%, 100% 87%, 92.3% 87%, 92.3% 46.1%, 84.6% 46.1%, 84.6% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 84.6% 0%, 84.6% 46.1%, 100% 46.1%, 100% 87%, 92.3% 87%, 92.3% 46.1%, 84.6% 46.1%, 84.6% 100%, 0% 100%);
+}
+
+@mixin make-clip-left() {
+  -webkit-clip-path: url(../assets/images/clipPath.svg#coverLeftPoly);
+  clip-path: url(../assets/images/clipPath.svg#coverLeftPoly);
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 15.4% 100%, 15.4% 87%, 0% 87%, 0% 46.1%, 7.7% 46.1%, 7.7% 87%, 15.4% 87%, 15.4% 0%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 15.4% 100%, 15.4% 87%, 0% 87%, 0% 46.1%, 7.7% 46.1%, 7.7% 87%, 15.4% 87%, 15.4% 0%);
+}

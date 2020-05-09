@@ -1,0 +1,505 @@
+form {
+  * {
+    outline: none !important;
+  }
+
+  details {
+    summary {
+      @include make-margin-grid((0, 0, 0.33, 0));
+    }
+  }
+
+  label {
+    &.form-required::after {
+      content: ' *';
+    }
+    &.visually-hidden {
+      display: none;
+    }
+  }
+
+  button.link {
+    padding: 0;
+    margin: 0;
+    color: theme-color('primary');
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  .form-control-info  {
+    font-size: 60%;
+    margin-top: 0.3rem;
+    float: right;
+  }
+  label {
+    font-size: $form-label-font-size;
+    margin-bottom: 0;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-form-label-font-size;
+    }
+  }
+}
+
+.form-control {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);/*$form-control-border;*/
+  font-size: $form-control-font-size;
+  color: $text-muted;
+  
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);/*$form-control-border;*/
+    border-radius: 3px;
+    font-size: $mobile-form-control-font-size;
+  }
+  &[type='text'],
+  &[type='password'],
+  &[type='number'],
+  &[type='email'],
+  &[type='search'],
+  &[type='tel'],
+  &[type='url'],
+  &[type='date'] {
+    padding: $form-control-padding 0px;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      padding: $form-control-padding;
+      width: 71vw;
+      border-width: 0 0 1px 0;
+    }
+  }
+
+  // Placeholder
+  &::placeholder
+   {
+    font-size: $form-placeholder-font-size;
+    text-transform: uppercase;
+    color: theme-color('light');
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-form-placeholder-font-size;
+    }
+  }
+
+  @at-root textarea#{&} {
+    border: 1px solid $gray-700;
+    @include make-margin-grid((0.5, 0, 0, 0));
+  }
+
+  &:focus {
+    @include media-breakpoint-up(sm) {
+      color: $text-muted;      
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+    }
+  }
+}
+
+/* Placeholder IE */
+.form-control:-ms-input-placeholder
+{
+ font-size: $form-placeholder-font-size;
+ text-transform: uppercase;
+ color: theme-color('light');
+ //MOBILE
+ @include media-breakpoint-down(sm) {
+   font-size: $mobile-form-placeholder-font-size;
+ }
+}
+
+.form-action {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  margin-top: 1.5rem;
+}
+
+.form-info {
+  display: flex;
+  flex: 1 1 100%;
+  font-size: 0.8rem;
+  font-weight: 100;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 0;
+  opacity: 0.7;
+}
+
+
+.form-row {
+  flex-basis: 110%;
+  @include make-margin-grid((0, -0.5));
+  > .col,
+  > [class*="col-"] {
+    @include make-padding-grid((0, 0.5));
+  }
+}
+
+.form-type-checkbox {
+  label {
+    padding-left: 1.7rem;
+  }
+}
+.form-type-radio {
+  label {
+    padding-left: 1.7rem;
+  }
+}
+
+.custom-checkbox,
+.custom-radio {
+  margin-bottom: 0;
+}
+
+.webform-submission-form {
+  .webform-details-toggle-state-wrapper {
+    text-align: right;
+    width: 100%;
+    .link {
+      text-transform: uppercase;
+      font-size: smaller;
+    }
+  }
+}
+
+.form-type-webform-multiple {
+  .webform-multiple-table {
+    table {
+      width: 100%;
+    }
+  }
+  .webform-multiple-table + .container-inline {
+    @include make-row();
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: center;
+    &::before {
+      @include btn-plus();
+      position: absolute;
+      color: theme-color('primary');
+      pointer-events: none;
+    }
+    .button {
+      @include make-shape-square(0.66);
+      background-color: transparent;
+      color: transparent;
+      border: none;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .form-item {
+      display: inherit;
+      input {
+        margin: 0 15% 0 0;
+        text-align: center;
+      }
+      .field-suffix {
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.form-display-1 {
+  @include make-row();
+  @include make-bg-shift('dark', 2);
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  &::after {
+    left: 0;
+  }
+  .form-title {
+    @include make-margin-grid((0,0,0,0));
+    font-size: $h4-font-size;
+    line-height: normal;
+    text-transform: uppercase;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-form-filter-header;
+      margin: 0;
+    }
+  }
+  .form-filter {
+    z-index: 2;
+  }
+  .form-result {
+    @include make-margin-grid((0, 5, 0, 0));
+    width: 100%;
+    z-index: 2;    
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((0, 2, 2, 2));
+      margin: 0;
+    }
+    .btn {
+      @include btn-outline('primary');
+    }
+  }
+  .form-more-result {
+    @include make-padding-grid((1));
+    @include make-margin-grid((-1,0,0,0));
+    text-align: center;
+  }
+  .close {
+    display: none;
+  }
+  .form-result-list {
+    @include make-row();
+    flex-direction: row;
+    width: 100%;
+    .list-group-item {
+      padding: 0px;
+      @include make-grid-sized-prop('margin-bottom', 1);
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        @include make-margin-grid((0, 0, 3, 0));
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+    }
+    .list-group-item:nth-child(2n) {
+      margin-left: auto;
+    }
+    .list-group-item:last-child {
+      padding-bottom: 0px;
+    }
+    .item {
+      @include make-shape-square(5);
+      @include shadow-1();
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        @include make-shape-square(18);
+      }
+    }
+  }
+  @include media-breakpoint-up(sm) {
+    @each $color, $value in $theme-colors {
+      &.form-display-#{$color} {
+        $reverse-color: get-reverse-color($color);
+        color: theme-color('light');
+        .form-filter {
+          @include make-bg-pattern($color);
+        }
+      }
+    }
+  }
+}
+
+.form-item-add-cv {
+  .description {
+    display: none;
+  }
+}
+
+.form-filter {
+  @include make-width-grid(6);
+  @include make-margin-grid((0, 1));
+  flex-grow: 0;
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+  .btn {
+    @include btn-outline('gray-dark');
+    display: flex;
+    margin: auto;
+  }
+  .btn-submit {
+    @include btn-outline('primary');
+    margin-top: -0.5rem;       
+  }
+  .form-filter-header {
+    @include make-padding-grid((1, 1, 0, 1));
+  }
+  .form-filter-body {
+    @include make-padding-grid((1, 1, 1, 1));
+  }
+  .form-action {
+    @include make-width-grid(6);
+    @include make-grid-sized-prop('margin-left', -1);
+    flex-direction: column;
+  }
+}
+
+.form-newsletter {
+  text-align: left;
+
+  input[type=email] {
+    border-width: 0 0 1px 0;
+    border-color: theme-color('primary');
+    font-size: 2rem;
+    color: white;
+    font-family: Oswald, sans-serif;
+    font-weight: 100;
+  }
+
+  .fieldset-legend {
+    font-size: 1rem;
+  }
+
+  .form-group-row {
+    display: flex;
+    margin-top: 1rem;
+    align-items: baseline;
+
+    legend {
+      width: auto;
+      margin: 0 1.7rem 0 0;
+      line-height: 1rem;
+    }
+  }
+
+  .form-group-row-2 {
+    align-items: flex-end;
+  }
+
+  .form-submit {
+    border: 1px solid $gray-500;
+    @include make-width-grid(0.7);
+    @include make-height-grid(0.7);
+    margin: 0 0 0.5rem -2.3rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    color: $white;
+    font-family: monospace;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 1s;
+  }
+  .form-submit:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+
+  }
+  .form-type-checkbox {
+    margin-right: 1.5em;
+  }
+  .custom-control-indicator {
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid $gray-500;
+  }
+  .form-info {
+    flex: 0;
+    padding: 2rem 0 0 0;
+  }
+
+  .form-group {
+    position: relative;
+  }
+}
+
+.calendar-availability {
+  //MOBILE
+  
+  table {
+    background: none;
+    border: none;
+    border-collapse: separate;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-width-grid(24);
+    }
+    thead, tbody {
+      background: none;
+    }
+    td, th {
+      text-align: center;
+      vertical-align: middle;
+      background-image: url(../images/bg-black-67.png);
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+    th {
+      @include make-shape(2, 1);
+      font-weight: normal;
+      text-align: center;
+    }
+    .col {
+      @include make-shape(2, 1); 
+    }
+    @include media-breakpoint-down(sm) {
+      tr {
+        height: 2rem;
+      }
+      .col {
+        width: 100%;
+        max-width: unset;
+        height: 2rem;
+        max-height: unset;
+      }
+      .col .form-item {
+        height: 2rem;
+        max-height: unset;
+      }
+    }
+    .form-type-checkbox {
+      margin: 0;
+      padding: 0;
+      label {
+        @include make-shape(2, 1); 
+        @include make-padding-grid((1, 0, 0, 0));
+        z-index: 11;
+        height: 0;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .custom-control-indicator {
+        @include make-shape(2, 1);
+        z-index: 10;
+        padding: 0;
+        background-color: transparent;
+        top: 0;
+        
+        //MOBILE
+        @include media-breakpoint-down(sm) {
+          max-height: unset;
+          max-width: unset;
+          width: 100%;
+          height: 2rem;
+        }
+      }
+      .custom-control-input:checked ~ .custom-control-indicator {
+        background-color: transparent;
+        background-image: url(../images/checkbox-tel.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: auto;
+      }
+      .custom-control-input:focus ~ .custom-control-indicator {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.form-display-2 {
+  //MOBILE
+  @include media-breakpoint-down(sm) {    
+    .heading-body {    
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .heading-title, p {
+      @include make-padding-grid((0, $mobile-heading-padding));
+    }
+  }
+}
+.form-display-2 + .views-element-container {
+  //MOBILE
+  @include media-breakpoint-down(sm) {    
+    .d-block {
+      margin: 2rem 0 !important;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.card-basic {
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    .card-link a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      margin-top: 1.5rem;
+    }
+    @each $color, $value in $theme-colors {
+      .card-link a.btn-outline-#{$color} {
+        &::before, &::after {
+          margin-right: 0.6rem;
+          margin-left: 0.6rem;
+          width: 1rem;
+        }
+      }
+    }
+  }
+  .card-body {
+    width: 100%; /* Required for IE11*/
+  }
+}

@@ -1,0 +1,108 @@
+.carousel-indicators:not([class*='carousel-indicators-line']) {
+  @include media-breakpoint-up(sm) {
+    @include make-width-grid(9);
+    @include make-margin-grid((5.8, 1, 0, 0));
+    @include make-padding-grid((0.5, 0, 0.5, 1));
+    justify-content: space-between;
+    align-self: flex-start;
+    font-size: $font-size-base-upper;
+    text-transform: uppercase;
+    @include make-layer-middle();
+    .active {
+      background-color: transparent;
+    }
+    .carousel-reverse & {
+      @include make-margin-grid((5.8, 0, 0, 1));
+      @include make-padding-grid((0.5, 1, 0.5, 0));
+    }
+    .nav-link {
+      @include make-padding-grid((0));
+      font-family: $font-family-base;
+      color: inherit;
+    }
+    .nav-link:first-child {
+      padding-left: 0;
+    }
+    .nav-link:last-child {
+      padding-right: 0;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    @include make-row();
+    @include make-height-grid(2);
+    @include make-grid-sized-prop('bottom', -2);    
+    @include make-grid-sized-gutter('margin-bottom', 3);    
+    
+    flex-flow: row nowrap;
+    position: initial;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 0;
+    order: 2;
+    background-color: theme-color('dark');
+    a {
+      cursor: pointer;
+      background-color: theme-color('light');
+      opacity: 0.3;
+      transition: opacity 0.5s;
+      position: relative;
+      flex: 0 1 auto;
+      width: 30px;
+      height: 2px;
+      margin-right: 3px;
+      margin-left: 3px;
+      text-indent: -999px;
+      padding: 0;
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.carousel-indicators.carousel-indicators-line {
+  @include make-row();
+  @include make-height-grid(1);
+  @include make-layer-middle();
+  flex-flow: row nowrap;
+  position: relative;
+  justify-content: flex-start;
+  align-items: flex-end;
+  bottom: initial;
+  padding: 0;
+  li {
+    cursor: pointer;
+    background-color: theme-color('dark');
+    opacity: 0.3;
+    transition: opacity 0.5s;
+    position: relative;
+    flex: 0 1 auto;
+    width: 30px;
+    height: 2px;
+    margin-right: 3px;
+    margin-left: 3px;
+    text-indent: -999px;
+    &.active {
+      opacity: 1;
+      list-style-type: none;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    justify-content: center;
+    @include make-height-grid(2);    
+    @include make-margin-grid((0, 0, 4, 0));
+  }
+}
+
+
+.bg-dark {
+  .carousel ol.carousel-indicators li {
+    background-color: theme-color('light');
+  }
+}
+
+.bg-light {
+  ol.carousel-indicators li {
+    background-color: theme-color('dark');
+  }
+}

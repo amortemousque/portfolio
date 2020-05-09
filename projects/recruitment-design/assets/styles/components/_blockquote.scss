@@ -1,0 +1,254 @@
+blockquote:not([class*='blockquote']) {
+  font-family: $font-family-primary;
+  display: inline-block;
+  font-size: $blockquote-0-font-size;
+  line-height: $blockquote-0-font-size + 0.5rem;
+  padding: 1rem 0 0.8rem 0;
+  margin-bottom: 0px;
+  position: relative;
+  font-weight: 100;
+  font-style: italic;
+  text-align: center;
+  &::before, &::after {
+    font-family: $font-family-secondary;
+    font-size: 4rem;
+    line-height: 4rem;
+    display: inline-block;
+    position: absolute;
+
+  }
+  &::before {
+    content: "\201C"; /*Unicode for Left Double Quote*/
+    vertical-align: top;
+    margin-left: -2rem;
+    margin-top: -15px;
+  }
+  &::after {
+    content: "\201D"; /*Unicode for Left Double Quote*/
+    bottom: -2rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: $mobile-blockquote-0-font-size;
+    line-height: $mobile-blockquote-0-font-size + 0.5rem;
+  }
+}
+
+/** DEFAULT SPECIAL BLOQUEQUOTE **/
+.blockquote {
+  position: relative;
+  .quote::before {
+    @include make-margin-grid((0, 0.2, 0, 0));
+    font-family: $font-family-secondary;
+    content: "\201C "; /*Unicode for Left Double Quote*/
+    font-size: 80%;
+    vertical-align: top;
+    line-height: 50%;
+  }
+  .quote::after {
+    @include make-grid-sized-gutter('margin-left', 0.2);
+    margin-top: 2.7rem;
+    position: absolute;
+    font-family: $font-family-secondary;
+    content: "\201D"; /*Unicode for Left Double Quote*/
+    font-size: 80%;
+  }
+
+  .blockquote-footer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .quote-author {
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .quote-author-info {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  .quote-author-image {
+    flex: 1 0 30%;
+    display: flex;
+    align-items: flex-end;
+    img {
+      width: 100%;
+    }
+    @include media-breakpoint-down(sm) {
+      @include make-grid-sized-prop('margin-top', 3);
+      display: block;
+      max-width: 50%;
+      margin-left: auto;
+    }
+  }
+  .blockquote-footer {
+    font-size: $blockquote-footer-0-font-size; // back to default font-size
+    color: $blockquote-small-color;
+    &::before {
+      content: " "; // em dash, nbsp
+      display: inline-block;
+      height: 2px;
+      background-color: theme-color('light');
+      width: 2.2rem;
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    .quote::after {
+      margin-top: 1.7rem;
+    }
+  }
+}
+
+/** COLOR HELPERS **/
+@each $color, $value in $theme-colors {
+  .blockquote-#{$color} {
+    .quote::after, .quote::before, .blockquote-footer {
+      color: #{$value};
+    }
+  }
+}
+
+/** BLOQUEQUOTE IN COVER **/
+.blockquote-display-1 {
+  font-family: $font-family-secondary;
+  .quote {
+    @include make-margin-grid((0.2, 0, 0.2, 0));
+    font-size: $blockquote-1-font-size;
+    font-weight: 300;
+    line-height: 0.9;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+       font-size: $mobile-blockquote-1-font-size;
+    }
+  }
+  .blockquote-footer {
+    @include make-margin-grid((0.5, 0, 1, 0));
+    display: block;
+    text-align: center;
+    font-size: $blockquote-footer-1-font-size;
+    font-family: FaithAndGloryTwo;
+    font-weight: 400;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-margin-grid((1.5, 0, 1, 0));
+      font-size: $mobile-blockquote-footer-1-font-size;
+    }
+  }
+  .blockquote-footer::before {
+    margin-bottom: 0.3rem;
+    margin-right: 0.7rem;
+    font-family: arial;
+  }
+}
+
+/** BLOQUEQUOTE IN SLIDERS **/
+.blockquote.blockquote-display-2 {
+  .quote {
+    @include make-margin-grid((0.5, 0, 0.5, 0));
+    font-style: italic;
+    position: relative;
+    font-weight: 100;
+    font-size: $blockquote-2-font-size;
+
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-blockquote-2-font-size;
+    }
+  }
+  .quote::before, .quote::after {
+    font-size: $blockquote-2-font-size + 1.5rem;
+    position: absolute;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-blockquote-2-font-size + 1.5rem;
+    }
+  }
+  .quote::before {
+    display: block;
+    top: 0rem;
+    left: -2rem;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      left: -1.3rem;
+    }
+  }
+  .quote::after {
+    @include make-margin-grid((0.3, 0, 0, 0.2));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-margin-grid((0.6, 0, 0, 0.2));
+    }
+  }
+  .blockquote-footer {
+    @include make-margin-grid((1, 0, 0, 0));
+    flex-direction: row;
+    color: theme-color('light');
+    &::before {
+      display: none;
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      display: block;
+      @include make-margin-grid((2, 0, 0, 0));
+    }
+  }
+}
+
+
+.blockquote-display-1.quote-variant {
+  .quote {
+    @include make-margin-grid((0.6, 0, 0.4, 0));
+  }
+  .quote::before {
+    @include make-margin-grid((0, -0.5, 0, 0));
+    line-height: 0;
+    font-size: 100%;
+  }
+  .quote::after {
+    @include make-margin-grid((1.2, 0, 0, -0.2));
+    position: absolute;
+    font-size: 100%;
+  }
+  @include media-breakpoint-down(sm) {
+    .quote::after {
+      @include make-margin-grid((2.2, 0, 0, -0.3));
+    }
+  }
+
+}
+
+.blockquote-display-2.quote-variant {
+  .quote::before {
+    @include make-margin-grid((0, 0, 0, 0.4));
+    line-height: 0.5;
+    font-size: 170%;
+    top: -1rem;
+    left: -1.5rem;
+  }
+  .quote::after {
+    @include make-margin-grid((0.7, 0, 0, 0.1));
+    position: absolute;
+    font-size: 170%;
+  }
+
+
+}
+
+.blockquote-display-2.quote-variant-2 {
+  .quote::before {
+    @include make-margin-grid((0, 0, 0, 0.4));
+    line-height: 0.5;
+    font-size: 170%;
+    top: -1rem;
+    left: -1.5rem;
+  }
+  .quote::after {
+    @include make-margin-grid((0.3, 0, 0, 0.1));
+    position: absolute;
+    font-size: 170%;
+  }
+
+
+}

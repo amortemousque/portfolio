@@ -1,0 +1,7 @@
+@mixin input($color) {
+  $value : map-get($theme-colors, $color);
+  .form-control:focus {
+    color: get-color-yiq($value);
+    border-color: $value;
+  }
+}

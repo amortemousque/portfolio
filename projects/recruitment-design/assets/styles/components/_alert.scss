@@ -1,0 +1,15 @@
+.alert-overlay {
+  font-size: 120%;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: $zindex-popover;
+  bottom:0;
+  margin-bottom: 0px;
+}
+
+.alert {
+  ul {
+    margin-bottom: 0rem;
+  }
+}

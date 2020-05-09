@@ -1,0 +1,30 @@
+body {
+  overflow-x: hidden;
+}
+
+#page-container {
+  background-color: $page-container-bg;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  /*overflow: hidden;*/
+}
+
+#main {
+  display: initial;
+  background-color: $page-container-bg;
+}
+
+
+/** MAIN NAVBAR **/
+.header-main {
+  width: 100%;
+  max-width: $container-max-width;
+  border-bottom: 1px solid #ddd;
+ // z-index: $zindex-header;
+  // NO BOTTOM BORDER
+  &.header-no-border {
+    border: none;
+  }
+}

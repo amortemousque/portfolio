@@ -1,0 +1,830 @@
+.item {
+  @include make-row();
+  flex-flow: row nowrap;
+  z-index: 2;
+  .item-figure img {
+    width: 100%;
+    height: 100%;
+  }
+  .item-body {
+    @include make-row();
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+//page teaser item
+.item-display-1 {
+  text-align: right;
+
+  &.item-reverse, + .item-display-1 {
+    flex-direction: row-reverse;
+    text-align: left;
+  }
+  .item-title {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+  }
+  .item-figure {
+    @include make-shape-square(5);
+    @include make-margin-grid((0, -2, 0, 0));
+    z-index: 1;
+    opacity: 0.7;
+  }
+  &.item-reverse .item-figure, + .item-display-1 .item-figure {
+    @include make-margin-grid((-1, 0, 0, -2));
+  }
+  .item-body {
+    justify-content: flex-start;
+  }
+  .item-body p {
+    margin-bottom: 0;
+  }
+  .item-title {
+    position: relative;
+    transition: all 0.5s;
+    &::before {
+      content: " ";
+      @include make-width-grid(0);
+      position: absolute;
+      right: 0;
+      transition: all 0.5s;
+    }
+  }
+  &.item-reverse .item-title::before, + .item-display-1 .item-title::before {
+    left: 0;
+  }
+  &:hover .item-figure {
+    opacity: 0.5;
+  }
+
+  //LAPTOP
+  @include media-breakpoint-up(sm) {
+    &.active .item-title, &:hover .item-title {
+      @include make-padding-grid((0, 1));
+      padding-left: 3rem;
+      opacity: 1;
+    }
+    &.active .item-title::before, &:hover .item-title::before {
+      @include make-width-grid(0.7);
+      @include make-grid-sized-gutter('top', 0.25);
+      background-color: theme-color('light');
+      height: 2px;
+      transition: 0.5s;
+    }
+  }
+}
+
+
+//article teaser item
+.item-display-2 {
+  @include make-row();
+  flex-flow: row nowrap;
+  position: relative;
+  text-align: left;
+  padding: 0px;
+
+  @include media-breakpoint-down(sm) {
+    flex-flow: column wrap;
+    .item-figure-overlay {
+      display: none;
+    }
+  }
+
+  @include media-breakpoint-up(sm) {
+    .item-figure-overlay {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      height: 100%;
+      cursor: pointer;
+      transition: all 1s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        opacity: 1;
+      }
+      .item-figure-overlay-content {
+        background-color: theme-color('primary');
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        opacity: 0.8;
+        align-items: center;
+      }
+      .item-figure-overlay-cta {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .btn {
+          color: $white;
+        }
+        .btn:hover {
+          color: theme-color('primary');
+        }
+        .btn:before, .btn:after {
+          background-color: $white;
+        }
+      }
+    }
+  }
+
+  &.item-reverse, + .item-display-2 {
+    flex-direction: row-reverse;
+    text-align: right;
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      text-align: left;
+    }
+  }
+  &.item-reverse .item-body, + .item-display-2 .item-body {
+    @include make-padding-grid((1.5, 0.5, 0.5, 0));
+  }
+  .item-figure {
+    display: flex;
+    @include make-col(12);
+    @include make-shape-square(5);
+    position: relative;
+    img {
+      width: 100%;
+    }
+    overflow: hidden;
+    @include media-breakpoint-down(sm) {
+      @include make-col(24);
+      @include make-shape-square(17);
+    }
+    picture {
+      background-color: $white;
+      width: 100%;
+    }
+    flex: 1 1 auto;
+  }
+  .item-body {
+    @include make-col(12);
+    @include make-padding-grid((1.5, 0, 0.5, 0.5));
+    justify-content: flex-start;
+    @include media-breakpoint-down(sm) {
+      @include make-col(24);
+      @include make-padding-grid((1.5, 0, 0, 0));
+      flex: 0 0 auto;
+    }
+  }
+  .item-body p {
+    margin-bottom: 0;
+  }
+  .item-subtitle {
+    font-size: $font-size-base-upper;
+    text-transform: uppercase;
+    color: theme-color('primary');
+    font-weight: 400;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-font-size-base-upper;
+    }
+  }
+  .item-title {
+    font-size: $item-2-title-font-size;
+    font-weight: 100;
+  }
+  &:hover {
+    .figure::before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      left:0;
+      height: 100%;
+      width: 100%;
+      opacity: 0.5;
+      background-color: map-get($theme-colors, "primary");
+    }
+  }
+}
+
+.carousel .item.item-display-2 {
+  @include media-breakpoint-down(sm) {
+    @include make-col(24);
+    padding: 0px;
+    .item-body {
+      @include make-grid-sized-gutter('padding-top', 2);
+      text-align: left;
+    }
+    .item-figure {
+      opacity: 1;
+      @include make-col(24);
+      @include make-shape-square(17);
+    }
+  }
+}
+
+
+.item.item-display-3 {
+  @include make-row();
+  background-color: theme-color('light');
+  color: theme-color('dark');
+  margin: 0;
+  .text-important {
+    color: theme-color('primary');
+  }
+  .item-title {
+    font-size: $item-title-font-size;
+    font-weight: 100;
+    margin-bottom: 1rem;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-item-title-font-size;
+    }
+  }
+  .item-body {
+    @include make-padding-grid((0.5, 0.5, 0, 0.5));
+    justify-content: flex-start;
+    width: 100%;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((2, 2, 0, 2));
+    }
+    p {
+      color: $text-muted;
+      text-transform: uppercase;
+      font-size: $font-size-base-upper;
+      font-weight: 400;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        font-size: $mobile-font-size-base-upper;
+      }
+    }
+  }
+  .item-footer {
+    @include make-grid-sized-prop('height', 1);
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    margin-top: auto;
+    color: theme-color('light');
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-grid-sized-prop('height', 3);
+    }
+    .item-footer-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex:1 0 50%;
+      text-align: center;
+      font-size: $font-size-base-upper;
+      & + .item-footer-info {
+        border-left: 1px solid rgba(255,255,255,0.2);
+      }
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.item-#{$color} {
+      .item-footer {
+          @include make-bg-pattern($color);
+      }
+    }
+  }
+}
+
+.item.item-display-4 {
+  @include make-row();
+  flex-direction: column;
+  position: relative;
+  .item-figure {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.3;
+  }
+  .item-title {
+    font-size: $item-title-font-size;
+    font-weight: 100;
+  }
+  .item-subtitle {
+    color: theme-color('primary');
+    text-transform: uppercase;
+    font-size: $font-size-base-upper;
+  }
+  .item-body {
+    @include make-padding-grid((0.5, 0.5, 0, 0.5));
+    flex-direction: column;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((2, 2, 0, 2));
+    }
+  }
+  .item-footer {
+    margin-top: auto;
+    text-align: center;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((0, 1, 1, 1));
+    }
+  }
+  .btn {
+    @include btn-outline('primary');
+  }
+  @each $color, $value in $theme-colors {
+    &.item-#{$color} {
+      .item-title {
+        color: get-color-yiq($value);
+      }
+      .item-subtitle {
+        color: theme-color($color);
+      }
+      .btn {
+        @include btn-outline($color)
+      }
+    }
+  }
+}
+
+.item.item-author {
+  display: inline-flex;
+  flex-direction: row;
+  .item-figure {
+    @include make-shape-square(2);
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(4);
+    }
+  }
+  .item-body {
+    @include make-padding-grid(0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 400;
+
+    margin: 0px;
+  }
+  .item-title {
+    color: theme-color('dark');
+  }
+  .item-subtitle {
+    color: $text-muted;
+  }
+}
+
+.item.item-attached {
+  flex-direction: column;
+  .item-title {
+    @include make-margin-grid((0, 0, 0.8, 0));
+    text-align: center;
+  }
+  .item-list li {
+    flex: 1 0 33%;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      flex: 1 0 100%;
+      text-align: center;
+    }
+    span a {      
+      color: black;
+      font-weight: 400;
+      font-size: 1vw;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        font-size: 1rem;
+      }
+      text-transform: uppercase;
+    }
+  }
+}
+
+
+.item.item-personae {
+  display: inline-flex;
+  flex-direction: column;
+  .item-header {
+    @include make-shape(5, 0.7);
+    @include make-margin-grid((0, 0, 0, 0.5));
+    position: absolute;
+    display: flex;
+    align-items: center;
+    background-color: rgba(#000000, 0.8);
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-shape(18, 3);
+      @include make-margin-grid((0, 0, 0, 4));
+    }  
+    .open {
+      @include btn-unstyled();
+      @include make-padding-grid((0.3));
+      margin-left: auto;
+      color: theme-color('light');
+      font-size: 3rem;
+      font-weight: 100;
+      line-height: 0.4;
+      cursor: pointer;
+    }
+  }
+  .item-figure {
+    @include make-shape-square(5);
+    @include make-margin-grid((0, 0, 0, 0.5));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(18);
+      @include make-margin-grid((0, 0, 0, 4));
+    }  
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+  }
+  .item-overlay {
+    @include make-shape-square(5);
+    @include make-margin-grid((0, 0, 0, 0.5));
+    /*@include make-padding-grid((0.5, 0.9, 0, 0.9));*/
+    opacity: 0;
+    transition: opacity 0.3s;
+    position: absolute;
+    color: theme-color('light');
+    display: flex;
+    flex-direction: column;    
+    .item-footer {
+      position: absolute;
+      z-index: 11;
+      background-color: rgba(0,0,0,0.7);
+      height: 100%;
+      blockquote {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        text-align: left;
+        padding: 2.5rem 3rem 1rem 3rem;
+      }
+      blockquote div {
+        display: inline;
+      }
+      blockquote div:after {
+        content: "...";
+      }
+      .item-actions {
+        @include make-height-grid(1.5);
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .item-figure {
+      z-index: 10;
+    }
+  }
+  .item-overlay:hover {
+    opacity: 1;
+  }
+  .item-header {
+    z-index: 11;
+  }
+  .item-body {
+    @include make-shape-square(3.5);
+    @include make-bg-pattern('primary');
+    @include make-margin-grid((-1.5, 0, 0, 0));
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-weight: 400;
+    color: theme-color('light');
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(12);
+      @include make-margin-grid((-7, 0, 0, 2));
+      justify-content: center;      
+    }  
+    &.item-body-secondary {
+      @include make-bg-pattern('secondary');
+    }
+  }  
+  .navbar {
+    flex: 1;
+    a {
+      color: theme-color('light');
+    }
+  }
+  .item-title {
+    @include make-padding-grid((0.7, 0.5, 0, 0.5));
+    font-family: $font-family-secondary;
+    font-weight: normal;
+    font-size: $item-personae-title-font-size;;
+    line-height: 1.1;
+    text-align: center;
+    &.bottom-margin {
+      @include make-padding-grid((0, 0.5, 0.5, 0.5));
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((0.7, 1.5, 0, 1.5));      
+      font-size: $mobile-item-personae-title-font-size;      
+    } 
+  }
+  .item-subtitle {
+    @include make-margin-grid((0.25, 0, 0, 0));
+    color: theme-color('light');
+    text-align: center;
+    font-weight: normal;
+  }
+  .nav-socials {
+    a + a {
+      @include make-margin-grid((0,0,0,0.25));
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      display: none;   
+    }  
+  }
+  .btn {
+    @include btn-outline('primary');
+  }
+  @each $color, $value in $theme-colors {
+    &.item-#{$color} {
+      .item-body {
+        @include make-bg-pattern($color);
+      }
+      .btn {
+        @include btn-outline($color);
+      }
+    }
+  }
+}
+
+.item.item-personae.item-personae-display-2 {
+  width: 100%;
+  align-items: center;
+  .item-body {
+    @include make-shape-square(6);
+    @include make-padding-grid((0.5, 0.2));
+    @include make-margin-grid((0));
+    justify-content: center;
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(18);
+      @include make-padding-grid((1.5, 1.2));
+    }
+  }
+  .item-title {
+    @include make-padding-grid(0);
+    margin-bottom: 1rem;
+
+  }
+  .item-subtitle {
+    margin-top: 0px;
+    margin-bottom: 0.5rem;
+    font-family: sans-serif;
+  }
+  .item-text {
+    display: block;
+    text-align: center;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+    strong {
+      font-weight: normal;
+    }
+  }
+}
+
+.item.item-personae.item-personae-display-3 {
+  width: 100%;
+  align-items: center;
+  .item-body {
+    @include make-shape-square(6);
+    @include make-padding-grid((0.1, 0.7));
+    @include make-margin-grid((0));
+    justify-content: center;
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(18);
+      @include make-padding-grid((1.5, 1.2));
+    }
+  }
+  .item-text {
+    display: block;
+    font-weight: 100;
+    margin: 1rem 0;
+    strong {
+      font-weight: normal;
+    }
+  }
+  h4 {
+    line-height: 2.2rem;
+  }
+}
+
+/* Trainings list */
+.item-display-5 {
+  @include make-margin-grid((0,3.2, 0.6, 3.2));
+  border: 1px solid #333;
+  background-color: rgba(0,0,0,0.3);
+  flex-flow: column wrap;
+  position: relative;
+  text-align: left;
+  padding: 0px;
+
+  @each $color, $value in $theme-colors {
+    &.item-categ-#{$color} {
+      border-left: 10px solid theme-color($color);
+      @include media-breakpoint-down(sm) {
+        border-left: 5px solid theme-color($color);
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    flex-flow: column wrap;
+    padding: 0.5rem 0.8rem;
+    @include make-margin-grid((0 ,1.6, 1.6, 1.6));
+  }
+
+  .item-body {
+    @include make-padding-grid((0.4, 0, 0.4, 0.5));
+    justify-content: flex-start;
+    @include media-breakpoint-down(sm) {
+      @include make-col(24);
+      @include make-padding-grid((0.5, 0, 0, 0));
+      flex: 0 0 auto;
+    }
+    p {
+      margin-bottom: 0;
+      color: theme-color('gray');
+    }
+    .flag.flag-bookmark {
+      position: absolute;
+      right: 1.6rem;
+      top: 2rem;
+
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        right: 1.3rem;
+        top: 1rem;
+      }
+    }
+  }
+  
+  .item-subtitle {
+    font-size: $font-size-base-upper;
+    text-transform: uppercase;
+    color: theme-color('primary');
+    font-weight: 400;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-font-size-base-upper;
+    }
+  }
+  .item-footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    @include make-padding-grid((0, 0.5, 0.2, 0.5));
+    .btn {
+      margin-top: -0.9rem;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: 0.7rem;
+      @include make-padding-grid((1, 0.5, 0.2, 0));
+    }    
+  }
+  .item-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: 0;
+    a span {
+      color: $white;
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      height: 3rem;
+      @include make-width-grid(15);
+      font-size: 1.2rem;
+    }
+  }
+  .item-content {
+    font-size: 1rem;
+    color: theme-color('gray');
+  }
+}
+
+/* Trainings domain blocks */
+.item-display-6 {
+  @include make-margin-grid((0,0,0,0));
+  @include make-width-grid(5.5);
+  border: 1px solid #333;
+  background-color: rgba(0,0,0,0.3);
+  flex-flow: column wrap;
+  position: relative;
+  text-align: left;
+  padding: 0px;
+
+  @each $color, $value in $theme-colors {
+    &.item-display-#{$color} {
+      background-color: theme-color($color);
+      $reverse-color: get-reverse-color($color);
+      color: theme-color($reverse-color);
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    flex-flow: column wrap;
+    @include make-width-grid(20);
+  }
+
+  .item-body {
+    @include make-padding-grid((0.4, 0, 0.4, 0.5));
+    justify-content: flex-start;
+    @include media-breakpoint-down(sm) {
+      @include make-col(24);
+      @include make-padding-grid((0.5, 0, 0, 0));
+      flex: 0 0 auto;
+    }
+    p {
+      margin-bottom: 0;
+      color: theme-color('gray');
+    }
+    .flag.flag-bookmark {
+      position: absolute;
+      right: 1.6rem;
+      top: 2rem;
+
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        right: 1rem;
+        top: 1.1rem;
+      }      
+    }
+  }
+  
+  .item-subtitle {
+    font-size: $font-size-base-upper;
+    text-transform: uppercase;
+    color: theme-color('primary');
+    font-weight: 400;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-font-size-base-upper;
+    }
+  }
+  .item-footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    @include make-padding-grid((0, 0.5, 0.2, 0.5));
+    .btn {
+      margin-top: -0.9rem;
+    }
+  }
+  .item-title {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .item-content {
+    padding: 1.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    .separator {
+      margin:1rem auto;
+      height:1px;
+      width:2rem;
+      display:block;
+      opacity: 0.2;
+    }
+    .title {
+      font-weight: 400;
+      margin-top: 0.4rem;
+    }
+    .subtitle  {
+      text-transform: none;
+      font-size: $font-size-base;
+      line-height: 1.5rem;
+
+      strong {
+        font-weight: 600;
+      }
+
+      p {
+        margin-top: 1rem;
+        font-weight: lighter;
+        opacity: 0.7;
+      }
+    }
+  }
+}

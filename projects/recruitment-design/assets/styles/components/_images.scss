@@ -1,0 +1,10 @@
+.image-animate {
+  content: "";
+  display: block;
+  background-color: $white;
+  position: absolute;
+  width: 150%;
+  height: 100%;
+  top: -100%;
+  left: -100%;
+}

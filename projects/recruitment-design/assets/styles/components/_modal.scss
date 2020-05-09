@@ -1,0 +1,675 @@
+.modal {
+  padding: 0;
+}
+.modal.show {
+  display: flex !important;
+  align-items: center;
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    display: block !important;
+  }
+}
+.modal-open .modal {
+  padding-right: 16px;
+}
+
+.modal:not(.modal-display-6) .modal-dialog .card-subtitle {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  color: theme-color('primary');
+}
+.modal-dialog {
+  @include make-width-grid(24);
+  @include make-padding-grid((0,2,0,0));
+  margin: auto;
+  pointer-events: none;
+  max-width: initial; 
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    @include clear-width();
+    padding: 0;
+    width: 100%;
+    position: absolute;
+  } 
+  .text-important {
+    color: theme-color('primary');
+    text-transform: uppercase;
+    font-size: 0.95rem;
+  }
+  .modal-list {
+    @include list-inline-flex();
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    justify-content: center;
+    margin-bottom: 0px;
+  }
+  .modal-title {
+    text-transform: uppercase;
+    font-size: $modal-title-font-size;
+    margin-bottom: 1.5rem;
+  }
+  .modal-intro {
+    text-transform: uppercase;
+    font-size: $modal-title-font-size;
+    margin-bottom: 1.5rem;
+  }
+  .modal-message {
+    font-size: $modal-message-font-size;
+    margin-bottom: 1.5rem;
+    font-weight: 100;
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-modal-message-font-size;
+    }      
+  }
+  .modal-subtitle {
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    color: theme-color('primary');
+  }
+  .modal-content {
+    width: 100%;
+    justify-content: center;
+    pointer-events: initial;
+    flex-direction: row;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid($mobile-modal-padding);
+      flex-direction: column;
+    }
+    p {
+      margin-bottom: 1.5rem;
+    }
+  }
+  .modal-header {
+    @include make-bg-pattern('dark');
+  }
+  .modal-body, card:not(.card-display-6) .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    align-items: center;
+    @include make-bg-pattern('dark');
+    @include make-padding-grid((2, 1));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+    }
+  }
+  .modal-body-left, .modal-body-right {
+    text-align: center;
+    align-items: center;
+  }
+  .icon {
+    fill: theme-color('primary');
+    margin-bottom: 1.5rem;
+    width: 5rem;
+  }
+  .btn {
+    @include btn-outline('primary');
+    display: inline-flex;
+  }
+  .number {
+    color: theme-color('primary');
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .modal-#{$color} {
+    $reverse-color: get-reverse-color($color);
+    .modal-body-left  {
+      @include make-bg-pattern($color);
+    }
+    .modal-body-right  {
+      background-color: theme-color($color);
+    }
+    .modal-dialog {
+      color: get-color-yiq($value);
+    }
+  }
+}
+
+.close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  font-size: 3rem;
+  line-height: 2rem;
+  font-weight: 100;
+  color: white;
+  opacity: 1;
+  font-family: "Times New Roman";
+  z-index: 1;
+  cursor: pointer;
+  &:focus, &:hover {
+    color: white;
+  }
+}
+
+.modal-split {
+  display: flex;
+  flex-flow: row nowrap;
+  .modal-body-left, .modal-body-right {
+    @include make-padding-grid((2, 1));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 50%;
+    justify-content: center;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      padding: 0px;
+      flex: 1 1 100%;
+    }
+  }
+  .form-info, p.form-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
+    right: 0;
+   // @include make-grid-sized-gutter('margin-left', -1);
+    @include  make-height-grid(1);
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      margin-top: 0.5rem;
+      margin-left: 0;
+      position: initial;
+    }
+  }
+}
+
+.modal-split-display-2 {
+  .modal-body-right {
+    @include make-padding-grid((2, 2));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+    }
+    .number {
+      color: theme-color('secondary');
+      margin-bottom: 0.8rem;
+    }
+    .title-number {
+      font-size: $font-size-base;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        font-size: $mobile-font-size-base-upper;
+      }
+    }
+    .btn {
+      @include btn-outline('secondary');
+    }
+  }
+  .form-group {
+    @include make-padding-grid((0, 1.5));
+  }
+  .form-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    @include make-grid-sized-gutter('margin-left', -2);
+    @include  make-height-grid(1);
+  }
+  .form-group {
+    @include input('secondary');
+  }
+ 
+}
+
+.modal-display-2 {
+  .modal-body {
+    @include make-padding-grid((2, 1));
+    align-items: stretch;
+    max-width: 60%;
+    #statusMessages {
+      max-width: unset;
+    }
+    .alert:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.modal-body-display-2 {
+  padding: 0 !important;
+  /*background-color: black !important;*/
+  background-image: none !important;
+  flex: 0 !important;
+  /*width: 89% !important;*/
+  position: absolute;
+  margin-top: 40vh;
+  /*margin-left: -2vw;*/
+}
+
+/** Modal personae **/
+.modal-display-3 {
+  .modal-content {
+    justify-content: flex-start;
+  }
+  .modal-figure {
+    @include make-shape-square(9);
+    @include make-padding-grid((0.5));
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .modal-figure::before {
+    content: " ";
+    @include make-bg-pattern('primary');
+    @include make-shape-square(2.5);
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+  }
+  .modal-intro {
+    font-family: $font-family-secondary;
+    font-size: $h3-font-size;
+    text-transform: none;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .modal-title, .card-title {
+    font-family: $font-family-secondary;
+    font-size: $h3-font-size;
+    text-transform: none;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .modal-subtitle, .card-subtitle {
+    font-size: $h4-font-size;
+    text-transform: none;
+    margin-bottom: 2.5rem !important;
+  }
+  .modal-body, .card-body {
+    @include make-width-grid(7);
+    @include make-padding-grid((0, 0.5));
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    flex: 1 1 50%;
+    justify-content: center;
+    color: theme-color('light');
+    p {
+      margin-bottom: 0px;
+      width: 100%;
+    }
+  }
+  .nav-socials {
+    @include make-margin-grid((0.7, 0, 0, 0));
+    font-size: $navsocial-2-font-size;
+    a {
+      color: theme-color('light');
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.modal-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      .modal-subtitle {
+        color: theme-color($color)
+      }
+      .modal-figure::before {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+  /* MOBILE */
+  @include media-breakpoint-down(sm) {
+    .card-display-7 .card-body {
+      @include make-width-grid(14);
+
+      p:nth-child(2) {
+        width: 70vw;
+        text-align: center;
+        margin: 0 -8vw 2vh -8vw;
+      }
+    }
+  }
+}
+
+.modal-display-4 {
+  .modal-body {
+  background: none;
+  }
+   
+  @each $color, $value in $theme-colors {
+    &.modal-#{$color} {
+      .modal-content {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+
+  .modal-dialog {
+    @include make-width-grid(20);
+    @include make-padding-grid((0,0,0,0));
+  }
+
+  .modal-body {
+    @include make-padding-grid((1, 0, 1, 0));
+  }
+}
+
+.modal-mobile .close {
+  display: none;
+}
+
+.modal-display-5 {
+  .modal-body {
+  background: none;
+  }
+   
+  @each $color, $value in $theme-colors {
+    &.modal-#{$color} {
+      .modal-content {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+  h2 {
+    margin-bottom: 2rem;
+    em {
+      font-weight: 100;
+    }
+  }
+  .modal-form {
+    @include make-width-grid(12);
+  }
+  .custom-control {
+    display: block;
+  }
+  .modal-content {
+    display: flex;
+    flex-flow: column;
+  }
+  .modal-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: $white;
+  }
+
+  .modal-dialog {
+    @include make-width-grid(20);
+    @include make-padding-grid((0,0,0,0));
+
+    .btn {
+      padding: 2rem 0 0 0;
+    }
+    .form-submit-buttons {
+      display: none;
+    }
+    .btn-submit {
+      display: none;
+    }
+  }
+
+  .modal-body {
+    @include make-padding-grid((1, 0, 1, 0));
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    &.modal {
+      padding: 0;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: flex-end;
+      &.fade {
+        z-index: -1;
+      }
+      &.show {
+        z-index: 1100 !important;
+      }
+    }
+    .modal-dialog {
+      @include make-width-grid(24);  
+      .btn {
+        padding: 0.5rem;
+      }
+      .form-submit-buttons {
+        display: flex;
+        justify-content: center;
+        margin: 0.5rem 0 0 0;
+      }
+    }
+    .modal-content {
+      @include make-padding-grid((0,0,0,0));
+    }
+    .modal-form {
+      @include make-width-grid(24);
+    }
+    .modal-subtitle {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    .form-submit {
+      @include make-width-grid(1.4);
+      @include make-height-grid(1.4);     
+      font-size: 0.8rem; 
+    }
+    .form-newsletter input[type=email] {
+      border-color: rgba(255,255,255,0.2);
+      font-size: 2rem;
+      color: white;
+      font-family: Oswald, sans-serif;
+      font-weight: 100;
+      width: 80%;
+    }
+    
+    .form-group-row-2, .form-group-row {
+      justify-content: center;
+    }
+    .form-group-row-2 {
+      margin-top: 0;
+    }
+    .form-group label {
+      font-size: 1rem;
+    }
+  }
+}
+
+.modal-mobile .close {
+  display: none;
+}
+
+@include media-breakpoint-down(sm) {    
+  .form-filter.modal-mobile, .nav-menu.modal-mobile {
+    @include clear-width();
+    display: none;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    margin: 0px;
+    color: theme-color('light');
+    z-index: 1050;      
+    .btn {
+      width: 100%;
+      @include make-grid-sized-gutter('margin-top', 1);
+    }
+    .btn-submit {
+      @include make-grid-sized-gutter('margin-top', 3);
+    }
+    .modal-inner {
+      flex-direction: column;
+      background-color: theme-color('dark');          
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .modal-title {
+      font-size: $mobile-h3-font-size;
+      font-weight: 100;
+      color: theme-color('light');
+      
+    }
+    .modal-header {
+      @include make-padding-grid((1, 2, 1, 2));
+      margin: 0;
+      text-transform: uppercase;
+      background-color: $gray-800;
+    }
+    .modal-body {
+      @include make-padding-grid((3, 2, 2, 2));
+    }
+    .close {
+      @include make-grid-sized-gutter('margin-top', -0.5);
+    }
+    .open & {
+      display: block;
+      .close {
+        display: block;
+      }
+      .modal-inner {
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+    }
+    .nav-link {
+      opacity: 0.5;
+      color: theme-color('light');
+      &.active, &:hover {
+        opacity: 1;
+        color: theme-color('light');
+      }
+      &.active::before, &:hover::before {
+        background-color: theme-color('light');
+      }
+    }
+  }
+}
+
+/* Modal with training view block exposed filters */
+.modal-display-6 {
+  .modal-dialog {
+    margin-top: 5vh;
+    height: 140%;
+  }
+  .modal-content {
+    height: 28rem;
+  }
+}
+.modal.modal-display-6.modal-switcher .modal-dialog .modal-body {
+  @include make-padding-grid((1,0, 2, 1));
+  height: 100%;
+}
+
+.modal-display-7 {
+  .modal-body {
+  background: none;
+  }
+   
+  @each $color, $value in $theme-colors {
+    &.modal-#{$color} {
+      .modal-content {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+  h2 {
+    margin-bottom: 2rem;
+    em {
+      font-weight: 100;
+    }
+  }
+  .modal-form {
+    @include make-width-grid(12);
+  }
+  .custom-control {
+    display: block;
+  }
+  .modal-content {
+    display: flex;
+    flex-flow: column;
+  }
+  .modal-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: $white;
+  }
+
+  .modal-dialog {
+    @include make-width-grid(20);
+    @include make-padding-grid((0,0,0,0));
+
+    .btn {
+      padding: 2rem 0 0 0;
+    }
+  }
+
+  .modal-body {
+    @include make-padding-grid((1, 0, 1, 0));
+  }
+  .form-info {
+    @include make-margin-grid((1, 0));
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    &.modal {
+      padding: 0;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: flex-end;
+      &.fade {
+        z-index: -1;
+      }
+      &.show {
+        z-index: 1050 !important;
+      }
+    }
+    .modal-dialog {
+      @include make-width-grid(24);  
+      .btn {
+        padding: 0.5rem;
+      }
+      .form-submit-buttons {
+        display: flex;
+        justify-content: center;
+        margin: 0.5rem 0 0 0;
+      }
+    }
+    .modal-content {
+      @include make-padding-grid((0,0,0,0));
+    }
+    .modal-form {
+      @include make-width-grid(20);
+    }
+    .modal-subtitle {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    
+    .form-group-row-2, .form-group-row {
+      justify-content: center;
+    }
+    .form-group-row-2 {
+      margin-top: 0;
+    }
+    .form-group label {
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Responsive Visitor's menu (your search) */
+@include media-breakpoint-down(sm) {
+  #block-visitorprofilesfloatingblock {
+    position: absolute;
+    top: 1px;
+    width: 100vw;
+    height: 100vh;
+  }
+}

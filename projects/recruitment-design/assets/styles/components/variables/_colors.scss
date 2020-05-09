@@ -1,0 +1,73 @@
+//
+// Color system
+//
+$white:  #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #cccccc;
+$gray-500: #adb0af;
+$gray-600: #868e96 !default;
+$gray-700: #666666;
+$gray-800: #474747;
+$gray-900: #151515;
+$black:  #000 !default;
+
+$blue:    #1b5e75;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default;
+$orange:  #cfa00e;
+$yellow:  #d7ac12;
+$green:   #28a745 !default;
+$teal:    #28677d;
+$cyan:    #17a2b8 !default;
+
+$charismatic: #fef900;
+$performer: #d2a200;
+$collaborative: #105d77;
+$manager: #a9cee1;
+
+$theme-colors: (
+  "primary": $orange,
+  "secondary": $blue,
+  "success": $green,
+  "info": $cyan,
+  "warning": $yellow,
+  "danger": $red,
+  "light": $white,
+  "gray": $gray-500,
+  "gray-dark": $gray-800,
+  "dark": $gray-900,
+  "charismatic": $charismatic,
+  "performer": $performer,
+  "collaborative": $collaborative,
+  "manager": $manager
+);
+
+$reverse-theme-colors-keys: (
+  "primary": "secondary",
+  "secondary": "primary",
+  "light": "dark",
+  "dark": "light",
+
+  "success": "danger",
+  "danger": "success",
+  "info": "warning",
+  "warning": "info",
+  "gray": "light",
+  "gray-dark": "light",
+  "charismatic": "dark",
+  "performer": "light",
+  "collaborative": "light",
+  "manager": "light"
+);
+
+$bg-pattern-images: (
+  primary: url(../assets/images/curry.jpg),
+  secondary: url(../assets/images/bleu-canard.jpg),
+  dark: url(../assets/images/noir.jpg)
+);
+
+$form-control-border: $gray-700;

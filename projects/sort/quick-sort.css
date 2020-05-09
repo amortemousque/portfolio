@@ -1,0 +1,15 @@
+.quick-sort {
+    display: grid;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 900px;
+    list-style: none;
+
+    grid-template-columns: repeat(24, 1fr);
+    grid-gap: 0.5rem;
+}
+
+.column {
+    width: 100%;
+    background: linear-gradient(#569ec4, #0280c2, #014d75);
+}

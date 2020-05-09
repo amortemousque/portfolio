@@ -1,0 +1,94 @@
+/** CARD WITH QUOTES **/
+.card-quote {
+  @include make-bg-cover();
+  .blockquote {
+    @include make-padding-grid((1, 1, 0, 1));
+    margin: 0 auto;
+    text-align: center;
+    .quote::before,
+    .quote::after,
+    .blockquote-footer {
+      color: theme-color('primary');
+    }
+    .blockquote-footer::before {
+      background-color: theme-color('primary');
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .blockquote {
+      @include make-padding-grid((6, 1, 4, 1));
+    }
+  }
+}
+
+/** CARD QUOTES SPLIT **/
+.card-quote.card-quote-display-2 {
+  @include make-row();
+  flex-wrap: nowrap;
+  position: relative;
+  .card-figure {
+    @include make-shape-square(7.5);
+  }
+  .card-overlay {
+    @include make-shape-square(7.5);
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(#000000, 0.7);
+    opacity: 0;
+    transition: opacity 0.5s;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .btn {
+    @include btn-outline('light');
+    flex: 0;
+  }
+  .blockquote {
+    @include make-padding-grid((0.6, 0.5, 0, 0.5));
+    text-align: left;
+    color: theme-color('light');
+    .quote::before,
+    .quote::after {
+      color: theme-color('light');
+    }
+    &.blockquote-display-2 .quote {
+      font-size: $blockquote-2smaller-font-size;
+    }
+  }
+  .card-body {
+    @include make-shape-square(7);
+    @include make-padding-grid(0);
+    @include make-margin-grid((2, 0, 0, -0.5));
+    @include make-bg-pattern('primary');
+    position: relative;
+    color: theme-color('light');
+  }
+  &.card-reverse {
+    .card-body {
+      @include make-margin-grid((0, 0, 0, 0));
+    }
+    .card-figure {
+      @include make-margin-grid((1.5, 0, 0, -0.5));
+    }
+    .card-overlay {
+      left: auto;
+      top: auto;
+      bottom: 0;
+      right: 0;
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      .card-body {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+}
+

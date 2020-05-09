@@ -1,0 +1,348 @@
+.form-steps {
+  @include make-bg-pattern-middle-2();
+  .article-aside {
+    margin-left: 0 !important;
+  }
+  .steps-target {
+    /*position: fixed;*/
+    position: absolute;
+    position: sticky;
+    top: 7rem;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-left: 1px solid rgba(255,255,255,0.3);
+
+    @include make-shape(2, 22);
+    @include make-margin-grid((0.5, 0, 0, 2));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+    .step-target {
+      display: flex;
+      align-items: center;            justify-content: center;
+      background-color: theme-color('dark');
+      font-size: 70%;
+
+      @include make-shape-square(1);
+      @include make-margin-grid((0.8, 0, 0, -0.5));
+      span {
+        color: #555;
+        font-weight: 600;  transition: color 1s;
+        }
+    }
+  }
+}
+.form-step {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 780px;
+  .form-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-size: cover;
+    text-align: center;
+
+    @include make-margin-grid((0, 0, 0.5, 0));
+    //DESKTOP
+    @include media-breakpoint-up(sm) {
+      background-image: none !important;
+      .form-header-bg {
+        display: none;
+      }
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      position: relative;
+      padding: 2rem 0;
+      background-color: $black;
+
+      .form-header-bg {
+        position: absolute;
+        top: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100%;
+        background-size: cover;
+        opacity: 0.5;
+      }
+    }
+
+    .form-number-title {
+      color: $gray-700;
+      text-transform: uppercase;
+      font-weight: 400;
+
+      @include media-breakpoint-down(sm) {
+        z-index: 1;
+        color: $white;
+        font-weight: 300;
+        font-size: 0.7rem;
+      }
+    }      
+    .form-number {
+      min-height: 2rem;
+
+      @extend .number-2;
+      // @extend .number-2, .number-2.number-cut;
+      @include media-breakpoint-down(sm) {
+        z-index: 1;
+      }
+    }
+    .form-title {
+      margin-bottom: 0.5rem;
+      padding: 0;
+      font-weight: 100;
+      font-size: $h2-font-size;
+      font-family: $font-family-secondary;
+      line-height: $h2-font-size + 0.5;
+
+      @include media-breakpoint-down(sm) {
+        z-index: 1;
+        font-size: $mobile-h2-font-size;
+        line-height: $mobile-h2-font-size + 0.5;
+      }
+    }
+    .form-subtitle {
+      margin-bottom: 0.5rem;
+      padding: 0;
+      font-weight: 400;
+      font-size: $font-size-base-upper;
+      //MOBILE
+
+      @include media-breakpoint-down(sm) {
+        z-index: 1;
+        font-size: $mobile-font-size-base-upper;
+
+        @include make-margin-grid((0, 0, 0.5, 0));
+      }
+    }
+  }
+  .form-figure {
+    background-color: black;
+    opacity: .6;
+
+    @include make-height-grid(6);
+    @include make-width-grid(22);
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .form-body {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include make-height-grid(6);
+    @include make-width-grid(24);
+    @include make-margin-grid((-6, 0, 0, 0));
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include clear-shape();
+      @include make-margin-grid((2, 0));
+    }    
+    .form-checkboxes, .form-radios {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 2rem;
+
+      @include make-width-grid(10);
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        justify-content: space-around;
+        margin-top: 0;
+
+        @include make-width-grid(18);
+      }  
+      .custom-control-indicator {
+        position: relative;
+        top: 0;
+        width: 6.25rem;
+        height: 6.25rem;
+        background-color: none;
+        opacity: 0.4;
+      }
+      .form-item {
+        display: flex;
+        align-items: center;
+        flex-basis: 25%;
+        flex-direction: column;
+        height: 8rem;
+      }
+      .checkbox-label {
+        position: relative;
+        margin-top: -6.25rem;
+        label.option {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin-bottom: 0;
+          width: 6.25rem;
+          height: 6.25rem;
+          border: 1px solid white;
+          text-align: center;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .form-checkboxes-large, .form-radios-large {
+      @include make-width-grid(13);
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        justify-content: space-around;
+        margin-top: 0;
+        min-width: unset;
+        max-width: unset;
+        width: 100vw;
+
+        @include make-width-grid(18);
+      }  
+      .form-item {
+        flex-basis: 20%;
+        font-size: 0.9rem;
+        //MOBILE
+
+        @include media-breakpoint-down(sm) {
+          height: 7.5rem;
+        }
+      }
+    }
+
+    .slider {
+      width: 60%;
+      .selection {
+        display: none;
+      }
+      .ui-widget-header {
+        background: theme-color('secondary') none;
+      }
+      .ui-widget-content {
+        background: rgba(0, 0, 0, 0.3);
+        background-image: none;
+        .ui-slider-handle.ui-corner-all.ui-state-default {
+          margin-left: -1rem;
+          width: 2.2rem;
+          border-radius: 70px;
+          background: white none;
+        }
+        .ui-slider-handle.ui-corner-all.ui-state-default:after {
+          display: block;
+          margin-top: -0.3rem;
+          height: 1.1rem;
+          content: ">";
+          text-align: center;
+          font-weight: bold;
+          font-family: monospace;
+        }
+      }
+      .ui-slider-handle {
+        z-index:100;
+        height: 1.1em !important;
+        cursor: pointer;
+      }
+      .ui-slider-horizontal {
+        height: 0.6em !important;
+      }
+      .ui-widget.ui-widget-content {
+        border: 1px solid white;
+        border-radius: 10px;
+      }
+      .form-group {
+        margin-bottom: 0;
+      }
+    }
+    .labels-slider {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 1.1rem;
+      height: 2rem;
+      text-align: center;
+      .label-slider {        
+        text-align: center;
+      }
+      .label-slider-basis-3 { flex-basis: 33%; }
+      .label-slider-basis-4 { flex-basis: 25%; }
+      .label-slider-basis-5 { flex-basis: 20%; }
+      .label-slider-basis-6 { flex-basis: 16%; }
+      .label-slider-basis-7 { flex-basis: 14%; }
+      .slider-limit-indicator {
+        z-index:90;
+        margin-top:-1.7rem;
+        width:1px;
+        height:1.2rem;
+        background-color:white;
+      }
+      .slider-limit-indicator:first-child {
+        display: none;
+      }
+    }
+
+    .col {
+      display: flex;
+      justify-content: center;
+    }
+    
+  }
+  .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include make-height-grid(2);
+    .btn {
+      @include btn-outline('primary');        
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.form-step-#{$color} {
+      .form-number {
+        color: theme-color($color);
+      }
+    }
+  }
+}
+.form-included-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+
+  @include make-width-grid(12);
+  @include make-margin-grid((0, 6));
+}
+
+.form-steps {
+  .form-figure, .form-header-bg {
+    background-position: center center;
+    background-size: cover;
+  }
+  #edit-group1 .form-figure, #edit-group1 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/01.jpg); }
+  #edit-group2 .form-figure, #edit-group2 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/02.jpg); }
+  #edit-group3 .form-figure, #edit-group3 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/03.jpg); }
+  #edit-group4 .form-figure, #edit-group4 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/04.jpg); }
+  #edit-group5 .form-figure, #edit-group5 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/06.jpg); }
+  #edit-group6 .form-figure, #edit-group6 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/07.jpg); }
+}
+.employer-quiz .form-steps {
+  #edit-group1 .form-figure, #edit-group1 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/07.jpg); }
+  #edit-group2 .form-figure, #edit-group2 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/01.jpg); }
+  #edit-group3 .form-figure, #edit-group3 .form-header-bg { background-image: url(/sites/lnh/files/inline-images/06.jpg); }
+}

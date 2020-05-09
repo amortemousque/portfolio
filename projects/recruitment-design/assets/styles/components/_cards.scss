@@ -1,0 +1,791 @@
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  .card {
+    width: 100%;
+  }
+}
+
+.card {
+  @include make-row();
+  flex-direction: row;
+  border: none;
+  &.card-reverse {
+    flex-direction: row-reverse;
+  }
+  &.collapse {
+    display: none;
+    &.show {
+      display: flex;
+    }
+  }
+  .card-subtitle {
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: $font-size-base-upper;
+    margin: 0;
+    padding: 0;
+    @include media-breakpoint-down(sm) {
+      @include make-grid-sized-gutter('margin-bottom', 0.5);
+      font-size: $mobile-font-size-base-upper;
+    }
+  }
+  .card-title {
+    font-size: $h2-font-size;
+    line-height: 1.1;
+    font-weight: 100;
+    margin: 0;
+    padding: 0;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-h2-font-size;
+    }
+  }
+  .card-title-important {
+    color: $gray-900;
+    border-bottom: 2px solid $gray-900;
+  }
+  ul .key-figure:nth-child(even) .key-figure-title {
+    color: theme-color('secondary') !important;
+  }
+  .card-body {
+    @include make-padding-grid(($card-padding));
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    //MOBILE FOR CARD-DISPLAY-6 INTO CARD (training search form)
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid(($mobile-card-padding));
+      .card-display-6 {
+        margin: -3.6rem 3.7rem -1rem -3.6rem;
+        @include make-padding-grid((1, 0, 0.5, 0));
+
+        .card-body {
+          @include make-width-grid(24);
+          @include make-padding-grid((0, 0, 2, 0));
+
+          form {
+            align-items: center;
+          }
+          .col {
+            flex-basis: unset;
+          }
+          .form-actions {
+            margin-top: 2.5rem;
+          }
+        } 
+      }
+    }
+    .card-subtitle,
+    .card-title {
+      @include make-margin-grid((0, 0, 0.2, 0));
+    }
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      .card-subtitle,
+      .card-title {
+        @include make-margin-grid((0, 0, 0.8, 0));
+      }
+    }
+  }
+  .card-figure {
+    width: 100%;
+    flex: 1 1 auto;
+    overflow: hidden;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      .card-body {
+        @include make-bg-pattern($color);
+        color: get-color-yiq($value);
+      }
+      .card-subtitle.subtitle-variant {
+        color: theme-color($reverse-color);
+      }
+    }
+  }
+
+  .card-link {
+    text-align: center;
+    justify-content: center;
+    a + a {
+      margin-left: 1rem;
+    }
+  }
+}
+
+// Card center helpers
+//
+.card-center {
+  align-items: center;
+  justify-content: center;
+  .card-subtitle {
+    display:block;
+    font-size: $font-size-base-upper;
+  }
+  .card-title, .card-content, .card-subtitle {
+    text-align: center;
+  }
+  .card-nav {
+    justify-content: space-evenly;
+  }
+}
+
+// Card display 1 (image left and text right)
+//
+.card.card-display-1 {
+  @include make-row();
+  justify-content: space-between;
+  .card-figure {
+    background-color: transparent;
+  }
+  /*&.card-display-teaser {
+    .card-body {
+      color: #FFF !important;
+    }
+  }*/
+
+  @each $color, $value in $theme-colors {    
+    &.card-display-teaser .card-body .text-#{$color} {
+      color: $white !important;
+    }
+  }
+
+  //LAPTOP
+  @include media-breakpoint-up(sm) {
+    .card-figure {
+      @include make-shape(13, 11);
+      @include make-clip-left();
+      @include make-margin-grid((2, 0, 0, 0));
+      position: relative;
+      z-index: layer-middle();
+    }
+    &.card-with-footer .card-figure {
+      @include make-grid-sized-gutter('margin-top', 5);
+    }
+    .card-body {
+      @include make-shape-square(11);
+      @include make-margin-grid((0, 1, 0, -3));
+      @include make-padding-grid((0, 2, 0, 2));
+      z-index: layer-bottom();
+      justify-content: center;
+    }
+    .card-footer {
+      @include make-width-grid(12);
+      @include make-margin-grid((3, 6, 0, 6));
+      @include make-padding-grid((0, 2));
+    }
+    .card-line {
+      @include make-height-grid(4);
+      @include make-margin-grid((-4.5, 0, 0, 3));
+      position: absolute;
+      width: 2px;
+      background-color: theme-color('dark');
+      z-index: layer-top();
+    }
+    &.card-reverse {
+      .card-figure {
+        @include make-clip-right();
+        z-index: layer-middle();
+      }
+      .card-body {
+        @include make-margin-grid((0, -3, 0, 1));
+        @include make-padding-grid((0, 2, 0, 2));
+        z-index: layer-bottom();
+      }
+      .card-line {
+        @include make-grid-sized-prop('margin-left', 6);
+      }
+    }
+    .bg-dark & {
+      .card-line {
+        background-color: theme-color('light');
+      }
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      .card-link .btn {
+       @include btn-outline($reverse-color);
+      }
+    }
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    .card-body {
+      @include clear-shape();
+      @include make-width-grid(24);
+      @include make-padding-grid(($mobile-card-padding));
+      justify-content: center;
+      margin: 0;
+    }
+    .card-figure {
+      display: none;
+    }
+    .card-link {
+      margin-top: 3rem;
+      display: flex;
+    }
+    .card-footer {
+      @include make-padding-grid(($mobile-card-padding));
+    }
+  }
+}
+
+// Card display 2 : Cooptation
+//
+.card-display-2 {
+  @include make-padding-grid((1, 0));
+  flex-direction: row;
+  z-index: 1;
+  /* Needed for animation */
+  /*.card-figure { background-color: $white; }*/
+  //LAPTOP
+  @include media-breakpoint-up(sm) {
+    .card-header {
+      @include make-row();
+      @include make-shape-square(5);
+      @include make-margin-grid((0, 0, 0, 3));
+      @include make-padding-grid((0));
+      z-index: 1;
+      justify-content: center;
+      align-items: center;
+      &.font-secondary > * {
+        font-size: $number-1-font-size;
+        line-height: $number-1-font-size;
+        font-weight: 200;
+      }
+    }
+    .card-figure {
+      @include make-shape-square(8);
+      @include make-margin-grid((1, 0, 0, -1));
+      margin-top: 4vw;
+      position: relative;
+    }
+    .card-content {
+      @include make-width-grid(7);
+      @include make-padding-grid((2, 1.5, 1.5, 1.5));
+      .card-subtitle {
+        @include make-margin-grid((0, 0, 0.3, 0));
+        color: theme-color('primary');
+      }
+      .card-text {
+        font-size: $font-size-sm;
+        font-weight: lighter;
+      }
+    }
+    &.card-reverse {
+      flex-direction: row-reverse;
+      .card-header {
+        @include make-margin-grid((0, 3, 0, 0));
+      }
+      .card-figure {
+        @include make-margin-grid((1, -1, 0, 0));
+      }
+    }
+
+    @each $color, $value in $theme-colors {
+      &.card-#{$color} {
+        .card-header  {
+          color: get-color-yiq($value);
+          @include make-bg-pattern($color);
+        }
+      }
+    }
+  }
+
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    .card-header {
+      @include clear-shape();
+      @include clear-width();
+      @include make-padding-grid((3, 3, 1, 3));
+      width: 100%;
+      z-index: 1;
+      text-align: center;
+      &.font-secondary > * {
+        font-size: $number-1-font-size;
+        line-height: $number-1-font-size;
+        font-weight: 200;
+      }
+    }
+    .card-figure {
+      @include clear-shape();
+      position: absolute;
+      top: 0;
+      left:0;
+      z-index: 0;
+      &::before {
+        content: " ";
+        background-color: rgba($gray-800, 0.7);
+        position: absolute;
+        top: 0;
+        left:0;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .card-content {
+      @include make-padding-grid((0, 3, 3, 3));
+      z-index: 1;
+      text-align: center;
+    }
+    .card-link {
+      margin-top: 3rem;
+    }
+    .card-subtitle {
+      @include make-margin-grid((0, 0, 0.3, 0));
+      color: theme-color('primary');
+    }
+  }
+}
+
+.card-display-3 {
+  //MOBILE
+  @include media-breakpoint-down(sm) {
+    flex-direction: column !important;
+  }
+  .card-header {
+    @include make-row();
+    @include make-shape-square(7);
+    @include make-margin-grid((0,0,0,2));
+    @include make-padding-grid((0,1));
+    @include make-layer-top();
+    flex-direction: column;
+    justify-content: center;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-shape-square(15);
+      @include make-margin-grid((0,auto,0,auto));
+      @include make-padding-grid((0,2));
+    }
+  }
+  .card-figure {
+    @include make-shape(21, 10);
+    @include make-margin-grid((-3,0,0,3));
+    @include make-layer-middle();
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include clear-width();
+      @include clear-shape();
+      @include make-grid-sized-prop('height', 20);
+      @include make-margin-grid((-8 ,0 ,0 ,0));
+    }
+  }
+  .card-body {
+    @include make-width-grid(24);
+    @include make-padding-grid(2);
+    text-align: center;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid((2, $mobile-card-padding, $mobile-card-padding, $mobile-card-padding));
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      .card-header  {
+        color: get-color-yiq($value);
+        @include make-bg-pattern($color);
+      }
+      .card-link .btn {
+        @include btn-outline($color);
+      }
+      .card-body {
+        background: none;
+        color: initial;
+      }
+    }
+  }
+  .bg-dark & {
+    .card-body {
+      color: theme-color('light');
+    }
+  }
+  @include media-breakpoint-up(sm) {
+    &.card-reverse {
+      .card-header {
+        @include make-margin-grid((0,2,0,0));
+      }
+      .card-figure {
+        @include make-margin-grid((-3,3,0,0));
+      }
+    }
+  }
+}
+
+.card-display-5 {
+  @extend .card-center;
+  justify-content: flex-start;
+  .card-body {
+    @include make-padding-grid((1.5, 2, 0, 2));
+    z-index: 1;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid(($mobile-card-padding, $mobile-card-padding, 2, $mobile-card-padding));
+    }
+    .card-title {
+      margin-bottom: 0;
+      font-size: $h3-font-size;
+      line-height: 1.1;
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        font-size: $mobile-h3-font-size;
+      }
+    }
+    .card-subtitle {
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        font-size: $mobile-font-size-base-upper;
+      }
+    }
+    .card-link {
+      @include make-padding-grid((1.25));
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      color: theme-color('light');
+      //LAPTOP
+      @include media-breakpoint-up(sm) {
+        @include  make-bg-pattern-middle($color);
+      }
+
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        @include  make-bg-pattern($color);
+      }
+      .card-body {
+        background: none;
+      }
+      .card-subtitle  {
+        color: theme-color($reverse-color);
+      }
+      .card-link .btn {
+        @include btn-outline($reverse-color);
+      }
+    }
+  }
+}
+
+/* Exposed form card */
+.card-display-6 {
+  @extend .card-center;
+  justify-content: flex-start;
+  flex-direction: column;
+  .card-header {
+    @include make-padding-grid((0.5, 0, 0, 0));
+    font-size: $font-size-base;
+  }
+  .card-title {
+    margin-bottom: 0;
+    font-size: $h3-font-size;
+    line-height: 1.1;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-h3-font-size;
+    }
+  }
+  .card-subtitle {
+    font-size: $font-size-base;
+    text-transform: none;
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      font-size: $mobile-font-size-base;
+      font-weight: 100;
+      margin-top: 1rem;
+    }
+  }
+  
+  .card-body {
+    @include make-padding-grid((0.5, 2));
+    @include make-width-grid(18);
+    //MOBILE
+    @include media-breakpoint-down(sm) {
+      @include make-padding-grid(($mobile-card-padding, $mobile-card-padding, 2, $mobile-card-padding));
+    }
+    .card-link {
+      @include make-padding-grid((1.25));
+    }
+    .btn-submit {
+      @include btn-outline('primary');
+      margin: 1rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .form-checkboxes label,
+      .form-radios label {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: $gray-500;
+
+        @include media-breakpoint-down(sm) {
+          font-size: 0.9rem;
+          font-weight: 350;
+          padding: 0;
+        }
+      }
+      .form-type-checkbox, .form-type-radio {
+        padding: 0 0 0 0.3rem;
+        height: 1.7rem;
+        cursor: pointer;
+        text-align: left;
+        @include media-breakpoint-down(sm) {
+          padding: 0;
+          height: 1.9rem;
+        }
+      }
+      .col:first-child {
+        width: 80%;
+      }
+      .form-text {
+        width: 100%;
+      }
+      .area-togglable-content {
+        display: flex;
+        margin-top: 4rem;
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+        }
+      }
+      .area-togglable-content fieldset {
+        flex-basis: 33%;
+        legend {
+          text-align: left;
+        }
+        @include media-breakpoint-down(sm) {
+          width: 75vw;
+          padding-bottom: 1rem;
+          margin-top: 1rem;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          &:last-child {
+            padding-bottom: 1rem;
+            border: 0;
+          }
+          &:first-child {
+            margin-top: 0;
+          }
+          .custom-control-indicator {
+            left: 70vw;
+          }
+        }
+
+        .fieldset-legend {
+          font-size: 75%;
+          @include media-breakpoint-down(sm) {
+            color: $white;
+            font-size: 80%;
+          }
+        }
+      }      
+      .form-actions {
+        width: 100%;
+        text-align: center;
+        margin-top: 2rem;
+      }
+    }
+  }
+  .btn-more-options {
+    margin-top: 0.9rem;
+    cursor: pointer;
+    right: 7rem;
+    @include media-breakpoint-up(sm) {
+      position: absolute;
+    }
+    @include media-breakpoint-down(sm) {
+      font-size: 0.8rem;
+      text-decoration: underline;
+    }
+  }
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      color: theme-color('light');
+      //LAPTOP
+      @include media-breakpoint-up(sm) {
+        @include  make-bg-pattern-middle($color);
+      }
+
+      //MOBILE
+      @include media-breakpoint-down(sm) {
+        @include  make-bg-pattern($color);
+      }
+      .card-body {
+        background: none;
+      }
+      .card-subtitle  {
+        color: theme-color($reverse-color);
+      }
+      .card-link .btn {
+        @include btn-outline($reverse-color);
+      }
+    }
+  }
+}
+
+//MOBILE
+@include media-breakpoint-down(sm) {
+  .card .card-body.card-body-exposed-form {
+    padding: 0;
+    .card-display-6 {
+      margin: 0;
+    }
+  }
+}
+
+/** Personae card (popin style) **/
+.card-display-7 {
+  .card-content {
+    justify-content: flex-start;
+  }
+  .card-figure {
+    @include make-shape-square(9);
+    @include make-padding-grid((0.5));
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    /* MOBILE */
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+  .card-figure::before {
+    content: " ";
+    @include make-bg-pattern('primary');
+    @include make-shape-square(2.5);
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+  }
+  .card-intro {
+    font-family: $font-family-secondary;
+    font-size: $h3-font-size;
+    text-transform: none;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .card-title {
+    font-family: $font-family-secondary;
+    font-size: $h3-font-size;
+    text-transform: none;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .card-subtitle {
+    font-size: $h4-font-size;
+    text-transform: none;
+    margin-bottom: 2.5rem;
+  }
+  .card-body {
+    @include make-width-grid(7);
+    @include make-padding-grid((0, 0.5));
+    @include make-bg-pattern('dark');
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    flex: 1 1 50%;
+    justify-content: center;
+    color: theme-color('light');
+    p {
+      margin-bottom: 0px;
+      width: 100%;
+    }    
+  }
+  .nav-socials {
+    @include make-margin-grid((0.7, 0, 0, 0));
+    font-size: $navsocial-2-font-size;
+    a {
+      color: theme-color('light');
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.card-#{$color} {
+      $reverse-color: get-reverse-color($color);
+      .card-subtitle {
+        color: theme-color($color)
+      }
+      .card-figure::before {
+        @include make-bg-pattern($color);
+      }
+    }
+  }
+}
+
+/* Properties image depth + block small */
+.card {
+  &.card-front .card-body {
+    z-index: layer-top() !important;
+  }
+  /* Desktop only */
+  @include media-breakpoint-up(sm) {
+    &.card-small {
+      align-items: center;
+      .card-body {
+        @include make-shape-square(10);
+        @include make-margin-grid((-1, auto, 0, -1));
+        @include make-padding-grid((1));
+      }
+      &.card-reverse .card-body {
+        @include make-margin-grid((-1, -1, 0, auto));
+        @include make-padding-grid((1));
+      }
+    }
+  }
+}
+
+.card-display-8 {
+  /* MOBILE */
+  @include media-breakpoint-down(sm) {
+    .card-body {
+      padding: 0;
+    }
+    .form-footer label {
+      padding-left: 1.7rem;
+      font-size: 0.8rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin: 0 0 2rem 0;
+      width: 80%;
+      color: $gray-600;
+      text-align: left;
+    }
+  }
+}
+
+/* See also trainings */
+.card-display-9 {
+  /* MOBILE */
+  @include media-breakpoint-down(sm) {
+    .card-body {
+      padding: 2rem 0;
+    }
+    h3 {
+      @include make-margin-grid((1, 0, 2, 0));
+      font-size: $h3-font-size;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+
+@each $size, $width in $shapers {
+
+  .shape-rectangle-#{$size} {
+    display: block !important;
+    position: relative;
+    padding: 0px !important;
+    justify-content: space-between;
+    .figure-image img {
+      position: absolute;
+    }
+  }
+
+  .shape-rectangle-#{$size}:before {
+    content: '';
+    float: left;
+    padding-top: $width;
+  }
+}
+
+
+
+.shape-square {
+  display: block !important;
+  position: relative;
+  padding: 0px !important;
+  justify-content: space-between;
+  .figure-image img {
+    position: absolute;
+  }
+  .card-content {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.shape-square:before {
+  content:'';
+  float:left;
+  padding-top:100%;
+}
+
+.square-content {
+  display: flex;
+  flex-direction: column;
+}
+
+
+

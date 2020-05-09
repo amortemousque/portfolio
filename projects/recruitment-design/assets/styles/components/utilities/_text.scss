@@ -1,0 +1,34 @@
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-uppercase  {
+  font-size: 80%; //when text is uppercase it looks bigger so i reduce it by default
+}
+
+.text-uppercase-max  {
+  font-size: 100%; //when text is uppercase it looks bigger so i reduce it by default
+}
+
+.small.text-uppercase, small.text-uppercase {
+  font-size: $small-font-size - 5;
+  font-weight: $font-weight-normal;
+}
+
+.line-squized {
+  line-height: 90%;
+}
+
+.font-primary {
+  font-family: $font-family-primary !important;
+}
+
+.font-secondary {
+  font-family: $font-family-secondary !important;
+}
+
+@each $color, $value in $theme-colors {
+  .text-#{$color} {
+    color: theme-color($color);
+  }
+}

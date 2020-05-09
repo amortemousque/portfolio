@@ -1,0 +1,28 @@
+
+// z-index layers
+//
+$layers: (
+    'background': 0,
+    'bottom': 10,
+    'middle': 100,
+    'top': 200,
+    'controls': 1000,
+    'foreground': 10000,
+  );
+
+
+$zindex-dropdown:           1000 !default;
+$zindex-sticky:             1020 !default;
+$zindex-fixed:              1030 !default;
+$zindex-modal-backdrop:     1040 !default;
+$zindex-modal:              1050 !default;
+$zindex-popover:            1060 !default;
+$zindex-tooltip:            1070 !default;
+
+$zindex-megamenu: 1030;
+$zindex-header: 1035;
+$zindex-switcher-close: 400;
+$zindex-switcher-open: 1045;
+
+$mobile-zindex-switcher-close: 1040;
+//$mobile-zindex-switcher-open: 1045;

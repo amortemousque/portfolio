@@ -1,8 +1,0 @@
-@each $size in map-keys($font-size-range) {
-  .font-size-#{$size} {
-    @include font-size($size);
-  }
-}
-
-.big { font-size: $font-size-big; }
-.bigger { font-size: $font-size-bigger; }

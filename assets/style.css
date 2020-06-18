@@ -188,9 +188,12 @@ a:hover {
     display: block;
     height: auto;
   }
-  .article-body {
+  .article-body,
+  .article-layout-2 .article-body,
+  .article-layout-3 .article-body {
     margin: 0 0 3rem 0;
   }
+  
   .article-images {
     display: block;
   }

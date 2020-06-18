@@ -10,14 +10,10 @@ body {
   margin: 0;
 }
 
-.container {
+main {
+  padding: 3rem;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.container main {
-  grid-area: main;
-  padding: 3rem;
 }
 
 /* Headline */
@@ -155,12 +151,17 @@ body {
 
 /* Links  */
 
+.article-links {
+  margin-left: -1rem;
+}
+
 a {
   border-bottom: 2px solid #272727;
   background: none;
   color: rgb(0, 0, 0);
   text-decoration: none;
   display: inline-block;
+  margin-left: 1rem;
 }
 
 a:hover {
@@ -174,23 +175,23 @@ a:hover {
   body {
     font-size: 16px !important;
   }
-  .container .headline {
+  .headline {
     font-size: 1.5rem;
   }
-  .container .first-letter {
+  .first-letter {
     font-size: 4.3rem;
     line-height: 4.3rem;
   }
-  .container .article,
-  .container .article-layout-2,
-  .container .article-layout-3 {
+  .article,
+  .article-layout-2,
+  .article-layout-3 {
     display: block;
     height: auto;
   }
-  .container .article-body {
+  .article-body {
     margin: 0 0 3rem 0;
   }
-  .container .article-images {
+  .article-images {
     display: block;
   }
 }

@@ -1,2 +1,6 @@
 SetEnv PHP_VER 5_TEST
 SetEnv REGISTER_GLOBALS 0
+
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.yourdomain.com/$1 [R,L]

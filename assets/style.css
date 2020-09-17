@@ -87,8 +87,8 @@ main {
 }
 
 .article-image-preview {
-    object-fit: cover;
-    inline-size: 100%;
+  object-fit: cover;
+  inline-size: 100%;
 }
 
 .article-2x-images {
@@ -153,7 +153,20 @@ main {
 /* Links  */
 
 .article-links {
-  margin-left: -1rem;
+  margin-inline-start: -1rem;
+}
+
+.article-link-section {
+  margin-inline-start: 1rem;
+  display: flex;
+}
+
+.article-link-section dt {
+  width: 80px;
+}
+
+.article-link-section dd {
+  margin-inline-start: 0;
 }
 
 a {
@@ -194,7 +207,7 @@ a:hover {
   .article-layout-3 .article-body {
     margin: 0 0 3rem 0;
   }
-  
+
   .article-images {
     display: block;
   }

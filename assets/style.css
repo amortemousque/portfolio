@@ -86,6 +86,10 @@ main {
   align-items: stretch;
 }
 
+picture {
+  display: flex;
+}
+
 .article-image-preview {
   object-fit: cover;
   inline-size: 100%;

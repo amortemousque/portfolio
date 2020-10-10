@@ -93,6 +93,7 @@ picture {
 .article-image-preview {
   object-fit: cover;
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .article-2x-images {

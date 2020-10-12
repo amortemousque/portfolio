@@ -19,11 +19,15 @@
       rel="stylesheet"
     />
     <title>Aymeric</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      const gtag = () => dataLayer.push(arguments);
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag("js", new Date());
+
       gtag("config", "UA-180340714-1");
     </script>
     <!-- Hotjar Tracking Code for www.mortemousque.com -->

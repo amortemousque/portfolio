@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Aymeric Mortemousque portfolio" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@IucioI" />
+    <meta name="twitter:title" content="Aymeric Mortemousque" />
+    <meta property="og:url" content="https://mortemousque.com" />
+    <meta property="og:description" content="Aymeric Mortemousque portfolio" />
+    <meta property="og:title" content="Aymeric Mortemousque" />
+    <meta name="keywords" content="Portfolio, Engineer, Web" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="../assets/style.css" />
+    <link rel="stylesheet" href="./post.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>JavaScript Event Loop</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-180340714-1");
+    </script>
+    <!-- Hotjar Tracking Code for www.mortemousque.com -->
+    <script>
+      (function (h, o, t, j, a, r) {
+        h.hj =
+          h.hj ||
+          function () {
+            (h.hj.q = h.hj.q || []).push(arguments);
+          };
+        h._hjSettings = { hjid: 2036739, hjsv: 6 };
+        a = o.getElementsByTagName("head")[0];
+        r = o.createElement("script");
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <h1 class="headline">
+        <!-- <span class="first-letter">J</span> <br /> -->
+        JavaScript Event Loop
+      </h1>
+      <p>
+        As Javascript developers, we all know the importance of performance. Now more than ever the
+        browser as a lot of responsibilities, data fetching, calculation, ui inputs, animations, you
+        name it. To tackle all these tasks,
+        <strong>Javascript has only one thread available</strong>. How Javascript manage all this?
+      </p>
+      <p>
+        This is where the event loop comes in. I first face the concept of the event loop few years
+        ago at a JSConf. The conference unlighted me on many troubles I have faced during my career.
+        I can now understand
+        <strong>why my application is not responsive</strong> or in
+        <strong>what order my code is gonna be executed.</strong>
+        This article address these questions through the exploration of the event loop.
+      </p>
+
+      <h2 class="post-title">A single threaded language</h2>
+
+      <p>
+        In order to understand the event loop, we need to know what “<strong
+          >single threaded means</strong
+        >”. Here is a picture of how it works basically.
+      </p>
+      <p>We can sum it up like this <strong>one thread === one task at a time</strong>.</p>
+      <p>
+        This means that if a task takes too much time, the application is frozen. The question that
+        come straight into are head now is, how can the browser manage all the tasks we have seen
+        before without freezing.
+      </p>
+
+      <h2 class="post-title">The event loop</h2>
+
+      <p>
+        The event loop is the way Javascript Engines orchestrate tasks in order to be processed. The
+        concept is simple.
+        <strong>There is an handless loop where Javascript wait for tasks and execute them.</strong>
+      </p>
+
+      Examples of tasks:
+      <ul>
+        <li>When an external script.</li>
+        <li>
+          When a user moves their mouse, the task is to dispatch mousemove event and execute
+          handlers.
+        </li>
+        <li>
+          When the time is due for a scheduled setTimeout, the task is to run its callback. Let’s
+          put it into motion with a simple bit of code. We assume we have an HTML page witch include
+          this script.
+        </li>
+      </ul>
+      <p>
+        <code>
+          console.log("Before"); function handleTimeout() { console.log("setTimeout script"); }
+          setTimeout(() => handleTimeout, 0); console.log("After");
+        </code>
+      </p>
+
+      <ol>
+        <li>console.log("Before") is executed</li>
+        <li>setTimeout will queued a task for the callback function</li>
+        <li>console.log("After") is executed</li>
+        <li>console.log("setTimeout script") is executed</li>
+      </ol>
+
+      Has we can see the event loop process the script wich is a task. During that processing, the
+      script creates a new task with setTimeout. The new task represente the execution of the
+      handler so console.log("setTimeout script") is executed.
+
+      <h2 class="post-title">Rendering tasks</h2>
+      <p>
+        One type of the tasks I did not mention yet and witch is often ignore by front developer is
+        rendering tasks. When we manipulate the DOM we want the browser to render the new state of
+        the screen. This is call rendering. As you know guess, these tasks will also have to be
+        process. Case study
+      </p>
+    </main>
+  </body>
+</html>

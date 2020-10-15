@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Aymeric Mortemousque portfolio" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@IucioI" />
+    <meta name="twitter:title" content="Aymeric Mortemousque" />
+    <meta property="og:url" content="https://mortemousque.com" />
+    <meta property="og:description" content="Aymeric Mortemousque portfolio" />
+    <meta property="og:title" content="Aymeric Mortemousque" />
+    <meta name="keywords" content="Portfolio, Engineer, Web" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="../assets/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Chivo|Playfair+Display:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Aymeric posts</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-180340714-1");
+    </script>
+    <!-- Hotjar Tracking Code for www.mortemousque.com -->
+    <script>
+      (function (h, o, t, j, a, r) {
+        h.hj =
+          h.hj ||
+          function () {
+            (h.hj.q = h.hj.q || []).push(arguments);
+          };
+        h._hjSettings = { hjid: 2036739, hjsv: 6 };
+        a = o.getElementsByTagName("head")[0];
+        r = o.createElement("script");
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <header class="header">
+        <h1 class="headline">
+          <span class="first-letter">A</span>ymeric <br />
+          mortemousque
+        </h1>
+        <nav class="menu">
+          <a href="/">Projects</a>
+          <a href="/posts">Posts</a>
+        </nav>
+      </header>
+
+      <ul class="list">
+        <li class="list-item">
+          <a class="list-item-title" href="event-loop.html"
+            >How JavaScript works: Event Loop and Web APIs</a
+          >
+          <p>
+            In order to understand Javascript we have to go through different concepts. First is the
+            Event loop and how javascript handles tasks, second how it handle render steps and
+            finally how WebAPIs operate.
+          </p>
+          <time class="date" datetime="2020-10-11"> October 11, 2020 </time>
+        </li>
+      </ul>
+    </main>
+    <script>
+      document
+        .querySelector('nav a[href^="/' + location.pathname.split("/")[1] + '"]')
+        .classList.add("active");
+    </script>
+  </body>
+</html>

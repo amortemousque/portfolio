@@ -1,32 +1,105 @@
 :root {
   --color-primary: rgb(231, 72, 50);
+  --text-color: #333333;
+  --title-color: #222222;
   --font-body: "Chivo", serif;
   --font-title: "Playfair Display", serif;
+  --title-line-height: 2.5rem;
+  --text-line-height: 1.8rem;
+  --base: 0.8rem;
+  --font-size: 16px;
+  --project-spacing: 2.5rem;
+  --max-font-size: 20px;
+  --min-font-size: 16px;
+  --min-width: 640px;
+  --max-width: 1200px;
+  --max-width-post: 800px;
+}
+
+/* For fluid font calculation */
+:root {
+  --max-font-size-stripped: 20;
+  --min-font-size-stripped: 16;
+  --min-width-stripped: 640;
+  --max-width-stripped: 1200;
+}
+
+/* Fluid typography formula */
+@media (min-width: 640px) and (max-width: 1199px) {
+  :root {
+    --font-size: calc(
+      var(--min-font-size) + (var(--max-font-size-stripped) - var(--min-font-size-stripped) - 1) *
+        (100vw - var(--min-width)) / (var(--max-width-stripped) - 1 - var(--min-width-stripped))
+    );
+  }
+}
+
+/* Define max font size */
+@media (min-width: 1200px) {
+  :root {
+    --font-size: 21px;
+  }
+}
+
+html {
+  font-size: var(--font-size);
 }
 
 body {
-  font-size: 18px;
   font-family: var(--font-body);
   margin: 0;
+  letter-spacing: 0.05rem;
+  line-height: var(--text-line-height);
+  color: var(--text-color);
 }
 
 main {
   padding: 3rem;
-  max-inline-size: 1200px;
+  max-inline-size: var(--max-width);
   margin: 0 auto;
+}
+/* Reset */
+pre {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-block-end: 4rem;
+  align-items: flex-end;
+}
+
+/* Nav */
+.menu {
+  margin-top: 1rem;
+}
+.menu a.active {
+  color: var(--color-primary);
+}
+.menu a + a {
+  margin-inline-start: 1rem;
 }
 
 /* Headline */
 
 .headline {
+  display: flex;
+  flex: 1;
   font-weight: bold;
   font-size: 2rem;
   line-height: 2.2rem;
-
-  margin-block-start: 0;
-  margin-block-end: 4rem;
+  padding-inline-end: 2rem;
+  margin: 0;
   letter-spacing: 0.2rem;
   font-family: var(--font-title);
+  color: var(--font-title);
 }
 
 /* Presentation */
@@ -43,7 +116,6 @@ main {
   margin-bottom: 3rem;
   background: #f4f4f4;
   color: rgba(0, 0, 0, 0.6);
-  font-size: 1.2rem;
   line-height: 1.5;
 }
 
@@ -54,11 +126,11 @@ main {
   font-size: 1.5rem;
 }
 
-/* Article */
+/* project */
 
-.article,
-.article-layout-2,
-.article-layout-3 {
+.project,
+.project-layout-2,
+.project-layout-3 {
   display: grid;
   grid-template-areas: "body images";
   grid-template-columns: 1fr 1fr;
@@ -68,18 +140,17 @@ main {
   box-sizing: border-box;
 }
 
-.article-body {
+.project-body {
   grid-area: body;
   margin-inline-end: 3rem;
   margin-block-end: 3rem;
 }
 
-.article-images,
-.article-2x-images {
+.project-images,
+.project-2x-images {
   grid-area: images;
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 4vh;
   overflow: hidden;
   align-self: stretch;
@@ -90,51 +161,52 @@ picture {
   display: flex;
 }
 
-.article-image-preview {
+.project-image-preview {
   object-fit: cover;
   inline-size: 100%;
   block-size: 100%;
 }
 
-.article-2x-images {
-  grid-template-columns: 100%;
-  grid-template-rows: 1fr 1fr;
-}
-
-.article-title {
-  font-size: 1.9rem;
+.project-title {
+  font-size: 1.7rem;
   justify-self: start;
   align-self: start;
   font-weight: bold;
   display: inline-block;
   font-family: var(--font-title);
+  line-height: var(--title-line-height);
 
-  padding-block-end: 1rem;
-  border-block-end: 2px solid var(--color-primary);
+  color: var(--title-color);
   padding-inline-end: 5px;
-  margin-block-start: 0rem;
 }
 
-.article-content {
-  line-height: 1.5;
+.project-title:after {
+  content: "";
+  display: block;
+  border-block-end: 2px solid var(--color-primary);
+  padding-block-start: 0.8rem;
+  width: 5vw;
+}
+
+.project-content {
   margin-block-end: 1.5rem;
 }
 
-/* Article layout 2 */
+/* project layout 2 */
 
-.article-layout-2 {
+.project-layout-2 {
   grid-template-areas: "images body";
   grid-template-columns: 1fr 40%;
 }
 
-.article-layout-2 .article-body {
+.project-layout-2 .project-body {
   margin-inline-end: 0;
-  margin-inline-start: 3rem;
+  margin-inline-start: var(--project-spacing);
 }
 
-/* Article layout 3 */
+/* project layout 3 */
 
-.article-layout-3 {
+.project-layout-3 {
   grid-template-columns: 1fr;
   grid-template-rows: min-content auto;
   grid-template-areas:
@@ -142,78 +214,74 @@ picture {
     "images";
 }
 
-.article-layout-3 .article-image-preview {
+.project-layout-3 .project-image-preview {
   height: auto;
 }
 
-.article-layout-3 .article-body {
+.project-layout-3 .project-body {
   margin-inline-end: 0;
   flex: 1 0 calc(50% - 2.5rem);
 }
 
-.article-layout-3 .article-images {
+.project-layout-3 .project-images {
   grid-template-columns: 1fr 1fr;
 }
 
 /* Links  */
-
-.article-links {
-  margin-inline-start: -1rem;
-}
-
-.article-link-section {
-  margin-inline-start: 1rem;
-  display: flex;
-}
-
-.article-link-section dt {
-  width: 80px;
-}
-
-.article-link-section dd {
-  margin-inline-start: 0;
+.project-links a + a {
+  margin-left: 1rem;
 }
 
 a {
-  border-bottom: 2px solid #272727;
+  font-style: italic;
   background: none;
   color: rgb(0, 0, 0);
   text-decoration: none;
   display: inline-block;
-  margin-left: 1rem;
+  line-height: 1.5rem;
 }
 
 a:hover {
-  border-bottom: 2px solid var(--color-primary);
   color: var(--color-primary);
 }
 
+/* List */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-item-title {
+  font-family: var(--font-title);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.list-item-date {
+  display: block;
+  font-size: 0.7em;
+  line-height: 2em;
+  font-style: italic;
+}
 /* Responsive */
 
-@media only screen and (max-width: 600px) {
-  body {
-    font-size: 16px !important;
-  }
-  .headline {
-    font-size: 1.5rem;
-  }
-  .first-letter {
-    font-size: 4.3rem;
-    line-height: 4.3rem;
-  }
-  .article,
-  .article-layout-2,
-  .article-layout-3 {
+@media only screen and (max-width: 640px) {
+  .project,
+  .project-layout-2,
+  .project-layout-3 {
     display: block;
     height: auto;
   }
-  .article-body,
-  .article-layout-2 .article-body,
-  .article-layout-3 .article-body {
-    margin: 0 0 3rem 0;
+  .project-body,
+  .project-layout-2 .project-body,
+  .project-layout-3 .project-body {
+    margin: 0 0 var(--project-spacing) 0;
   }
-
-  .article-images {
-    display: block;
+  .project-layout-3 .project-images {
+    grid-template-columns: 1fr;
+  }
+  main {
+    padding: 1rem;
   }
 }

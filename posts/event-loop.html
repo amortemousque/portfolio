@@ -62,8 +62,8 @@
     <main>
       <h1 class="headline">How Javascript work: Event Loop, Render steps and WebAPIs</h1>
       <p>
-        How Javascript works? Tough question witch can be approach by describing core elements of
-        Javascript engines. The event loop, the render steps and the WebAPIs.
+        How Javascript works? Tough question which can be approached by describing the core elements
+        of Javascript engines. The event loop, the render steps and the WebAPIs.
       </p>
       <p>
         As Javascript developers, we all know the importance of performance. Now more than ever the
@@ -93,7 +93,7 @@
       <p>
         The event loop is the way Javascript Engines orchestrate tasks in order to be processed. The
         concept is simple.
-        <strong>There is an handless loop where Javascript wait for tasks and execute them.</strong>
+        <strong>There is a handless loop where Javascript wait for tasks and execute them.</strong>
       </p>
       <picture>
         <image src="../assets/images/posts/event-loop.gif" />
@@ -107,13 +107,13 @@
           it.
         </li>
         <li>
-          When a user moves their mouse, the task is to dispatch mousemove event and execute
+          When a user moves their mouse, the task is to dispatch a mousemove event and execute
           handlers.
         </li>
         <li>When the time is due for a scheduled setTimeout, the task is to run its callback.</li>
       </ul>
       <p>
-        Let’s put it into motion with a simple bit of code. We assume we have an HTML page witch
+        Let’s put it into motion with a simple bit of code. We assume we have an HTML page which
         include this script.
       </p>
       <pre><code class="lang-javascript">console.log("Before"); 
@@ -126,7 +126,7 @@ console.log("After");</code></pre>
       <ol>
         <li><code class="lang-javascript">console.log("Before")</code> print "Before".</li>
         <li>
-          <code class="lang-javascript">setTimeout</code> wait 0 millisecond and queue a task witch
+          <code class="lang-javascript">setTimeout</code> wait 0 milliseconds and queue a task which
           invoke the callback function.
         </li>
         <li><code class="lang-javascript">console.log("After")</code> print "After".</li>
@@ -137,7 +137,7 @@ console.log("After");</code></pre>
       </ol>
 
       <p>
-        Has we can see the event loop process the script witch is a task. During that processing,
+        Has we can see the event loop process the script which is a task. During that processing,
         the script creates a new task with setTimeout. The new task represents the execution of the
         handler so <code class="lang-javascript">console.log("setTimeout script")</code> is
         executed.
@@ -145,9 +145,9 @@ console.log("After");</code></pre>
 
       <h2 class="project-title">What about the render steps?</h2>
       <p>
-        One type of the tasks I did not mention yet and witch is often ignore by front developer is
-        render steps. When you change the DOM, the browser has to updates what's on the screen. This
-        is done through <strong>render steps</strong>. Render steps is basically a set of tasks.
+        One type of the tasks I did not mention yet and which is often ignored by front developer is
+        render steps. When you change the DOM, the browser has to update what's on the screen. This
+        is done through <strong>render steps</strong>. Render steps are basically a set of tasks.
         Here's a quick recap :
       </p>
 
@@ -171,7 +171,7 @@ console.log("After");</code></pre>
       </picture>
       <p>
         Each task has to wait before the three render steps finishes and conversely. All tasks being
-        dependent of the execution time, if one of are script take too much time (meaning more than
+        dependent on the execution time, if one of our script takes too much time (meaning more than
         few millisecond) the application will freeze.
       </p>
       <h3>In fact, the event loop is smarter.</h3>
@@ -183,17 +183,17 @@ console.log("After");</code></pre>
         Scientists and researchers agree that the human eye can see until 60 frames per second. 60
         Hz refresh rate is what the browser is aiming for a good responsive user experience. This
         means the browser should process a frame in about 16.7ms. During this 16.7ms the event loop
-        prioritize other Javascript tasks. Therefore many tasks can be executed before the render
-        steps occurs.
+        prioritizes other Javascript tasks. Therefore, many tasks can be executed before the render
+        steps occur.
       </p>
       <p>
         Now we know that the event loop is smart, but
-        <strong>What about fetching data from the server?</strong> This take more than few
-        milliseconds, even few seconds in the worst case. This is where Web APIs comes in.
+        <strong>What about fetching data from the server?</strong> This take more than a few
+        milliseconds, even a few seconds in the worst case. This is where Web APIs come in.
       </p>
       <h2 class="project-title">Web APIs and asynchronous code</h2>
       <p>
-        We all use Fetch(), console.log(), setTimeout()... without caring to much on how it works.
+        We all use Fetch(), console.log(), setTimeout()... without caring too much how it works.
         This is because
         <a href="https://developer.mozilla.org/en-US/docs/Web/API" target="_blank" rel="noopener"
           >Web APIs</a
@@ -216,15 +216,15 @@ console.log("After");</code></pre>
       </picture>
       <ol>
         <li>
-          First the fetch API call the URL. This call happens outside of the event loop scope.
+          First the fetch API calls the URL. This call happens outside of the event loop scope.
         </li>
         <li>
-          Then the first callback <code class="lang-javascript">response.text()</code> is send to
+          Then the first callback <code class="lang-javascript">response.text()</code> is sent to
           the event loop as a task.
         </li>
         <li>
           <code class="lang-javascript">res.text()</code> is also part of the fetch API, so another
-          task is generated witch represents <code class="lang-javascript">displayText(text)</code>.
+          task is generated which represents <code class="lang-javascript">displayText(text)</code>.
         </li>
         <li><code class="lang-javascript">show(text)</code> is executed.</li>
         <li>The browser print the text through the render steps.</li>

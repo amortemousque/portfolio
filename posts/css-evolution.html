@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Aymeric Mortemousque portfolio" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@IucioI" />
+    <meta name="twitter:title" content="Aymeric Mortemousque" />
+    <meta property="og:url" content="https://mortemousque.com" />
+    <meta property="og:description" content="Aymeric Mortemousque portfolio" />
+    <meta property="og:title" content="Aymeric Mortemousque" />
+    <meta name="keywords" content="Portfolio, Engineer, Web" />
+    <link rel="icon" href="favicon.ico" />
+
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css"
+    />
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/style.css" />
+    <link rel="stylesheet" href="../assets/post.css" />
+    <title>What's next for CSS</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-180340714-1");
+    </script>
+    <!-- Hotjar Tracking Code for www.mortemousque.com -->
+    <script>
+      (function (h, o, t, j, a, r) {
+        h.hj =
+          h.hj ||
+          function () {
+            (h.hj.q = h.hj.q || []).push(arguments);
+          };
+        h._hjSettings = { hjid: 2036739, hjsv: 6 };
+        a = o.getElementsByTagName("head")[0];
+        r = o.createElement("script");
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+    </script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <h1 class="headline">Web design evolution with CSS</h1>
+      <picture class="cover"
+        ><img src="../assets/images/posts/web-design-evolution.jpg" alt=""
+      /></picture>
+      <p>
+        When the web started, layouts looked like this article. A single page with text and images
+        following the only top-down flow available with the only comfort of background and text
+        colors.
+      </p>
+      <h2 class="project-title">Table era</h2>
+      <p>
+        Then <strong>tables came along</strong>. It was a huge step forward. Now, you were able to
+        organize your page in a two dimensional way. Tables unleashed creativity on the web.
+      </p>
+      <p>
+        One of the reasons is that <strong>design conventions</strong> on the web did not exist, so
+        everything had to be invented. Things that we call convention are just practices that stays
+        over time. For instance, no one is able to tell who and when navbar and sidebar became
+        navigation layout conventions.
+      </p>
+      <p>
+        Another reason for this creativity was the absence of one big constraint. I'm talking about
+        screen sizes. Back at that time they were no smartphone, no tablet and almost all computers
+        shared the same screen size. Without this constraint you were sure your visual didn't break.
+      </p>
+      <p>
+        However, one of the major problems was that the visual styling and the content were twisted
+        together and that made your page impossible to redesign and also impossible to reuse your
+        style. In this context, CSS came out.
+      </p>
+      <h2 class="project-title">Hard coded float layouts era</h2>
+      <p>
+        CSS was invented to separate the content from the visual style, given us a lot of advantages
+        among reusability, accessibility and SEO.
+      </p>
+      <p>
+        CSS did not provide a powerful layout model nevertheless, <strong>float</strong> did the job
+        for a while. At the same time, the complexity caused by the arrival of new devices and
+        screens, was growing. With it, the need of a reliable
+        <strong>responsive design</strong> became a necessity.
+      </p>
+      <p>
+        The problem was, Float wasn't designed to be used like we did and we ended up playing with
+        percentage to create multi column layouts. Lots of math had to be done in order to align
+        elements, in addition to this the support of older browser was a nightmare. Even with the
+        best intentions our layouts lacked of reliability. So people started to lose confidence in
+        CSS and concluded <strong>CSS wasn't enough.</strong>
+      </p>
+      <h2 class="project-title">CSS frameworks era</h2>
+      <p>
+        That's why, <strong>CSS frameworks came along</strong>, and with them the idea of
+        <strong>grids</strong>. The 12 column grid layout was one of the most famous ones. This idea
+        is to split your screen in 960px width container split in 12 columns. Frameworks took away
+        the burden of responsiveness and did the math for you. You can now organize your elements
+        and to be sure your design won't break. Websites heavily used them to get rid of layout
+        headaches. But it came with a price. Standardization has removed creativity not to mention
+        that we have to learn another tool in order to create layout for the web.
+      </p>
+      <picture
+        ><img
+          style="min-width: 100%; margin-block-start: 2rem; margin-block-end: 2rem"
+          src="../assets/images/posts/css-layout-timeline.svg"
+          alt=""
+      /></picture>
+      <div class="statement">
+        <span class="statement-title">Statement</span>
+        <p>
+          <strong>Standardization has removed creativity</strong>. A large majority of the web
+          follows the same layout patterns, which has been even enforced by the misusage of
+          <strong>design systems</strong>. Of corse, best practices and industrialization are very
+          important. But lots us use these tools without understanding their philosophy and what
+          tradeoffs they imply.
+        </p>
+        <p>
+          Take a look at
+          <a href="https://www.google.com/search?q=newspaper+layout&tbm=isch">newspaper layouts</a>.
+          Every pages has it's own layout wish depend on what content it displays. Newspapers use
+          layouts to emphases the content and to make it attractive. They wants their readers to
+          enjoy the reading experience through the content and the visual. The complete opposite of
+          this boring article.
+        </p>
+      </div>
+
+      <h2 class="project-title">The future of layouts</h2>
+      <p>
+        Lots of new features have been rolled out in CSS this recent years, empowering developer and
+        designer. I strongly believe these features bring back the creativity I talked earlier.
+      </p>
+      <ul>
+        <li>CSS Grid</li>
+        <li>Flexbox</li>
+        <li>ALlignment</li>
+        <li>Writing modes</li>
+        <li>Multicolumn</li>
+        <li>Viewport Unit</li>
+        <li>Transformations</li>
+        <li>Object Fit</li>
+        <li>Clip path</li>
+        <li>Masking</li>
+        <li>Initial-letter</li>
+      </ul>
+
+      <p>
+        CSS Logical Properties introduces a new set of properties intended to replace CSS physical
+        properties. Traditionally css uses physical properties to describe boxes: "width", "height",
+        "margin-top", "border-left" and so on. CSS Logical Properties are relative to the flow.
+      </p>
+    </main>
+  </body>
+</html>

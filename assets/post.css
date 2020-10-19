@@ -9,14 +9,32 @@ main {
   line-height: 2.9rem;
   margin-block-end: 3rem;
 }
+.cover {
+  justify-content: center;
+  max-height: 90vh;
+}
+.drawing img {
+  margin: 0 auto;
+  width: 80%;
+}
+.cover img {
+  margin: 0 auto;
+  width: 100%;
+  margin-block-end: 2rem;
+  inline-size: 100vw;
+  max-inline-size: 1920px;
+  object-fit: cover;
+}
 
 .hljs {
   padding: 1rem;
 }
 
 img {
-  margin: 0 auto;
-  width: 80%;
+  margin-block-start: 1rem;
+  margin-block-end: 1rem;
+
+  inline-size: 100%;
 }
 
 ul,
@@ -35,4 +53,15 @@ p {
   initial-letter: 2;
   margin-block-start: 1em;
   margin-block-end: 1em;
+}
+
+.statement {
+  background: #efefef;
+  padding: 1rem 2rem;
+}
+
+.statement-title {
+  color: #ccc;
+  margin-block-end: 1rem;
+  display: block;
 }

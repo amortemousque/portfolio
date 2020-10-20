@@ -59,36 +59,44 @@
   </head>
 
   <body>
+    <header>
+      <div class="bar">
+        <a href="..">&larr; Back to post</a>
+        <a class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle dark mode</a>
+      </div>
+      <section>
+        <h1 class="headline">Web design layout evolution with CSS</h1>
+      </section>
+    </header>
     <main>
-      <h1 class="headline">Web design evolution with CSS</h1>
       <picture class="cover"
         ><img src="../assets/images/posts/web-design-evolution.jpg" alt=""
       /></picture>
       <p>
         When the web started, layouts looked like this article. A single page with text and images
-        following the only top-down flow available with the only comfort of background and text
+        following the only top-down flow available. Design choices was around backgrounds and text
         colors.
       </p>
       <h2 class="project-title">Table era</h2>
       <p>
-        Then <strong>tables came along</strong>. It was a huge step forward. Now, you were able to
-        organize your page in a two dimensional way. Tables unleashed creativity on the web.
+        <strong>Tables came along</strong> bringing two dimensional layouts. It was a huge step
+        forward which unleashed creativity on the web.
       </p>
       <p>
-        One of the reasons is that <strong>design conventions</strong> on the web did not exist, so
-        everything had to be invented. Things that we call convention are just practices that stays
-        over time. For instance, no one is able to tell who and when navbar and sidebar became
-        navigation layout conventions.
+        One of the reasons is that <strong>design conventions</strong> on the web didn't exist yet.
+        Everything had to be invented. In fact, what we call conventions are practices that stays
+        over time but we can hardly predict when they happened. For instance, no one is able to tell
+        how and when navbar and sidebar became navigation layout conventions.
       </p>
       <p>
-        Another reason for this creativity was the absence of one big constraint. I'm talking about
-        screen sizes. Back at that time they were no smartphone, no tablet and almost all computers
-        shared the same screen size. Without this constraint you were sure your visual didn't break.
+        Another reason for this creativity was the absence of screen sizes constraint. Back at that
+        time, we had no smartphones, no tablets and almost all computers shared the same screen
+        size. This mean, you were sure our visual didn't break.
       </p>
       <p>
-        However, one of the major problems was that the visual styling and the content were twisted
-        together and that made your page impossible to redesign and also impossible to reuse your
-        style. In this context, CSS came out.
+        However, one of the major issue lies in the mix between visual styling and the content which
+        made our page style impossible to redesign and also impossible to reuse. In this context,
+        CSS came out.
       </p>
       <h2 class="project-title">Hard coded float layouts era</h2>
       <p>
@@ -102,21 +110,24 @@
         <strong>responsive design</strong> became a necessity.
       </p>
       <p>
-        The problem was, Float wasn't designed to be used like we did and we ended up playing with
+        The problem was, Float wasn't designed to be used like we did. We ended up playing with
         percentage to create multi column layouts. Lots of math had to be done in order to align
-        elements, in addition to this the support of older browser was a nightmare. Even with the
-        best intentions our layouts lacked of reliability. So people started to lose confidence in
-        CSS and concluded <strong>CSS wasn't enough.</strong>
+        elements and the support of older browser was a nightmare. Even with the best intentions,
+        layouts lacked of reliability and consistency. Therefore people started to lose confidence
+        in CSS and concluded <strong>CSS wasn't enough.</strong>
       </p>
       <h2 class="project-title">CSS frameworks era</h2>
       <p>
-        That's why, <strong>CSS frameworks came along</strong>, and with them the idea of
-        <strong>grids</strong>. The 12 column grid layout was one of the most famous ones. This idea
-        is to split your screen in 960px width container split in 12 columns. Frameworks took away
-        the burden of responsiveness and did the math for you. You can now organize your elements
-        and to be sure your design won't break. Websites heavily used them to get rid of layout
-        headaches. But it came with a price. Standardization has removed creativity not to mention
-        that we have to learn another tool in order to create layout for the web.
+        In this context, <strong>CSS frameworks came along</strong>, and with them the idea of
+        <strong>grids</strong>. The 12 column grid layout was one of the most famous ones. The idea
+        is to define a container of a specific dimension and to split it into 12 columns. Finally,
+        helper classes allowed you to place your content.
+      </p>
+      <p>
+        Frameworks took away the burden of responsiveness and did the math for you. Websites heavily
+        used them to get rid of layout headaches. But it came with a price. Layout standardization
+        took away creativity, not to mention that we had to learn another tool in order to create
+        layouts for the web.
       </p>
       <picture
         ><img
@@ -127,40 +138,71 @@
       <div class="statement">
         <span class="statement-title">Statement</span>
         <p>
-          <strong>Standardization has removed creativity</strong>. A large majority of the web
-          follows the same layout patterns, which has been even enforced by the misusage of
+          <strong>Standardization took away creativity</strong>. A large majority of the web follows
+          the same layout patterns, which has been even enforced by the misusage of
           <strong>design systems</strong>. Of corse, best practices and industrialization are very
-          important. But lots us use these tools without understanding their philosophy and what
-          tradeoffs they imply.
+          important and we've seen lot of improvements in term of user experience. But lots of
+          misguidance came along the way. And people started to use these tools by default without
+          understanding what tradeoffs they imply.
         </p>
         <p>
           Take a look at
-          <a href="https://www.google.com/search?q=newspaper+layout&tbm=isch">newspaper layouts</a>.
-          Every pages has it's own layout wish depend on what content it displays. Newspapers use
-          layouts to emphases the content and to make it attractive. They wants their readers to
-          enjoy the reading experience through the content and the visual. The complete opposite of
-          this boring article.
+          <a
+            href="https://www.google.com/search?q=newspaper+layout&tbm=isch"
+            target="_blank"
+            rel="noopener"
+            >newspaper layouts</a
+          >
+          or
+          <a
+            href="https://www.google.com/search?q=magazine+layout&tbm=isch"
+            target="_blank"
+            rel="noopener"
+            >magazine layouts</a
+          >
+          . Every pages takes care of choosing the right layout for right content. Newspapers and
+          magazines use layouts to emphases the content and to make it attractive. They wants their
+          readers to enjoy the reading experience through the content and the visual. For instance,
+          this article, like 90% of the web is a perfect counterexample. Our brain is still
+          formatted by our experience with CSS frameworks.
         </p>
       </div>
 
       <h2 class="project-title">The future of layouts</h2>
       <p>
-        Lots of new features have been rolled out in CSS this recent years, empowering developer and
-        designer. I strongly believe these features bring back the creativity I talked earlier.
+        Lots of new features have been rolled out in CSS this recent years, empowering developers
+        and designers.
       </p>
       <ul>
         <li>CSS Grid</li>
         <li>Flexbox</li>
-        <li>ALlignment</li>
-        <li>Writing modes</li>
+        <li>CSS logical properties</li>
         <li>Multicolumn</li>
         <li>Viewport Unit</li>
         <li>Transformations</li>
-        <li>Object Fit</li>
-        <li>Clip path</li>
-        <li>Masking</li>
-        <li>Initial-letter</li>
+        <li>CSS Shapes</li>
       </ul>
+      <p>
+        Among them, we can find Flexbox, CSS Grid and Viewport Unit. I suggest you to check them
+        out. There is a tremendous amount of good articles about them on the web. All of these
+        features are reliable and consistent across browsers. The web isn't stiff anymore.
+      </p>
+      <h3>Let's be creative!</h3>
+      <div class="divider"><span></span><span></span><span></span></div>
+      <div class="inspired">
+        This article is heavily influenced by Jen simmons’s work on CSS Layouts. For a dipper
+        understanding of CSS layouts, head on to her
+        <a href="https://www.youtube.com/c/LayoutLand" target="_blank" rel="noopener"
+          >Youtube channel</a
+        >. Thank you Jen, you helped me understand CSS Layouts much better.
+      </div>
     </main>
+    <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector(".hilightjs-dark").toggleAttribute("disabled");
+        document.querySelector(".hilightjs-light").toggleAttribute("disabled");
+      }
+    </script>
   </body>
 </html>

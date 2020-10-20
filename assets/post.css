@@ -1,22 +1,13 @@
-main {
-  padding: 3rem;
-  max-inline-size: var(--max-width-post);
-  margin: 0 auto;
+:root {
+  --max-width: 800px;
+  --padding: 3rem;
 }
 
-.headline {
-  font-size: 2.3rem;
-  line-height: 2.9rem;
-  margin-block-end: 3rem;
-}
 .cover {
   justify-content: center;
   max-height: 90vh;
 }
-.drawing img {
-  margin: 0 auto;
-  width: 80%;
-}
+
 .cover img {
   margin: 0 auto;
   width: 100%;
@@ -24,6 +15,11 @@ main {
   inline-size: 100vw;
   max-inline-size: 1920px;
   object-fit: cover;
+}
+
+.drawing img {
+  margin: 0 auto;
+  width: 80%;
 }
 
 .hljs {
@@ -49,19 +45,25 @@ li {
 }
 
 p {
-  color: #444444;
-  initial-letter: 2;
   margin-block-start: 1em;
   margin-block-end: 1em;
 }
 
-.statement {
-  background: #efefef;
-  padding: 1rem 2rem;
+.inspired {
+  font-style: italic;
 }
 
-.statement-title {
-  color: #ccc;
-  margin-block-end: 1rem;
-  display: block;
+.divider {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-block-start: 4rem;
+  margin-block-end: 4rem;
+}
+
+.divider span {
+  width: 3px;
+  height: 3px;
+  background-color: var(--text-color);
+  border-radius: 50%;
 }

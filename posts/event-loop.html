@@ -14,10 +14,8 @@
     <meta name="keywords" content="Portfolio, Engineer, Web" />
     <link rel="icon" href="favicon.ico" />
 
-    <link
-      rel="stylesheet"
-      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css"
-    />
+    <link class="hilightjs-dark" rel="stylesheet" href="../assets/hilightjs-dark.css" disabled />
+    <link class="hilightjs-light" rel="stylesheet" href="../assets/hilightjs-light.css" />
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap"
@@ -59,16 +57,24 @@
   </head>
 
   <body>
+    <header>
+      <div class="bar">
+        <a href="..">&larr; Back to post</a>
+        <a class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle dark mode</a>
+      </div>
+      <section>
+        <h1 class="headline">How Javascript work: Event Loop, Render steps and WebAPIs</h1>
+      </section>
+    </header>
     <main>
-      <h1 class="headline">How Javascript work: Event Loop, Render steps and WebAPIs</h1>
       <p>
         How Javascript works? Tough question which can be approached by describing the core elements
         of Javascript engines. The event loop, the render steps and the WebAPIs.
       </p>
       <p>
         As Javascript developers, we all know the importance of performance. Now more than ever the
-        browser has a lot of responsibilities, data fetching, calculation, ui inputs, animations,
-        you name it. To tackle all these tasks,
+        browser has a lot of responsibilities among data fetching, calculation, ui inputs,
+        animations, you name it. To tackle all these tasks,
         <strong>Javascript has only one thread available</strong>.
       </p>
       <p>
@@ -95,7 +101,7 @@
         concept is simple.
         <strong>There is a handless loop where Javascript wait for tasks and execute them.</strong>
       </p>
-      <picture>
+      <picture class="drawing">
         <image src="../assets/images/posts/event-loop.gif" />
       </picture>
 
@@ -163,7 +169,7 @@ console.log("After");</code></pre>
         As you now guess, these tasks also have to compete to be processed by the event loop. The
         figure below show four tasks mutating the DOM therefore triggering the render steps.
       </p>
-      <picture>
+      <picture class="drawing">
         <img
           src="../assets/images/posts/event-loop-render-steps.gif"
           alt="Render steps description"
@@ -208,7 +214,7 @@ console.log("After");</code></pre>
   .then(res => res.text())
   .then(text => show(text));</code></pre>
       <p>Here it what's happening in the event loop</p>
-      <picture>
+      <picture class="drawing">
         <img
           src="../assets/images/posts/event-loop-render-steps-web-apis.gif"
           alt="Web api description"
@@ -236,5 +242,12 @@ console.log("After");</code></pre>
         our script and the Web APIs.
       </p>
     </main>
+    <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.querySelector(".hilightjs-dark").toggleAttribute("disabled");
+        document.querySelector(".hilightjs-light").toggleAttribute("disabled");
+      }
+    </script>
   </body>
 </html>

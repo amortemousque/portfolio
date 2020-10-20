@@ -49,8 +49,11 @@
   </head>
 
   <body>
-    <main>
-      <header class="header">
+    <header>
+      <div class="bar">
+        <a class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle dark mode</a>
+      </div>
+      <section>
         <h1 class="headline">
           <span class="first-letter">A</span>ymeric <br />
           mortemousque
@@ -59,15 +62,16 @@
           <a href="/">Projects</a>
           <a href="/posts">Posts</a>
         </nav>
-      </header>
-
-      <div class="presentation">
-        <strong>Hi! I’m Aymeric Mortemousque</strong>
+      </section>
+    </header>
+    <main>
+      <article class="statement">
+        <strong class="statement-emphases">Hi! I’m Aymeric Mortemousque</strong>
         Experienced software engineer curious about various computer science topics. I love learning
         and solving complex challenges. My favorite subjects are often around frontend development
         and user experiences. Thus, I’m often busy working on side projects to pick up new
         technologies or to help others. This is a collection of some of my recent side-projects.
-      </div>
+      </article>
       <article class="project">
         <div class="project-body">
           <h3 class="project-title">CPU load monitoring</h3>
@@ -283,6 +287,10 @@
       </article>
     </main>
     <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+
       document
         .querySelector('nav a[href^="/' + location.pathname.split("/")[1] + '"]')
         .classList.add("active");

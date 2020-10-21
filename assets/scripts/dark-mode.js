@@ -1,8 +1,12 @@
 export class DarkModeToggle extends HTMLElement {
   connectedCallback() {
-    if (localStorage.getItem("dark-mode") === "true") document.body.classList.add("dark-mode");
-    this.addEventListener("click", this.toggleDarkMode.bind(this));
+    const darkMode = localStorage.getItem("dark-mode");
+    const preference = window.matchMedia("(prefers-color-scheme: dark)");
 
+    if (darkMode === "true" || (!darkMode && preference.matches))
+      document.body.classList.add("dark-mode");
+
+    this.addEventListener("click", this.toggleDarkMode.bind(this));
     document.body.classList.add("theme-loaded");
   }
 

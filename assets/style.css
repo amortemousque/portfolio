@@ -20,7 +20,7 @@
   --min-width: 640px;
   --max-width: 1200px;
   --max-width-post: 800px;
-  --padding: 3rem;
+  --padding: clamp(1rem, 4vw, 3rem);
   --radius: 5px;
 }
 /* For fluid font calculation */
@@ -357,8 +357,5 @@ button:hover,
   }
   .project-layout-3 .project-images {
     grid-template-columns: 1fr;
-  }
-  main {
-    padding: 1rem;
   }
 }

@@ -9,12 +9,12 @@
 }
 
 .cover img {
-  margin: 0 auto;
-  width: 100%;
-  margin-block-end: 2rem;
   inline-size: 100vw;
+  margin: 0 auto;
+  margin-block-end: 2rem;
   max-inline-size: 1920px;
   object-fit: cover;
+  width: 100%;
 }
 
 .drawing img {
@@ -27,17 +27,16 @@
 }
 
 img {
-  margin-block-start: 1rem;
-  margin-block-end: 1rem;
-
   inline-size: 100%;
+  margin-block-end: 1rem;
+  margin-block-start: 1rem;
 }
 
 ul,
 ol {
-  padding-inline-start: 1.5rem;
-  margin-top: 2rem;
   margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding-inline-start: 1.5rem;
 }
 
 li {
@@ -45,8 +44,8 @@ li {
 }
 
 p {
-  margin-block-start: 1em;
   margin-block-end: 1em;
+  margin-block-start: 1em;
 }
 
 .inspired {
@@ -55,15 +54,15 @@ p {
 
 .divider {
   display: flex;
-  justify-content: center;
   gap: 1.5rem;
-  margin-block-start: 4rem;
+  justify-content: center;
   margin-block-end: 4rem;
+  margin-block-start: 4rem;
 }
 
 .divider span {
-  width: 3px;
-  height: 3px;
   background-color: var(--text-color);
   border-radius: 50%;
+  height: 3px;
+  width: 3px;
 }

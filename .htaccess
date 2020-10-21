@@ -4,4 +4,13 @@ SetEnv REGISTER_GLOBALS 0
 RewriteEngine On
 RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://www.mortemousque.com/$1 [R,L]
+
+
+# Manually re-route posts/ requests to posts
+RewriteCond %{REQUEST_FILENAME} posts/$
+RewriteRule ^(.*)/$ $1 
+
+# Hide extension
+RewriteCond %{REQUEST_FILENAME}\.html -f
 RewriteRule ^([^\.]+)$ $1.html [NC,L]
+

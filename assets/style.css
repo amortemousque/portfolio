@@ -104,15 +104,15 @@ p {
 }
 
 /* Nav */
-menu {
+nav-menu {
   margin-top: 1rem;
 }
 
-menu a.active {
+nav-menu a.active {
   color: var(--color-primary);
 }
 
-menu a + a {
+nav-menu a + a {
   margin-inline-start: 1rem;
 }
 

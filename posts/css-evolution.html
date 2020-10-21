@@ -13,7 +13,6 @@
     <meta property="og:title" content="Aymeric Mortemousque" />
     <meta name="keywords" content="Portfolio, Engineer, Web" />
     <link rel="icon" href="favicon.ico" />
-
     <link
       rel="stylesheet"
       href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css"
@@ -26,6 +25,7 @@
     <link rel="stylesheet" href="../assets/style.css" />
     <link rel="stylesheet" href="../assets/post.css" />
     <title>What's next for CSS</title>
+    <script type="module" rel="preload" src="/assets/scripts/index.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"></script>
     <script>
@@ -62,7 +62,7 @@
     <header>
       <div class="bar">
         <a href="/posts">&larr; Back to post</a>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle dark mode</button>
+        <dark-mode-toggle class="button">Toggle dark mode</dark-mode-toggle>
       </div>
       <section>
         <h1 class="headline">Web design layout evolution with CSS</h1>
@@ -197,12 +197,5 @@
         >. Thank you Jen, you helped me understand CSS Layouts much better.
       </div>
     </main>
-    <script>
-      function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-        document.querySelector(".hilightjs-dark").toggleAttribute("disabled");
-        document.querySelector(".hilightjs-light").toggleAttribute("disabled");
-      }
-    </script>
   </body>
 </html>

@@ -1,9 +1,11 @@
+@import "/assets//hilightjs.css";
+
 :root {
   --background: #ffffff;
   --background-stand-out: rgba(0, 0, 0, 0.05);
   --color-primary: hsl(7, 79%, 55%);
   --text-color: rgba(0, 0, 0, 0.9);
-  --text-muted: rgba(0, 0, 0, 0.3);
+  --text-muted: rgba(0, 0, 0, 0.4);
   --title-color: #222222;
   --stand-out-color: rgba(10, 8, 8, 0.6);
   --font-body: "Chivo", serif;
@@ -21,6 +23,13 @@
   --padding: 3rem;
   --radius: 5px;
 }
+/* For fluid font calculation */
+:root {
+  --max-font-size-stripped: 20;
+  --min-font-size-stripped: 16;
+  --min-width-stripped: 640;
+  --max-width-stripped: 1200;
+}
 
 .dark-mode {
   --color-primary: rgb(231, 72, 50);
@@ -30,15 +39,7 @@
   --background: #222;
   --background-emphases: #383737;
   --background-stand-out: rgba(255, 255, 255, 0.07);
-  --text-muted: rgba(255, 255, 255, 0.25);
-}
-
-/* For fluid font calculation */
-:root {
-  --max-font-size-stripped: 20;
-  --min-font-size-stripped: 16;
-  --min-width-stripped: 640;
-  --max-width-stripped: 1200;
+  --text-muted: rgba(255, 255, 255, 0.4);
 }
 
 /* Fluid typography formula */
@@ -69,6 +70,7 @@ body {
   letter-spacing: 0.05rem;
   line-height: var(--text-line-height);
   margin: 0;
+  opacity: 0;
 }
 
 main {
@@ -102,15 +104,15 @@ p {
 }
 
 /* Nav */
-.menu {
+menu {
   margin-top: 1rem;
 }
 
-.menu a.active {
+menu a.active {
   color: var(--color-primary);
 }
 
-.menu a + a {
+menu a + a {
   margin-inline-start: 1rem;
 }
 
@@ -123,21 +125,26 @@ p {
   width: calc(100%);
 }
 
-.bar * {
+.bar a,
+.bar .button {
   color: var(--text-muted);
 }
 
-.dark-mode-toggle {
+dark-mode-toggle {
   margin-inline-start: auto;
 }
 
-.dark-mode-toggle::before {
+dark-mode-toggle::before {
   content: "\2600";
   display: inline-block;
   margin-inline-end: 0.2rem;
 }
 
-.dark-mode .dark-mode-toggle::before {
+.theme-loaded {
+  opacity: 1;
+}
+
+.dark-mode dark-mode-toggle::before {
   content: "\263D";
   display: inline-block;
   margin-inline-end: 0.2rem;
@@ -294,7 +301,8 @@ picture {
 }
 
 a,
-button {
+button,
+.button {
   background: none;
   border: none;
   color: var(--text-color);
@@ -307,7 +315,8 @@ button {
 }
 
 a:hover,
-button:hover {
+button:hover,
+.button:hover {
   color: var(--color-primary);
 }
 

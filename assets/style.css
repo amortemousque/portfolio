@@ -7,6 +7,8 @@
   --text-color: rgba(0, 0, 0, 0.9);
   --text-muted: rgba(0, 0, 0, 0.4);
   --title-color: #222222;
+  --title-underline-width: 3rem;
+  --title-spacing: 2rem;
   --stand-out-color: rgba(10, 8, 8, 0.6);
   --font-body: "Chivo", serif;
   --font-title: "Playfair Display", serif;
@@ -14,19 +16,19 @@
   --text-line-height: 1.8rem;
   --base: 0.8rem;
   --font-size: 16px;
-  --project-spacing: 2.5rem;
   --max-font-size: 20px;
-  --min-font-size: 16px;
+  --min-font-size: 17px;
   --min-width: 640px;
   --max-width: 1200px;
   --max-width-post: 800px;
-  --padding: clamp(1rem, 4vw, 3rem);
+  --padding: clamp(1.2rem, 4.5vw, 3rem);
+
   --radius: 5px;
 }
 /* For fluid font calculation */
 :root {
   --max-font-size-stripped: 20;
-  --min-font-size-stripped: 16;
+  --min-font-size-stripped: 17;
   --min-width-stripped: 640;
   --max-width-stripped: 1200;
 }
@@ -101,6 +103,28 @@ pre {
 
 p {
   margin: 0;
+  margin-block-end: 1rem;
+}
+
+img {
+  inline-size: 100%;
+  margin-block-end: var(--title-spacing);
+  margin-block-start: 1rem;
+}
+
+ul,
+ol {
+  margin-block-end: var(--title-spacing);
+  margin-block-start: 0;
+  padding-inline-start: 1.5rem;
+}
+
+li + li {
+  margin-block-start: 0.7rem;
+}
+
+picture {
+  display: flex;
 }
 
 /* Nav */
@@ -149,6 +173,7 @@ dark-mode-toggle::before {
   display: inline-block;
   margin-inline-end: 0.2rem;
 }
+
 /* Headline */
 
 .headline {
@@ -161,10 +186,11 @@ dark-mode-toggle::before {
   letter-spacing: 0.2rem;
   line-height: 2.2rem;
   margin: 0;
-  padding-inline-end: 2rem;
+  padding-inline-end: var(--title-spacing);
 }
 
-/* Presentation */
+/* Statement */
+
 .first-letter {
   float: left;
   font-size: 4.48rem;
@@ -177,6 +203,7 @@ dark-mode-toggle::before {
   background: var(--background-stand-out);
   border-radius: var(--radius);
   color: var(--stand-out-color);
+  margin-block-end: 1rem;
   padding: 1.5rem 2rem;
 }
 
@@ -193,51 +220,26 @@ dark-mode-toggle::before {
   margin-block-end: 1rem;
 }
 
-/* project */
+/* Cover */
 
-.project,
-.project-layout-2,
-.project-layout-3 {
-  align-items: center;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-areas: "body images";
-  grid-template-columns: 1fr 1fr;
-  min-height: 80vh;
-  padding: 4rem 0;
+.cover {
+  justify-content: center;
+  max-height: 90vh;
 }
 
-.project-body {
-  grid-area: body;
-  margin-block-end: var(--padding);
-  margin-inline-end: var(--padding);
-}
-
-.project-images,
-.project-2x-images {
-  align-items: stretch;
-  align-self: stretch;
-  display: grid;
-  gap: 4vh;
-  grid-area: images;
-  overflow: hidden;
-  position: relative;
-}
-
-picture {
-  display: flex;
-}
-
-.project-image-preview {
-  block-size: 100%;
-  border-radius: var(--radius);
-  inline-size: 100%;
+.cover img {
+  inline-size: 100vw;
+  justify-self: center;
+  margin: 0 auto;
+  margin-block-end: var(--title-spacing);
+  max-inline-size: 1920px;
   object-fit: cover;
 }
 
-.project-title {
-  align-self: start;
+/* Title */
 
+.title {
+  align-self: start;
   color: var(--title-color);
   display: inline-block;
   font-family: var(--font-title);
@@ -245,58 +247,111 @@ picture {
   font-weight: bold;
   justify-self: start;
   line-height: var(--title-line-height);
+  margin-block-end: var(--title-spacing);
+  margin-block-start: 0rem;
   padding-inline-end: 5px;
 }
 
-.project-title:after {
+* + .title {
+  margin-block-start: var(--title-spacing);
+}
+
+.title:after {
   border-block-end: 2px solid var(--color-primary);
   content: "";
   display: block;
   padding-block-start: 0.8rem;
-  width: 5vw;
+  width: var(--title-underline-width);
 }
 
-.project-content {
-  margin-block-end: 1.5rem;
+/* Divider */
+
+.divider {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-block-end: 4rem;
+  margin-block-start: 4rem;
 }
 
-/* project layout 2 */
-
-.project-layout-2 {
-  grid-template-areas: "images body";
-  grid-template-columns: 1fr 40%;
+.divider span {
+  background-color: var(--text-color);
+  border-radius: 50%;
+  height: 3px;
+  width: 3px;
 }
 
-.project-layout-2 .project-body {
-  margin-inline-end: 0;
-  margin-inline-start: var(--project-spacing);
+/* Item */
+
+.item {
+  align-items: center;
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--padding);
+  grid-auto-flow: row dense;
+  grid-template-areas: "body image";
+  grid-template-columns: 7fr 9fr;
+  min-height: 80vh;
+  padding: 4rem 0;
+}
+.item-body {
+  grid-area: body;
 }
 
-/* project layout 3 */
+.item-images {
+  align-items: stretch;
+  align-self: stretch;
+  display: grid;
+  gap: calc(var(--padding) / 2);
+  grid-area: image;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  overflow: hidden;
+  position: relative;
+}
 
-.project-layout-3 {
+.item-image-preview {
+  block-size: 100%;
+  border-radius: var(--radius);
+  margin: 0;
+  object-fit: cover;
+}
+
+/* item layout 2 */
+
+.item:nth-child(odd) {
+  grid-template-areas: "image body";
+  grid-template-columns: 10fr 6fr;
+}
+
+/* item layout 3 */
+
+.item:last-child {
   grid-template-areas:
     "body"
-    "images";
-  grid-template-columns: 1fr;
-  grid-template-rows: min-content auto;
+    "image";
+  grid-template-columns: none;
 }
 
-.project-layout-3 .project-image-preview {
-  height: auto;
+.item:last-child > .item-body,
+.item:last-child > .item-images {
+  grid-column: auto;
 }
 
-.project-layout-3 .project-body {
-  flex: 1 0 calc(50% - 2.5rem);
-  margin-inline-end: 0;
-}
+/* Responsive */
 
-.project-layout-3 .project-images {
-  grid-template-columns: 1fr 1fr;
+@media only screen and (max-width: 640px) {
+  .item,
+  .item:nth-child(odd) {
+    grid-template-areas:
+      "body"
+      "image";
+    grid-template-columns: none;
+  }
 }
 
 /* Links  */
-.project-links a + a {
+
+.item-links a + a {
   margin-left: 1rem;
 }
 
@@ -321,17 +376,22 @@ button:hover,
 }
 
 /* List */
+
 .list {
   display: grid;
-  gap: 2rem;
+  gap: var(--padding);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+.list-item {
+  margin: 0;
+}
+
 .list-item-title {
   font-family: var(--font-title);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
@@ -341,21 +401,9 @@ button:hover,
   font-style: italic;
   line-height: 2em;
 }
-/* Responsive */
 
-@media only screen and (max-width: 640px) {
-  .project,
-  .project-layout-2,
-  .project-layout-3 {
-    display: block;
-    height: auto;
-  }
-  .project-body,
-  .project-layout-2 .project-body,
-  .project-layout-3 .project-body {
-    margin: 0 0 var(--project-spacing) 0;
-  }
-  .project-layout-3 .project-images {
-    grid-template-columns: 1fr;
-  }
+/* Post */
+
+.post {
+  --max-width: 800px;
 }

@@ -68,7 +68,7 @@
   overflow-x: auto;
   background: var(--code-background);
   color: var(--code-color);
-  padding: 0.5em;
+  padding: 1rem;
 }
 .hljs-emphasis {
   font-style: italic;

@@ -19,7 +19,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../assets/style.css" />
-    <link rel="stylesheet" href="../assets/post.css" />
     <title>How JavaScript works: Event Loop and Web APIs</title>
     <script type="module" rel="preload" src="/assets/scripts/index.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -54,7 +53,7 @@
     </script>
   </head>
 
-  <body>
+  <body class="post">
     <header>
       <div class="bar">
         <a href="/posts">&larr; Back to post</a>
@@ -92,18 +91,18 @@
         >""
       </p>
 
-      <h2 class="project-title">The event loop</h2>
+      <h2 class="title">The event loop</h2>
 
       <p>
         The event loop is the way Javascript Engines orchestrate tasks in order to be processed. The
         concept is simple.
         <strong>There is a handless loop where Javascript wait for tasks and execute them.</strong>
       </p>
-      <picture class="drawing">
+      <picture>
         <image src="../assets/images/posts/event-loop.gif" />
       </picture>
 
-      Examples of tasks:
+      <p>Examples of tasks:</p>
       <ul>
         <li>
           When an external script
@@ -116,6 +115,7 @@
         </li>
         <li>When the time is due for a scheduled setTimeout, the task is to run its callback.</li>
       </ul>
+
       <p>
         Let’s put it into motion with a simple bit of code. We assume we have an HTML page which
         include this script.
@@ -147,7 +147,7 @@ console.log("After");</code></pre>
         executed.
       </p>
 
-      <h2 class="project-title">What about the render steps?</h2>
+      <h2 class="title">What about the render steps?</h2>
       <p>
         One type of the tasks I did not mention yet and which is often ignored by front developer is
         render steps. When you change the DOM, the browser has to update what's on the screen. This
@@ -167,7 +167,7 @@ console.log("After");</code></pre>
         As you now guess, these tasks also have to compete to be processed by the event loop. The
         figure below show four tasks mutating the DOM therefore triggering the render steps.
       </p>
-      <picture class="drawing">
+      <picture>
         <img
           src="../assets/images/posts/event-loop-render-steps.gif"
           alt="Render steps description"
@@ -195,7 +195,7 @@ console.log("After");</code></pre>
         <strong>What about fetching data from the server?</strong> This take more than a few
         milliseconds, even a few seconds in the worst case. This is where Web APIs come in.
       </p>
-      <h2 class="project-title">Web APIs and asynchronous code</h2>
+      <h2 class="title">Web APIs and asynchronous code</h2>
       <p>
         We all use Fetch(), console.log(), setTimeout()... without caring too much how it works.
         This is because
@@ -212,7 +212,7 @@ console.log("After");</code></pre>
   .then(res => res.text())
   .then(text => show(text));</code></pre>
       <p>Here it what's happening in the event loop</p>
-      <picture class="drawing">
+      <picture>
         <img
           src="../assets/images/posts/event-loop-render-steps-web-apis.gif"
           alt="Web api description"

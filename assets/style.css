@@ -296,7 +296,7 @@ dark-mode-toggle::before {
   grid-template-areas: "body image";
   grid-template-columns: 7fr 9fr;
   min-height: 80vh;
-  padding: 2rem 0;
+  padding: clamp(2rem, 5vw, 3rem) 0;
 }
 .item-body {
   grid-area: body;

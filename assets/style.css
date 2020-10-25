@@ -21,7 +21,7 @@
   --min-width: 640px;
   --max-width: 1200px;
   --max-width-post: 800px;
-  --padding: clamp(1.2rem, 4.5vw, 3rem);
+  --padding: clamp(1rem, 4.5vw, 3rem);
 
   --radius: 5px;
 }
@@ -296,7 +296,7 @@ dark-mode-toggle::before {
   grid-template-areas: "body image";
   grid-template-columns: 7fr 9fr;
   min-height: 80vh;
-  padding: 4rem 0;
+  padding: 2rem 0;
 }
 .item-body {
   grid-area: body;
@@ -383,7 +383,7 @@ button:hover,
 
 .list {
   display: grid;
-  gap: var(--padding);
+  gap: var(--title-spacing);
   list-style: none;
   margin: 0;
   padding: 0;

@@ -218,7 +218,6 @@ dark-mode-toggle::before {
   background: var(--statement-background);
   border-radius: var(--radius);
   color: var(--statement-color);
-  /* margin-block-end: 1rem; */
   padding: 1.5rem 2rem;
 }
 
@@ -263,10 +262,6 @@ dark-mode-toggle::before {
   justify-self: start;
   line-height: var(--title-line-height);
   margin-block-end: var(--title-spacing);
-  margin-block-start: 0rem;
-}
-
-* + .title {
   margin-block-start: var(--title-spacing);
 }
 
@@ -276,6 +271,11 @@ dark-mode-toggle::before {
   display: block;
   padding-block-start: 0.8rem;
   width: var(--title-underline-width);
+}
+
+.subheading {
+  box-sizing: border-box;
+  margin-block-end: var(--title-spacing);
 }
 
 /* Blockquote */
@@ -329,6 +329,10 @@ blockquote {
 
 .item-body {
   grid-area: body;
+}
+
+.item-body .title {
+  margin-top: 0;
 }
 
 .item-images {
@@ -443,4 +447,12 @@ button:hover,
 
 .post {
   --max-width: 800px;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+em {
+  font-family: var(--font-title);
 }

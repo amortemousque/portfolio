@@ -19,6 +19,7 @@
   --title-line-height: 2.5rem;
   --text-line-height: 1.8rem;
   --headline-size: 2rem;
+  --blockquote-size: 1.15rem;
 
   --font-size: 17px;
   --max-font-size: 20px;
@@ -58,8 +59,10 @@
 @media (min-width: 640px) and (max-width: 1199px) {
   :root {
     --font-size: calc(
-      var(--min-font-size) + (var(--max-font-size-stripped) - var(--min-font-size-stripped) - 1) *
-        (100vw - var(--min-width)) / (var(--max-width-stripped) - 1 - var(--min-width-stripped))
+      var(--min-font-size) +
+        (var(--max-font-size-stripped) - var(--min-font-size-stripped) - 1) *
+        (100vw - var(--min-width)) /
+        (var(--max-width-stripped) - 1 - var(--min-width-stripped))
     );
   }
 }
@@ -79,7 +82,7 @@ body {
   background-color: var(--background);
   color: var(--text-color);
   font-family: var(--font-body);
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.02rem;
   line-height: var(--text-line-height);
   margin: 0;
   opacity: 0;
@@ -273,6 +276,20 @@ dark-mode-toggle::before {
   display: block;
   padding-block-start: 0.8rem;
   width: var(--title-underline-width);
+}
+
+/* Blockquote */
+
+blockquote {
+  max-width: 700px;
+  display: block;
+  margin: 45px auto 45px;
+  color: var(--text-muted);
+  line-height: 2rem;
+  font-weight: 100;
+  font-size: var(--blockquote-size);
+  font-style: italic;
+  font-family: var(--font-title);
 }
 
 /* Divider */

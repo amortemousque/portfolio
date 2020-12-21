@@ -276,6 +276,7 @@ dark-mode-toggle::before {
 .subheading {
   box-sizing: border-box;
   margin-block-end: var(--title-spacing);
+  margin-block-start: var(--title-spacing);
 }
 
 /* Blockquote */

@@ -27,32 +27,16 @@
       src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || []
       function gtag() {
-        dataLayer.push(arguments);
+        dataLayer.push(arguments)
       }
-      gtag("js", new Date());
+      gtag("js", new Date())
 
-      gtag("config", "UA-180340714-1");
-    </script>
-    <!-- Hotjar Tracking Code for www.mortemousque.com -->
-    <script>
-      (function (h, o, t, j, a, r) {
-        h.hj =
-          h.hj ||
-          function () {
-            (h.hj.q = h.hj.q || []).push(arguments);
-          };
-        h._hjSettings = { hjid: 2036739, hjsv: 6 };
-        a = o.getElementsByTagName("head")[0];
-        r = o.createElement("script");
-        r.async = 1;
-        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-        a.appendChild(r);
-      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+      gtag("config", "UA-180340714-1")
     </script>
     <script>
-      hljs.initHighlightingOnLoad();
+      hljs.initHighlightingOnLoad()
     </script>
   </head>
 
@@ -68,7 +52,9 @@
     </header>
     <main>
       <picture class="cover"
-        ><img src="../assets/images/posts/killing-feature.jpg" alt=""
+        ><img
+          src="../assets/images/posts/killing-feature.jpg"
+          alt="Feature creep illustrate with a  messy library picture"
       /></picture>
       <p>
         Killing features is a crucial part of software development. Over time,
@@ -96,7 +82,10 @@
         available menus.
       </p>
       <picture>
-        <image src="../assets/images/posts/feature-creep.png" />
+        <img
+          src="../assets/images/posts/feature-creep.png"
+          alt="2006 Microsoft Word software picture"
+        />
       </picture>
       <p>
         It confronts how complicated the product really is. Knowing all the
@@ -111,29 +100,10 @@
       </p>
       <p>
         Any additional feature added to the product increase the learning curve,
-        put stress on navigation and ultimately work against the user. A good
-        explanation to this phenomenon is given by Ian Batterbee.
-      </p>
-      <blockquote>
-        "The product phenomenon is the result of designing for feature-led
-        experiences rather than user-centred ones" — Ian Batterbee
-      </blockquote>
-      <p>
-        Ian Batterbee opposed feature-led development to user-centered which can
-        be translated as <strong>user needs ≠ features</strong>
-      </p>
-      <p>
-        Being user oriented does not mean, you have to implement new features
-        every time a customer ask for it. Requirements can be translated in many
-        ways before thinking of features. They need to be answered wisely and
-        strategically, regarding the pros and const for the product as a all.
-      </p>
-      <p>
-        Being user oriented is a mind-set that as to go all way down, from the
-        top management to the production.
+        put stress on navigation and ultimately work against the user.
       </p>
 
-      <h2 class="title">Control scope</h2>
+      <h2 class="title">Controlling the scope</h2>
       <p>
         Defining boundaries and maintaining a cohesive vision, is one of the
         hardest things to do with product development. CEO vision, invertors,
@@ -142,6 +112,7 @@
         to embrace new features while expanding the product scope, few are
         willing to kill features while reducing that same scope.
       </p>
+
       <blockquote>
         "The dilution effect is why maintaining a clear vision for your product
         is so important. Without a clear understanding of the limits and
@@ -153,24 +124,39 @@
         Inherited from the development phase, the backlog is observed
         chronologically. New feature feels more appealing than older ones. The
         bad news is, older features are the core value proposition of the
-        product. You have to see your product as a set of feature.
+        product. You have to see your product as a set of features and control
+        it.
       </p>
-      <p><strong>Don't lose sight of the product promise.</strong></p>
       <p>
         Features on the backlog need the same level of scrutiny, or higher. Any
         increase in the surface area of a product is a potential dilution of the
-        value proposition and the overall experience. Each feature has to answer
-        a simple question:
-        <strong> feature value > resource required</strong>
+        value proposition and the overall experience.
       </p>
+      <p><strong>Don't lose sight of the product promise.</strong></p>
 
+      <p>
+        <i
+          >How to manage user needs that fall out of our boundaries but can add
+          value to the users?</i
+        >
+      </p>
+      <p>
+        To answer this question wee need to clarify what being "user oriented"
+        means and how to gather real needs.<br />
+        A common misconception about being "user oriented" is to think that
+        interviewing users and answering to there needs with new features is the
+        solution. Gathering needs only through interview will lead you to what's
+        Ian Batterbee called "feature-led experiences".
+        <strong>Users are not good at expressing theirs needs</strong>.
+        Observation and data is key when it comes to understand you users.
+      </p>
       <h2 class="title">Be data driven</h2>
       <p>
         In order for your product to deliver value, you need to build a
         framework to review objectively features. Gathering usage data on every
         feature is a key step to success. We need metrics thar are clear
-        indications of success/failure of a feature. Here, I'm only gonna scrape the surface of two well known
-        systems:
+        indications of success/failure of a feature. Here, I'm only gonna scrape
+        the surface of two well known systems:
       </p>
       <ul>
         <li>Dave McClure's AARRR Framework Metrics</li>
@@ -183,56 +169,63 @@
         created this framework to measure a startup gross using 5 key
         performance indicators.
       </p>
-      <p>
-        <strong>Acquisitions</strong> — <em>How do customers find you?</em
-        ><br />
-        Which channel: Most traffic? / Best conversion rate? / Best cost per
-        acquisition?
-      </p>
-      <p>
-        <strong>Activation</strong> —
-        <em>How quickly can you get your customer's to the 'Aha-Moment'?</em
-        ><br />
-        This is when the user sees the value of your product. Find this moment
-        thanks to customer interview and metrics.
+      <section>
+        <h4>Acquisitions — <em>How do customers find you?</em></h4>
+        <p>
+          Which channel: Most traffic? / Best conversion rate? / Best cost per
+          acquisition?
+        </p>
+      </section>
+      <section>
+        <h4>
+          Activation —
+          <em>How quickly can you get your customer's to the 'Aha-Moment'?</em>
+        </h4>
+        <p>
+          This is when the user sees the value of your product. Find this moment
+          thanks to customer interview and metrics.
+        </p>
         <ul>
-          <li>
-            for apps, that can be after people download / sign up
-          </li>
+          <li>for apps, that can be after people download / sign up</li>
           <li>for e-commerce, it could be the number of orders.</li>
           <li>for SaaS, sign up for your trial</li>
         </ul>
-      </p>
-      <p>
-        <strong>Retention</strong> —
-        <em
-          >How many of your customers are you retaining & why are you losing the
-          others.</em
-        >
-        <br />
-        <span>
+      </section>
+      <section>
+        <h4>
+          Retention —
+          <em
+            >How many of your customers are you retaining & why are you losing
+            the others.</em
+          >
+        </h4>
+        <p>
           Make sure your churn rate is smaller than your customer acquisitions.
-          <ul>
-            <li>
-              for apps, that can be measured following your daily or monthly
-              active users.
-            </li>
-            <li>for e-commerce, it could be the number of orders.</li>
-            <li>for SaaS, renewing the monthly subscription.</li>
-          </ul>
-          Don't forget that it's 5 to 25 times more expensive to acquire a new
-          customer than to sell to an existing one.
-        </span>
-      </p>
-      <p>
-        <strong>Referral</strong> —
-        <em>How can you turn your customers into your advocates</em><br />
+        </p>
+        <ul>
+          <li>
+            for apps, that can be measured following your daily or monthly
+            active users.
+          </li>
+          <li>for e-commerce, it could be the number of orders.</li>
+          <li>for SaaS, renewing the monthly subscription.</li>
+        </ul>
+        Don't forget that it's 5 to 25 times more expensive to acquire a new
+        customer than to sell to an existing one.
+      </section>
+      <section>
+        <h4>
+          Referral —
+          <em>How can you turn your customers into your advocates</em>
+        </h4>
         Keep an eye on the Net Promoter Score and Viral Coefficient.
-      </p>
-      <p>
-        <strong>Revenue</strong> —
-        <em>How can you increase revenue</em>
-      </p>
+      </section>
+      <section>
+        <h4>
+          Revenue —
+          <em>How can you increase revenue</em>
+        </h4>
+      </section>
       <br />
       <p>
         Make sure that while building your app and add more feature, you look at
@@ -244,40 +237,53 @@
         HEART metrics are especially build to measure UX metric. We can see them
         as a lower level of dataset compared to AARRR.
       </p>
-      <p>
-        <strong>Happiness</strong> —
-        <em>How do users feel about your product?</em><br />
+      <section>
+        <h4>Happiness — <em>How do users feel about your product?</em></h4>
         Happiness is typically measured by user satisfaction surveys, app
         ratings and reviews, and net promoter score.
-      </p>
-      <p>
-        <strong>Engagement</strong> —
-        <em>How often are people coming back to use the product? </em
-        ><br />Engagement can be measured by number of visits per user per week,
-        session length, or a key action, like the number of photos uploaded or
-        songs listened to per user per day.
-      </p>
-      <p>
-        <strong>Adoption</strong> —
-        <em
-          >How many people complete the onboarding process and become regular
-          users?</em
-        ><br />
-        Adoption is measured by number of new users over a period of time or
-        percentage of customers using a new feature.
-      </p>
-      <p>
-        <strong>Retention</strong> —
-        <em>What percentage of users are returning to the product?</em><br />
-        Retention is measured by churn.
-      </p>
-      <p>
-        <strong>Task success</strong> —
-        <em>Can users achieve their goal or task quickly and easily?</em><br />
-        Task success is measured by factors like efficiency (how long it takes
-        users to complete the task) effectiveness (percent of tasks completed),
-        and error rate.
-      </p>
+      </section>
+      <section>
+        <h4>
+          <strong>Engagement</strong> —
+          <em>How often are people coming back to use the product? </em>
+        </h4>
+        <p>
+          Engagement can be measured by number of visits per user per week,
+          session length, or a key action, like the number of photos uploaded or
+          songs listened to per user per day.
+        </p>
+      </section>
+      <section>
+        <h4>
+          <strong>Adoption</strong> —
+          <em
+            >How many people complete the onboarding process and become regular
+            users?</em
+          >
+        </h4>
+        <p>
+          Adoption is measured by number of new users over a period of time or
+          percentage of customers using a new feature.
+        </p>
+      </section>
+      <section>
+        <h4>
+          Retention —
+          <em>What percentage of users are returning to the product?</em>
+        </h4>
+        <p>Retention is measured by churn.</p>
+      </section>
+      <section>
+        <h4>
+          Task success —
+          <em>Can users achieve their goal or task quickly and easily?</em>
+        </h4>
+        <p>
+          Task success is measured by factors like efficiency (how long it takes
+          users to complete the task) effectiveness (percent of tasks
+          completed), and error rate.
+        </p>
+      </section>
       <br />
       <p>
         Theses frameworks are very important to objectify the success of your

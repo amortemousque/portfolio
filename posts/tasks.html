@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Aymeric Mortemousque portfolio" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@IucioI" />
+    <meta name="twitter:title" content="Aymeric Mortemousque" />
+    <meta property="og:url" content="https://mortemousque.com" />
+    <meta property="og:description" content="Aymeric Mortemousque portfolio" />
+    <meta property="og:title" content="Aymeric Mortemousque" />
+    <meta name="keywords" content="Portfolio, Engineer, Web" />
+    <link rel="icon" href="favicon.ico" />
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/style.css" />
+    <title>Javascript tasks</title>
+    <script type="module" rel="preload" src="/assets/scripts/index.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag("js", new Date())
+
+      gtag("config", "UA-180340714-1")
+    </script>
+    <script>
+      hljs.initHighlightingOnLoad()
+    </script>
+  </head>
+
+  <body class="post">
+    <header>
+      <div class="bar">
+        <a href="/posts">&larr; Back to post</a>
+        <dark-mode-toggle class="button">Toggle dark mode</dark-mode-toggle>
+      </div>
+      <section>
+        <h1 class="headline">Javascript tasks</h1>
+      </section>
+    </header>
+    <main>
+      <p>
+        Javascript is a single-threaded language, which mean it can only execute
+        one operation at a time. It uses tasks to manage long operations such as
+        HTTP calls in order to avoid blocking the main thread. But not all tasks
+        have the same priority. Therefore the order in which each operations are
+        performed isn't something trivial.
+      </p>
+      <p>
+        For those who don't know how tasks are managed in Javascript, I suggest
+        you have a quick look at my article about
+        <a href="/posts/event-loop">the event loop.</a> Here, I will focus on
+        the different types and how to trigger them.
+      </p>
+      <p>
+        Javascript isn't good at providing consistent APIs to schedule tasks. In
+        fact, you'll see that it's quite messy ;)
+      </p>
+      <h2 class="title">Synchronous</h2>
+      <p>
+        Synchronous programming is when each statement are executed
+        sequentially. This mean that a statement has to wait until the previous
+        one before executing.
+      </p>
+      <p><em>How to call a callback synchronously?</em></p>
+      <pre><code class="lang-javascript">function synchronous(callback) {
+  callback()
+}</code></pre>
+      <p>
+        Synchronous code is of course the easiest to trigger. We just have to
+        call our callback, and it's done.
+      </p>
+      <h2 class="title">Task</h2>
+      <p>
+        Tasks are the oldest building block of asynchronous code in Javascript.
+        They are probably the most known task type in javascript. To have a
+        better understanding, here is some examples when tasks get scheduled:
+      </p>
+      <ul>
+        <li>
+          A new JavaScript program or subprogram is executed (such as from a
+          console, or by running the code in a &lt;script&gt; element.
+        </li>
+        <li>
+          An event is fired by the user, adding the event's callback function to
+          the task queue.
+        </li>
+        <li>
+          A timeout or interval created with <em>setTimeout()</em> or
+          <em>setInterval()</em> is reached, causing the corresponding callback
+          to be added to the task queue.
+        </li>
+      </ul>
+      <p><em>How to schedule a task easily?</em></p>
+      <pre><code class="lang-javascript">function task(callback) {
+  setTimeout(() => callback(), 0)
+}</code></pre>
+      <p>
+        This technique works well but the spec mentions a very specific rules to
+        setTimeout. If you start scheduling task within a task, once you reach a
+        certain depth "timeout clamping" will occur. Which mean the task won't
+        schedule immediately but it will start scaling it after 4 ms.
+      </p>
+      <p>A more reliable way is to use <strong>MessageChannel</strong>.</p>
+      <pre><code class="lang-javascript">function task(callback) { 
+  const mc = new MessageChannel()
+  mc.port1.postMessage(null)
+  mc.port2.addEventListener("message", () => {
+      callback()
+  }, {once: true })
+  mc.port2.start()
+}</code></pre>
+      <p>
+        I won't go into detail, but this code is going to schedule a task
+        immediately whatever the deps of the call.
+      </p>
+      <p>
+        Now, let's execute a synchronous code and a task in the same script.
+      </p>
+      <pre><code class="lang-javascript">task(() => console.log("Task 1"))
+synchronous(() => console.log("Sync 1"))
+
+// Output
+// > Sync 1
+// > Task 1
+</code></pre>
+      <p>
+        As we can see, tasks are always executed once the synchronous code has
+        finished.
+      </p>
+      <h2 class="title">Microtask</h2>
+      <p>
+        Microtasks have been introduce lately in Javascript and are well known
+        thanks to Promises. When you resolve a promise a microtask is scheduled.
+      </p>
+      <pre><code class="lang-javascript">function microtask(callback) {
+  Promise.resolve().then(() => callback())
+}</code></pre>
+      <p>More recently, a much cleaner way came out.</p>
+      <pre><code class="lang-javascript">function microtask(callback) {
+  queueMicrotask(callback)
+}</code></pre>
+      <p>
+        If you're a fan of semantic like me, you should be happy with
+        queueMicrotask().
+      </p>
+      <p>Let's compare the different task and microtask with this script.</p>
+      <pre><code class="lang-javascript">task(() => console.log("Task 1"))
+microtask(() => console.log("Microtask 1"))
+synchronous(() => console.log("Sync 1"))
+
+// Output
+// > Sync 1
+// > Microtask 1
+// > Task 1
+</code></pre>
+      <p>
+        Synchronous code is executed first, then microtasks and then tasks.
+        Microtask has a higher priority than task.
+      </p>
+      <h2 class="title">Nanotask</h2>
+      <p>
+        Nanotask comes from <strong>process.nextTick()</strong> which is only
+        available in Node. If you've already understood the difference between
+        tasks, and microtasks, you should already guess that the name comes from
+        the fact that it has a higher priority than microtask.
+      </p>
+      <p><em>How to trigger a nanotask?</em></p>
+      <pre><code class="lang-javascript">function nanotask(callback) {
+  process.nextTick(callback)
+}</code></pre>
+      <p>
+        Actually, nanotask is not a real concept in Javascript but it's a easy
+        way to remember the priority order.
+      </p>
+      <p>The script above shows the priority order in Node.</p>
+      <pre><code class="lang-javascript">task(() => console.log("Task 1"))
+microtask(() => console.log("Microtask 1"))
+synchronous(() => console.log("Sync 1"))
+Nanotask(() => console.log("Nanotask 1"))
+
+// Output
+// > Sync 1
+// > Nanotask 1
+// > Microtask 1
+// > Task 1
+</code></pre>
+      <h2 class="title">setImmediate</h2>
+      <p>
+        SetImmediate comes from the golden age of IE but it's no longer part of
+        the browser ecosystem. However it still exist in Node.
+      </p>
+      <pre><code>function setImmediate(callback) {
+  setImmediate(callback)
+}</code></pre>
+      <p>
+        Back in the day, setImmediate(callback) was used as a shortcut of
+        setTimeout(callback, 0). What people often ignore is that it triggers a
+        task in a different task queue.
+      </p>
+      <p>
+        The spec isn't realy clear about the implementation of setImmediate().
+        To get to the conclusion we need to try the following script.
+      </p>
+      <pre><code class="lang-javascript">
+task(() => console.log("Task 1")) //setTimeout() implementation
+task(() => console.log("Task 2")) //MessageChannel() implementation
+nanotask(() => console.log("Nanotask 1"))
+immediate(() => console.log("Immediate 1"))
+synchronous(() => console.log("Sync 1"))
+microtask(() => console.log("Microtask 1"))
+
+// Output
+// > Sync 1
+// > Nanotask 1
+// > Microtask 1
+// > Task 2
+// > Immediate 1
+// > Task 1
+</code></pre>
+      <p>
+        Has we can see, setImmediate() has a higher priority than setTimeout but
+        a lower priority than MessageChannel. It's easy to argue that
+        setImmediate() is a misleading name for tasks type with almost the least
+        priority amongst all types.
+      </p>
+    </main>
+  </body>
+</html>

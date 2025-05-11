@@ -27,20 +27,6 @@
     />
     <script type="module" rel="preload" src="/assets/scripts/index.js"></script>
     <title>Aymeric</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-180340714-1"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag("js", new Date())
-
-      gtag("config", "UA-180340714-1")
-    </script>
     <script>
     window['_fs_host'] = 'fullstory.com';
     window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
@@ -119,15 +105,26 @@
             >
           </div>
         </div>
-        <div>
-          <img
-            src="./assets/images/image-1.png"
-            alt="Description image 1"
-          />
-          <img
-            src="./assets/images/image-2.png"
-            alt="Description image 1"
-          />
+        <div class="item-images">
+          <picture>
+            <source srcset="./assets/images/authentication-1.webp" type="image/webp" />
+            <source srcset="./assets/images/authentication-1.png" type="image/png" />
+            <img
+              class="item-image-preview"
+              src="./assets/images/authentication-1.png"
+              alt="Login page screenshot"
+            />
+          </picture>
+           <picture>
+            <source srcset="./assets/images/authentication-2.webp" type="image/webp" />
+            <source srcset="./assets/images/authentication-2.png" type="image/png" />
+            <img
+              class="item-image-preview"
+              src="./assets/images/authentication-2.png"
+              alt="Admin page screenshot"
+            />
+          </picture>
+
         </div>
       </article>
       <article class="item">
@@ -159,7 +156,7 @@
               class="item-image-preview"
               src="./assets/images/mondrian.png"
               loading="lazy"
-              alt="Mondrian painting 2D and 3D screeshot"
+              alt="Mondrian painting 2D and 3D screenshot"
             />
           </picture>
         </div>
@@ -196,7 +193,7 @@
               class="item-image-preview"
               src="./assets/images/lesnouveauxhertiers.png"
               loading="eager"
-              alt="Recruitment platform front page screeshot"
+              alt="Recruitment platform front page screenshot"
             />
           </picture>
         </div>

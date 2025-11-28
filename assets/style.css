@@ -122,6 +122,75 @@ p:last-child {
   margin-block-end: 0;
 }
 
+/* Paragraph / list hover accent (markdown-style left bar) */
+
+.post p,
+.post li {
+  border-left: 2px solid transparent;
+  padding-inline-start: 0.6rem;
+  transition:
+    border-color 120ms ease-in-out,
+}
+
+.post p:hover,
+.post li:hover {
+  border-left-color: var(--statement-color);
+  background-color: var(--statement-background);
+}
+
+/* Mermaid diagrams */
+
+.post .mermaid {
+  margin-block: 1.5rem;
+  overflow-x: auto;
+}
+
+.post .mermaid svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  background: transparent;
+}
+
+/* Nodes */
+.post .mermaid .node rect,
+.post .mermaid .node circle,
+.post .mermaid .node ellipse {
+  fill: var(--statement-background);
+  stroke: var(--color-primary);
+  stroke-width: 1.5px;
+  rx: var(--radius);
+}
+
+/* Node labels */
+.post .mermaid .label,
+.post .mermaid text {
+  fill: var(--text-color);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+/* Edges */
+.post .mermaid .edgePath path {
+  stroke: var(--text-muted);
+  stroke-width: 1.3px;
+}
+
+.post .mermaid .marker path {
+  fill: var(--text-muted);
+}
+
+/* Clusters / groups */
+.post .mermaid .cluster rect {
+  fill: transparent;
+  stroke: var(--statement-background);
+  stroke-width: 1.5px;
+}
+
+.post .mermaid .cluster text {
+  fill: var(--text-muted);
+}
+
 img {
   inline-size: 100%;
   margin-block-end: var(--title-spacing);

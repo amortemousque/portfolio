@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "build:posts": "node scripts/build-posts.js",
+    "watch:posts": "node scripts/watch-posts.js",
+    "dev": "npm run build:posts && npm run watch:posts & vite",
+    "build": "npm run build:posts && vite build",
     "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "marked": "^12.0.0",
+    "gray-matter": "^4.0.3",
+    "chokidar": "^3.6.0",
+    "fs-extra": "^11.2.0"
   }
 }

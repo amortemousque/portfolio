@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Understanding how modern browsers use multi-process architecture to achieve resilience, performance, and security. A deep dive into Chrome's process model and Site Isolation." />
+    <meta name="keywords" content="Portfolio, Engineer, Web, Browser, Chrome, Architecture, Multi-Process, Site Isolation" />
+    <meta property="og:url" content="https://mortemousque.com/posts/browser-architecture" />
+    <meta property="og:description" content="Understanding how modern browsers use multi-process architecture to achieve resilience, performance, and security. A deep dive into Chrome's process model and Site Isolation." />
+    <meta property="og:title" content="Browser Multi-Process Architecture - Aymeric Mortemousque" />
+    <meta property="og:type" content="article" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/assets/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet" />
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <!-- Mermaid for diagrams rendered from ```mermaid code blocks -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      if (window.mermaid) {
+        window.mermaid.initialize({ startOnLoad: true });
+      }
+    </script>
+    <title>Browser Multi-Process Architecture</title>
+    <script type="module" src="/assets/scripts/components/index.js"></script>
+  </head>
+
+  <body class="post">
+    <site-header variant="post-detail" title="Browser Multi-Process Architecture" back-url="/posts"></site-header>
+    <main>
+      <p>Modern web browsers feel simple on the surface—type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.</p>
+<h2 class="title">Multi-Process Architecture</h2>
+<p>Chrome is a multi-process software. It separates concerns with processes. Each process can then run multiple threads in parallel.</p>
+<div class="mermaid">
+graph TD
+  Browser["Browser process"]
+  Network["Network process"]
+  Storage["Storage process"]
+  GPU["GPU process"]
+  Utility["Utility processes"]
+  Renderer["Renderer processes (per tab / frame)"]
+  Extension["Extension processes"]
+
+  Browser --> Network
+  Browser --> Storage
+  Browser --> GPU
+  Browser --> Utility
+  Browser --> Renderer
+  Browser --> Extension
+  Renderer --> GPU
+
+</div>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>What it controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Browser</strong></td>
+<td>Coordinates other processes, owns the UI (address bar, tabs, back/forward) and the main network and file privileges.</td>
+</tr>
+<tr>
+<td><strong>Network</strong></td>
+<td>Handles the network stack: DNS, TCP/TLS, HTTP, and resource fetching, independently from the UI.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Manages storage operations: cache, cookies, local storage, IndexedDB, and other on-disk data.</td>
+</tr>
+<tr>
+<td><strong>GPU</strong></td>
+<td>Performs GPU-accelerated compositing and graphics work, isolated from other processes.</td>
+</tr>
+<tr>
+<td><strong>Utility</strong></td>
+<td>Runs auxiliary services like audio playback, image decoding, and other offloaded tasks.</td>
+</tr>
+<tr>
+<td><strong>Renderer</strong></td>
+<td>One renderer process per tab or cross-site frame running Blink and V8: parses HTML/CSS, executes JavaScript, manages DOM, layout, and painting.</td>
+</tr>
+<tr>
+<td><strong>Extension</strong></td>
+<td>One or more processes per Chrome extension, running in isolation from websites and other extensions.</td>
+</tr>
+</tbody></table>
+<p>It brings 3 benefits:</p>
+<ul>
+<li><strong>Resilience</strong>: If one process crashes (for example, a renderer for a single tab), only that part of the browser is affected and the rest keeps running. A broken site usually means you can just close or reload that tab instead of restarting the whole browser.</li>
+<li><strong>Performance</strong>: Processes are independent and can run in parallel on multiple CPU cores. Heavy work in one tab (like a WebGL app or a big JavaScript bundle) is less likely to freeze other tabs or the browser UI.</li>
+<li><strong>Isolation / Security</strong>: Each process runs in its own sandbox with restricted access to system APIs and other processes&#39; memory. Combined with Site Isolation, this means different sites and extensions are kept separate, limiting the blast radius of bugs and vulnerabilities.</li>
+</ul>
+<h2 class="title">Servicification</h2>
+<p>Chrome has started &quot;Servicification&quot;, turning some components into services that can run either in their own dedicated process or inside a single process on separate threads. On memory-constrained devices, Chrome can run services like network, storage, and utility in the browser process in their own threads to reduce resource usage.</p>
+<h2 class="title">Site Isolation: Per-Frame Renderer Processes</h2>
+<p>To better comply with the Same Origin Policy, Chrome started to also run cross-origin frames in their own process for better isolation. They do not share memory with the</p>
+<p>This architecture brings three key benefits:</p>
+<ul>
+<li><strong>Resilience</strong>: If one process crashes (for example, a renderer for a single tab), only that part of the browser is affected and the rest keeps running. A broken site usually means you can just close or reload that tab instead of restarting the whole browser.</li>
+<li><strong>Performance</strong>: Processes are independent and can run in parallel on multiple CPU cores. Heavy work in one tab (like a WebGL app or a big JavaScript bundle) is less likely to freeze other tabs or the browser UI.</li>
+<li><strong>Isolation / Security</strong>: The Same Origin Policy is the core security model. Process separation hardens Chrome against side-channel attacks like Spectre—cross-origin iframes run in their own renderer processes, so a compromised renderer for one origin cannot directly read another site&#39;s memory.</li>
+</ul>
+<h2 class="title">How Chrome handles user interactions</h2>
+<p>Because each part of Chrome runs in its own process, they have to talk to each other using <strong>inter‑process communication (IPC)</strong> instead of direct function calls. The <strong>browser process</strong> sits in the middle and routes most messages between processes.</p>
+<h3>From address bar to page load</h3>
+<ol>
+<li>You type a URL in the address bar and press Enter. The address bar (omnibox) lives in the <strong>browser process</strong>.  </li>
+<li>The browser process decides whether this is a search or a navigation, then starts a navigation for the chosen URL.  </li>
+<li>It asks the <strong>network process</strong> to resolve DNS and open the TCP/TLS connection, then to fetch the main document</li>
+<li>Once headers are received and the target site is known, the browser process selects or creates the right <strong>renderer process</strong> for that origin (and Site Isolation rules).  </li>
+<li>The browser process sends the response as a raw byte stream to that renderer over IPC. The renderer parses HTML/CSS, runs JavaScript, and then starts requesting sub-resources (images, CSS, JS) via further IPC calls back to the browser and network processes. (More detail in <a href="/posts/browser-dns-behavior">Browser DNS behavior</a>.)</li>
+</ol>
+<h3>From user input to event handlers</h3>
+<ol>
+<li>Mouse, keyboard, and touch events first arrive in the <strong>browser process</strong> from the operating system.  </li>
+<li>At this stage the browser process only has the coordinates. It process <a href="https://www.w3.org/wiki/Hit_Testing">hit-tests</a> which tab and which region should receive the event, then forwards it to the correct <strong>renderer process</strong>.  </li>
+<li>Inside the renderer, Blink delivers the event to the appropriate DOM node so your JavaScript event listeners can run.  </li>
+<li>Some inputs (like Ctrl+L to focus the address bar, or closing a tab) are intercepted and handled directly by the <strong>browser process</strong> instead of going to a renderer.</li>
+</ol>
+<h2 class="title">References</h2>
+<ul>
+<li><a href="https://developer.chrome.com/blog/inside-browser-part1">Inside look at modern web browser (part 1)</a></li>
+<li><a href="https://docs.google.com/document/d/15I7sQyQo6zsqXVNAlVd520tdGaS8FCicZHrN0yRu-oU/edit?tab=t.0">Chrome Architecture Documentation</a></li>
+<li><a href="https://addyo.substack.com/p/how-modern-browsers-work">How Modern Browsers Work</a></li>
+</ul>
+
+      <p>
+        <em>Published: October 7, 2022</em>
+      </p>
+    </main>
+  </body>
+</html>
+

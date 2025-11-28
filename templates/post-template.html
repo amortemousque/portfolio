@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="{{description}}" />
+    <meta name="keywords" content="{{keywords}}" />
+    <meta property="og:url" content="https://mortemousque.com/posts/{{slug}}" />
+    <meta property="og:description" content="{{description}}" />
+    <meta property="og:title" content="{{ogTitle}}" />
+    <meta property="og:type" content="article" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/assets/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet" />
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <!-- Mermaid for diagrams rendered from ```mermaid code blocks -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      if (window.mermaid) {
+        window.mermaid.initialize({ startOnLoad: true });
+      }
+    </script>
+    <title>{{title}}</title>
+    <script type="module" src="/assets/scripts/components/index.js"></script>
+  </head>
+
+  <body class="post">
+    <site-header variant="post-detail" title="{{title}}" back-url="/posts"></site-header>
+    <main>
+      {{content}}
+      <p>
+        <em>Published: {{publishedDate}}</em>
+      </p>
+    </main>
+  </body>
+</html>
+

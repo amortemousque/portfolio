@@ -28,7 +28,7 @@
   <body class="post">
     <site-header variant="post-detail" title="Browser Multi-Process Architecture" back-url="/posts"></site-header>
     <main>
-      <p>Modern web browsers feel simple on the surface—type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.</p>
+      <p>Modern web browsers feel simple on the surface, type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.</p>
 <h2 class="title">Multi-Process Architecture</h2>
 <p>Chrome is a multi-process software. It separates concerns with processes. Each process can then run multiple threads in parallel.</p>
 <div class="mermaid">
@@ -95,13 +95,7 @@ graph TD
 <h2 class="title">Servicification</h2>
 <p>Chrome has started &quot;Servicification&quot;, turning some components into services that can run either in their own dedicated process or inside a single process on separate threads. On memory-constrained devices, Chrome can run services like network, storage, and utility in the browser process in their own threads to reduce resource usage.</p>
 <h2 class="title">Site Isolation: Per-Frame Renderer Processes</h2>
-<p>To better comply with the Same Origin Policy, Chrome started to also run cross-origin frames in their own process for better isolation. They do not share memory with the</p>
-<p>This architecture brings three key benefits:</p>
-<ul>
-<li><strong>Resilience</strong>: If one process crashes (for example, a renderer for a single tab), only that part of the browser is affected and the rest keeps running. A broken site usually means you can just close or reload that tab instead of restarting the whole browser.</li>
-<li><strong>Performance</strong>: Processes are independent and can run in parallel on multiple CPU cores. Heavy work in one tab (like a WebGL app or a big JavaScript bundle) is less likely to freeze other tabs or the browser UI.</li>
-<li><strong>Isolation / Security</strong>: The Same Origin Policy is the core security model. Process separation hardens Chrome against side-channel attacks like Spectre—cross-origin iframes run in their own renderer processes, so a compromised renderer for one origin cannot directly read another site&#39;s memory.</li>
-</ul>
+<p>Site Isolation is a Chrome security feature that ensures cross-site iframes run in their own renderer processes instead of sharing one process across different sites. This pushes the Same Origin Policy down to the process level: each origin (and many cross-site frames) gets its own memory space. By separating sites into different processes, Chrome significantly reduces the impact of side‑channel attacks like Spectre—a compromised renderer for one origin cannot directly read another site&#39;s memory.</p>
 <h2 class="title">How Chrome handles user interactions</h2>
 <p>Because each part of Chrome runs in its own process, they have to talk to each other using <strong>inter‑process communication (IPC)</strong> instead of direct function calls. The <strong>browser process</strong> sits in the middle and routes most messages between processes.</p>
 <h3>From address bar to page load</h3>
@@ -127,7 +121,7 @@ graph TD
 </ul>
 
       <p>
-        <em>Published: October 7, 2022</em>
+        <em>Published: November 28, 2025</em>
       </p>
     </main>
   </body>

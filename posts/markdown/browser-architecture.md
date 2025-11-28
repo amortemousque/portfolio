@@ -3,7 +3,7 @@ title: "Browser Multi-Process Architecture"
 slug: "browser-architecture"
 description: "Understanding how modern browsers use multi-process architecture to achieve resilience, performance, and security. A deep dive into Chrome's process model and Site Isolation."
 keywords: "Portfolio, Engineer, Web, Browser, Chrome, Architecture, Multi-Process, Site Isolation"
-published: "2022-10-07"
+published: "2025-11-28"
 ---
 
 Modern web browsers feel simple on the surface—type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.
@@ -53,13 +53,7 @@ Chrome has started "Servicification", turning some components into services that
 
 ## Site Isolation: Per-Frame Renderer Processes
 
-To better comply with the Same Origin Policy, Chrome started to also run cross-origin frames in their own process for better isolation. They do not share memory with the
-
-This architecture brings three key benefits:
-
-- **Resilience**: If one process crashes (for example, a renderer for a single tab), only that part of the browser is affected and the rest keeps running. A broken site usually means you can just close or reload that tab instead of restarting the whole browser.
-- **Performance**: Processes are independent and can run in parallel on multiple CPU cores. Heavy work in one tab (like a WebGL app or a big JavaScript bundle) is less likely to freeze other tabs or the browser UI.
-- **Isolation / Security**: The Same Origin Policy is the core security model. Process separation hardens Chrome against side-channel attacks like Spectre—cross-origin iframes run in their own renderer processes, so a compromised renderer for one origin cannot directly read another site's memory.
+Site Isolation is a Chrome security feature that ensures cross-site iframes run in their own renderer processes instead of sharing one process across different sites. This pushes the Same Origin Policy down to the process level: each origin (and many cross-site frames) gets its own memory space. By separating sites into different processes, Chrome significantly reduces the impact of side‑channel attacks like Spectre—a compromised renderer for one origin cannot directly read another site's memory.
 
 ## How Chrome handles user interactions
 

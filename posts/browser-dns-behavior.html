@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Deep dive into how browsers handle DNS resolution, caching, and IP failover. Learn how Chrome and Firefox differ in their DNS behavior and what happens when servers become unavailable." />
+    <meta name="keywords" content="Portfolio, Engineer, Web, DNS, Browser, Chrome, Firefox, Networking" />
+    <meta property="og:url" content="https://mortemousque.com/posts/browser-dns-behavior" />
+    <meta property="og:description" content="Deep dive into how browsers handle DNS resolution, caching, and IP failover. Learn how Chrome and Firefox differ in their DNS behavior and what happens when servers become unavailable." />
+    <meta property="og:title" content="When DNS Failover Fails: Understanding Browser IP Fallback - Aymeric Mortemousque" />
+    <meta property="og:type" content="article" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/assets/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet" />
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <title>Browser IP Failover</title>
+    <script type="module" src="/assets/scripts/components/index.js"></script>
+  </head>
+
+  <body class="post">
+    <site-header variant="post-detail" title="Browser IP Failover" back-url="/posts"></site-header>
+    <main>
+      <p>
+        After experiencing an incident with a service using DNS-based load balancing where a domain resolves to multiple IP addresses, but one of those IPs was returning HTTP 500 errors. I investigated how different browsers handle DNS resolution and failover.
+        This deep dive explores DNS caching, IP failover behavior, and the differences between Chrome and Firefox.
+      </p>
+
+      <h2 class="title">How DNS Resolution Works</h2>
+      <p>
+        Domain Name System (DNS) maps human-friendly domain names to numerical IP addresses that computers use to connect to each other.
+        When you type a URL into your browser, a complex resolution process happens behind the scenes.
+      </p>
+
+      <p>Here's the typical flow when a user types <code>www.example.com</code> in their browser:</p>
+
+      <picture>
+        <img
+          src="../assets/images/dns-resolution.png"
+          alt="DNS resolution process diagram"
+        />
+      </picture>
+
+      <ol>
+        <li>The user types <code>www.example.com</code> in their browser</li>
+        <li>The browser sends a DNS request to the DNS resolver</li>
+        <li>The resolver queries the root name server</li>
+        <li>The resolver queries the TLD name server</li>
+        <li>The resolver queries the authoritative name server</li>
+        <li>The resolver returns the corresponding IP addresses to the browser</li>
+        <li>The browser sends an HTTP request to the IP address</li>
+        <li>The web server returns the requested content</li>
+      </ol>
+
+      <h3>The Role of System APIs</h3>
+      <p>
+        To send DNS requests, browsers typically use native system APIs like <code>getaddrinfo</code>. Both Chrome and Firefox rely on these APIs by default.
+        However, <strong>Chromium has implemented its own built-in DNS resolver client</strong> to avoid native OS APIs in certain scenarios.
+      </p>
+
+      <p>
+        Chrome switches between its built-in DNS resolver and the system API depending on user configuration.
+        This means that all browsers are impacted by OS DNS cache, except Chrome in some specific cases.
+      </p>
+
+      <h2 class="title">What IP Addresses Do Browsers Get?</h2>
+      <p>
+        Both Chrome and Firefox provide tools to inspect DNS lookups:
+      </p>
+      <ul>
+        <li>Chrome: <code>chrome://net-internals/#dns</code></li>
+        <li>Firefox: <code>about:networking#dnslookuptool</code></li>
+      </ul>
+
+      <p>
+        I ran multiple experiments on domains that resolve to multiple IP addresses to understand if:
+      </p>
+      <ul>
+        <li>Browsers get multiple IPs from DNS lookups</li>
+        <li>Browsers get the same list after clearing the cache</li>
+        <li>IPs are ordered in a way that suggests prioritization</li>
+      </ul>
+
+      <h3>Experiment Results</h3>
+      <p>After clearing the browser DNS cache and performing multiple lookups, I observed:</p>
+
+      <ul>
+        <li><strong>IP address lists always contain 8 results</strong></li>
+        <li><strong>IP address lists are ordered differently each time</strong></li>
+        <li><strong>Different IP addresses appear after clearing the DNS cache</strong> (13 different addresses across experiments)</li>
+      </ul>
+
+      <p>
+        The random ordering suggests that the DNS resolver (in this case, AWS infrastructure) implements load balancing by rotating IP addresses in the response. Browsers typically attempt connections in the order received from the DNS resolver.
+      </p>
+
+      <h2 class="title">Do Browsers Fallback to Other IPs?</h2>
+      <p>
+        This was the critical question: if one IP is unavailable, will browsers automatically try another one from the DNS response?
+      </p>
+
+      <h3>Test Protocol</h3>
+      <p>I set up a controlled test by:</p>
+      <ol>
+        <li>Adding two IPs to <code>/etc/hosts</code>: <code>127.0.0.1</code> (local web server) and <code>192.168.8.1</code> (router)</li>
+        <li>Clearing the browser DNS cache</li>
+        <li>Testing different scenarios: both servers up, one down, one returning errors, one timing out</li>
+      </ol>
+
+      <h3>Results</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Chrome Behavior</th>
+            <th>Firefox Behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Both IPs are UP</td>
+            <td>Reaches 127.0.0.1</td>
+            <td>Reaches 127.0.0.1</td>
+          </tr>
+          <tr>
+            <td>127.0.0.1 is DOWN</td>
+            <td>Falls back to 192.168.8.1</td>
+            <td>Falls back to 192.168.8.1</td>
+          </tr>
+          <tr>
+            <td>127.0.0.1 returns 500</td>
+            <td>Reaches 127.0.0.1 (no fallback)</td>
+            <td>Reaches 127.0.0.1 (no fallback)</td>
+          </tr>
+          <tr>
+            <td>127.0.0.1 returns 408 (Request Timeout)</td>
+            <td>Reaches 127.0.0.1 (no fallback)</td>
+            <td>Reaches 127.0.0.1 (no fallback)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        <mark>Both browsers only fallback to another IP when the TCP connection fails
+        (server unreachable at the network level). They do NOT fallback when the TCP connection
+        succeeds but the HTTP request fails (500 error) or times out (408 error).</mark>
+      </p>
+
+      <h3>Why This Happens: TCP vs HTTP Layer</h3>
+      <p>
+        This behavior is tied to the <strong>TCP protocol level</strong>. DNS fallback is a
+        TCP-level mechanism browsers will only try the next IP address if the TCP three-way
+        handshake fails (connection refused, network unreachable, etc.). Once a TCP connection
+        is established, the browser considers it has successfully connected to the server,
+        regardless of what happens at the HTTP layer afterwards.
+      </p>
+      <p>
+        This means that HTTP-level failures whether 5xx server errors or 408 request timeouts
+        do not trigger DNS fallback. From the browser's perspective, it successfully reached
+        the server; any issues after that are application-level problems, not network connectivity
+        issues.
+      </p>
+
+      <h2 class="title">DNS Caching in Browsers</h2>
+      <p>
+        DNS caching happens at every level: browser, operating system, and DNS servers. Understanding browser-level caching is crucial for debugging network issues.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Browser Configuration</th>
+            <th>Cache Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chrome with built-in DNS resolver</td>
+            <td>Uses TTL from resolver response (minimum 60s)</td>
+          </tr>
+          <tr>
+            <td>Chrome with system DNS resolver</td>
+            <td>60 seconds</td>
+          </tr>
+          <tr>
+            <td>Firefox</td>
+            <td>60 seconds (configurable via <code>network.dnsCacheExpiration</code>)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Firefox users can view DNS cache settings by typing <code>about:config</code> in the address bar and searching for DNS-related variables.
+      </p>
+
+      <h2 class="title">Can We Control DNS with Browser APIs?</h2>
+      <p>
+        Unfortunately, there is no DNS API available in browser JavaScript for regular web applications.
+        The only DNS APIs I found are in the context of Firefox extensions, which are not accessible to standard web applications.
+      </p>
+
+      <p>
+        This means web developers cannot implement custom IP fallback strategies or DNS resolution logic from JavaScript.
+        We're at the mercy of browser and OS DNS behaviors, with no programmatic control over how DNS queries are resolved or cached.
+      </p>
+      <p>
+        <em>Published: October 7, 2022</em>
+      </p>
+    </main>
+  </body>
+</html>

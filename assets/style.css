@@ -463,3 +463,32 @@ em {
   font-family: var(--font-title);
   font-weight: normal;
 }
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  margin-block-end: var(--title-spacing);
+  margin-block-start: 1rem;
+  width: 100%;
+}
+
+table thead {
+  background-color: var(--statement-background);
+}
+
+table th {
+  color: var(--title-color);
+  font-family: var(--font-title);
+  font-weight: bold;
+  padding: 1rem;
+  text-align: left;
+}
+
+table td {
+  padding: 1rem;
+  border-top: 1px solid var(--statement-background);
+}
+
+table tbody tr:hover {
+  background-color: var(--statement-background);
+}

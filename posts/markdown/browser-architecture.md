@@ -18,9 +18,9 @@ graph TD
   Network["Network process"]
   Storage["Storage process"]
   GPU["GPU process"]
-  Utility["Utility processes"]
-  Renderer["Renderer processes (per tab / frame)"]
-  Extension["Extension processes"]
+  Utility@{ shape: procs, label: "Utility Processes"}
+  Renderer@{ shape: procs, label: "Renderer processes (per tab / frame)"}
+  Extension@{ shape: procs, label: "Extension processes"}
 
   Browser --> Network
   Browser --> Storage
@@ -50,6 +50,30 @@ It brings 3 benefits:
 ## Servicification
 
 Chrome has started "Servicification", turning some components into services that can run either in their own dedicated process or inside a single process on separate threads. On memory-constrained devices, Chrome can run services like network, storage, and utility in the browser process in their own threads to reduce resource usage.
+
+```mermaid
+graph TD
+  subgraph Browser["Browser Process"]
+    direction TB
+    Network
+    Storage
+    UI
+    Utility
+    end
+
+  UI["UI thread"]
+  Network["Network thread"]
+  Storage["Storage thread"]
+  GPU["GPU process"]
+  Utility@{ shape: procs, label: "Utility Processes"}
+  Renderer@{ shape: procs, label: "Renderer processes (per tab / frame)"}
+  Extension@{ shape: procs, label: "Extension processes"}
+
+  Browser --> GPU
+  Browser --> Renderer
+  Browser --> Extension
+  Renderer --> GPU
+```
 
 ## Site Isolation: Per-Frame Renderer Processes
 

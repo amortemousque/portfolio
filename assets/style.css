@@ -31,7 +31,7 @@
   --padding: clamp(1rem, 4.5vw, 3rem);
 
   --list-item-spacing: 2.5rem;
-  --header-spacing: clamp(3.5rem, 6vw, 4rem);
+  --header-spacing: clamp(3rem, 6vw, 4rem);
   --item-spacing: clamp(3.5rem, 10vw, 6rem);
 
   --radius: 5px;
@@ -70,7 +70,7 @@
 /* Define max font size */
 @media (min-width: 1200px) {
   :root {
-    --font-size: 21px;
+    --font-size: 19px;
   }
 }
 
@@ -189,7 +189,7 @@ ol {
 }
 
 li + li {
-  margin-block-start: 0.7rem;
+  margin-block-start: 0.5rem;
 }
 
 picture {
@@ -544,4 +544,20 @@ table td {
 
 table tbody tr:hover {
   background-color: var(--statement-background);
+}
+
+
+
+
+code.language-schema {
+  display: block;
+  overflow-x: auto;
+  background: var(--code-background);
+  color: var(--code-color);
+  padding: 1rem;
+  margin-block-end: 1rem;
+  font-family: monospace;
+  line-height: 1rem;
+  font-size: 0.8rem;
+
 }

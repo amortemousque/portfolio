@@ -7,10 +7,23 @@ const POSTS_DIR = path.join(__dirname, '../posts');
 const MARKDOWN_DIR = path.join(POSTS_DIR, 'markdown');
 const TEMPLATE_PATH = path.join(__dirname, '../templates/post-template.html');
 
-// Configure marked
+// Configure marked with custom renderer for mermaid diagrams
+const renderer = new marked.Renderer();
+
+// Custom code block renderer to handle mermaid diagrams
+renderer.code = function(code, language) {
+  if (language === 'mermaid') {
+    // Output mermaid diagrams in the format expected by mermaid.js
+    return `<pre class="mermaid">${code}</pre>`;
+  }
+  // Default code block rendering for other languages
+  return `<pre><code class="language-${language}">${code}</code></pre>`;
+};
+
 marked.setOptions({
   breaks: true,
-  gfm: true
+  gfm: true,
+  renderer: renderer
 });
 
 // Format date from YYYY-MM-DD to "Month Day, Year"
@@ -23,26 +36,10 @@ function formatDate(dateString) {
   return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 }
 
-// Post-process HTML (headings, diagrams, etc.)
+// Post-process HTML (headings, etc.)
 function postProcessHtml(html) {
   // Add title class to h2 elements
   html = html.replace(/<h2>/g, '<h2 class="title">');
-
-  // Transform mermaid code blocks (```mermaid) into <div class="mermaid"> for client-side rendering
-  // marked outputs: <pre><code class="language-mermaid">...</code></pre>
-  html = html.replace(
-    /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
-    (_, code) => {
-      const decoded = code
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'");
-
-      return `<div class="mermaid">\n${decoded}\n</div>`;
-    }
-  );
 
   return html;
 }

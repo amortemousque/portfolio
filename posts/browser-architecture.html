@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Chivo:400,700|Playfair+Display:400,700&display=swap" rel="stylesheet" />
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
     <!-- Mermaid for diagrams rendered from ```mermaid code blocks -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <script>
       if (window.mermaid) {
         window.mermaid.initialize({ startOnLoad: true });
@@ -28,18 +28,17 @@
   <body class="post">
     <site-header variant="post-detail" title="Browser Multi-Process Architecture" back-url="/posts"></site-header>
     <main>
-      <p>Modern web browsers feel simple on the surface, type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.</p>
+      <p>Modern web browsers feel simple on the surface—type a URL, hit enter, and a page appears. But under that smooth experience sits a complex set of systems working in parallel and coordinated with care. When I dug deeper into Chrome’s process model, I realized how much of the web’s behavior only makes sense once you understand how the browser itself is built.</p>
 <h2 class="title">Multi-Process Architecture</h2>
 <p>Chrome is a multi-process software. It separates concerns with processes. Each process can then run multiple threads in parallel.</p>
-<div class="mermaid">
-graph TD
+<pre class="mermaid">graph TD
   Browser["Browser process"]
   Network["Network process"]
   Storage["Storage process"]
   GPU["GPU process"]
-  Utility["Utility processes"]
-  Renderer["Renderer processes (per tab / frame)"]
-  Extension["Extension processes"]
+  Utility@{ shape: procs, label: "Utility Processes"}
+  Renderer@{ shape: procs, label: "Renderer processes (per tab / frame)"}
+  Extension@{ shape: procs, label: "Extension processes"}
 
   Browser --> Network
   Browser --> Storage
@@ -47,10 +46,7 @@ graph TD
   Browser --> Utility
   Browser --> Renderer
   Browser --> Extension
-  Renderer --> GPU
-
-</div>
-<table>
+  Renderer --> GPU</pre><table>
 <thead>
 <tr>
 <th>Process</th>
@@ -94,7 +90,27 @@ graph TD
 </ul>
 <h2 class="title">Servicification</h2>
 <p>Chrome has started &quot;Servicification&quot;, turning some components into services that can run either in their own dedicated process or inside a single process on separate threads. On memory-constrained devices, Chrome can run services like network, storage, and utility in the browser process in their own threads to reduce resource usage.</p>
-<h2 class="title">Site Isolation: Per-Frame Renderer Processes</h2>
+<pre class="mermaid">graph TD
+  subgraph Browser["Browser Process"]
+    direction TB
+    Network
+    Storage
+    UI
+    Utility
+    end
+
+  UI["UI thread"]
+  Network["Network thread"]
+  Storage["Storage thread"]
+  GPU["GPU process"]
+  Utility@{ shape: procs, label: "Utility Processes"}
+  Renderer@{ shape: procs, label: "Renderer processes (per tab / frame)"}
+  Extension@{ shape: procs, label: "Extension processes"}
+
+  Browser --> GPU
+  Browser --> Renderer
+  Browser --> Extension
+  Renderer --> GPU</pre><h2 class="title">Site Isolation: Per-Frame Renderer Processes</h2>
 <p>Site Isolation is a Chrome security feature that ensures cross-site iframes run in their own renderer processes instead of sharing one process across different sites. This pushes the Same Origin Policy down to the process level: each origin (and many cross-site frames) gets its own memory space. By separating sites into different processes, Chrome significantly reduces the impact of side‑channel attacks like Spectre—a compromised renderer for one origin cannot directly read another site&#39;s memory.</p>
 <h2 class="title">How Chrome handles user interactions</h2>
 <p>Because each part of Chrome runs in its own process, they have to talk to each other using <strong>inter‑process communication (IPC)</strong> instead of direct function calls. The <strong>browser process</strong> sits in the middle and routes most messages between processes.</p>

@@ -15,33 +15,29 @@
 
   --font-body: "Chivo", serif;
   --font-title: "Playfair Display", serif;
-  --title-size: 1.7rem;
-  --title-line-height: 2.5rem;
-  --text-line-height: 1.8rem;
-  --headline-size: 2rem;
-  --blockquote-size: 1.15rem;
-
-  --font-size: 17px;
-  --max-font-size: 20px;
-  --min-font-size: 17px;
+  
+  /* Fluid typography using clamp */
+  --font-size: clamp(14px, 1.5vw, 16px);
+  --title-size: clamp(1.4rem, 2.5vw, 1.7rem);
+  --title-line-height: clamp(2rem, 3vw, 2.5rem);
+  --text-line-height: clamp(1.6rem, 2vw, 1.8rem);
+  --headline-size: clamp(1.6rem, 2.8vw, 2rem);
+  --blockquote-size: clamp(1rem, 1.5vw, 1.15rem);
+  --code-font-size: clamp(0.75rem, 1.1vw, 0.85rem);
+  --code-line-height: clamp(1.4rem, 1.8vw, 1.6rem);
 
   --min-width: 640px;
   --max-width: 1200px;
 
   --padding: clamp(1rem, 4.5vw, 3rem);
+  --code-padding: clamp(0.75rem, 2vw, 1.25rem);
 
   --list-item-spacing: 2.5rem;
   --header-spacing: clamp(3rem, 6vw, 4rem);
   --item-spacing: clamp(3.5rem, 10vw, 6rem);
+  --block-spacing: clamp(1.5rem, 3vw, 2rem);
 
   --radius: 5px;
-}
-/* For fluid font calculation */
-:root {
-  --max-font-size-stripped: 20;
-  --min-font-size-stripped: 17;
-  --min-width-stripped: 640;
-  --max-width-stripped: 1200;
 }
 
 .dark-mode {
@@ -53,25 +49,6 @@
   --background-emphases: #383737;
   --statement-background: rgba(255, 255, 255, 0.07);
   --text-muted: rgba(255, 255, 255, 0.4);
-}
-
-/* Fluid typography formula */
-@media (min-width: 640px) and (max-width: 1199px) {
-  :root {
-    --font-size: calc(
-      var(--min-font-size) +
-        (var(--max-font-size-stripped) - var(--min-font-size-stripped) - 1) *
-        (100vw - var(--min-width)) /
-        (var(--max-width-stripped) - 1 - var(--min-width-stripped))
-    );
-  }
-}
-
-/* Define max font size */
-@media (min-width: 1200px) {
-  :root {
-    --font-size: 19px;
-  }
 }
 
 html {
@@ -111,6 +88,28 @@ header section {
 /* Reset */
 pre {
   margin: 0;
+  margin-block-end: var(--block-spacing);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+pre code {
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: var(--code-font-size);
+  line-height: var(--code-line-height);
+}
+
+code {
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: var(--code-font-size);
+  background: var(--statement-background);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}
+
+pre code {
+  background: none;
+  padding: 0;
 }
 
 p {
@@ -125,7 +124,7 @@ p:last-child {
 /* Mermaid diagrams */
 
 .post .mermaid {
-  margin-block: 1.5rem;
+  margin-block: var(--block-spacing);
   overflow-x: auto;
 }
 
@@ -151,7 +150,7 @@ p:last-child {
 .post .mermaid text {
   fill: var(--text-color);
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
 }
 
 /* Edges */
@@ -177,13 +176,13 @@ p:last-child {
 
 img {
   inline-size: 100%;
-  margin-block-end: var(--title-spacing);
-  margin-block-start: 1rem;
+  margin-block-end: var(--block-spacing);
+  margin-block-start: var(--block-spacing);
 }
 
 ul,
 ol {
-  margin-block-end: var(--title-spacing);
+  margin-block-end: var(--block-spacing);
   margin-block-start: 0;
   padding-inline-start: 1.5rem;
 }
@@ -261,9 +260,8 @@ dark-mode-toggle::before {
 
 .first-letter {
   float: left;
-  font-size: 4.48rem;
-  line-height: 4.48rem;
-
+  font-size: clamp(3.5rem, 5vw, 4.48rem);
+  line-height: clamp(3.5rem, 5vw, 4.48rem);
   margin-inline-end: 5px;
 }
 
@@ -277,7 +275,7 @@ dark-mode-toggle::before {
 .statement-emphases {
   color: var(--title-color);
   display: block;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   margin-bottom: 0.4rem;
 }
 
@@ -328,13 +326,28 @@ dark-mode-toggle::before {
 
 .subheading {
   box-sizing: border-box;
-  margin-block-end: var(--title-spacing);
-  margin-block-start: var(--title-spacing);
+  margin-block-end: var(--block-spacing);
+  margin-block-start: var(--block-spacing);
+}
+
+h2, h3, h4 {
+  margin-block-end: clamp(0.75rem, 1.5vw, 1rem);
+  margin-block-start: var(--block-spacing);
+  color: var(--title-color);
+  font-family: var(--font-title);
+  font-weight: bold;
+}
+
+h2 {
+  font-size: clamp(1.3rem, 2.2vw, 1.5rem);
+}
+
+h3 {
+  font-size: clamp(1.15rem, 1.9vw, 1.3rem);
 }
 
 h4 {
-  margin-block-end: 0;
-  margin-block-start: calc(var(--title-spacing) / 2);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
 }
 
 /* Blockquote */
@@ -342,9 +355,9 @@ h4 {
 blockquote {
   max-width: 700px;
   display: block;
-  margin: 45px auto 45px;
+  margin: var(--block-spacing) auto;
   color: var(--text-muted);
-  line-height: 2rem;
+  line-height: clamp(1.8rem, 2.5vw, 2rem);
   font-weight: 100;
   font-size: var(--blockquote-size);
   font-style: italic;
@@ -487,7 +500,7 @@ button:hover,
 
 .list-item-title {
   font-family: var(--font-title);
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
   font-weight: bold;
 }
 
@@ -520,8 +533,8 @@ em {
 /* Tables */
 table {
   border-collapse: collapse;
-  margin-block-end: var(--title-spacing);
-  margin-block-start: 1rem;
+  margin-block-end: var(--block-spacing);
+  margin-block-start: var(--block-spacing);
   width: 100%;
 }
 
@@ -533,12 +546,12 @@ table th {
   color: var(--title-color);
   font-family: var(--font-title);
   font-weight: bold;
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   text-align: left;
 }
 
 table td {
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   border-top: 1px solid var(--statement-background);
 }
 
@@ -554,10 +567,10 @@ code.language-schema {
   overflow-x: auto;
   background: var(--code-background);
   color: var(--code-color);
-  padding: 1rem;
-  margin-block-end: 1rem;
-  font-family: monospace;
-  line-height: 1rem;
-  font-size: 0.8rem;
-
+  padding: var(--code-padding);
+  margin-block-end: var(--block-spacing);
+  border-radius: var(--radius);
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: var(--code-font-size);
+  line-height: var(--code-line-height);
 }

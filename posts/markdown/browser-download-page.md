@@ -17,6 +17,58 @@ thread. It parses the text to decide what to do:
 - If it looks like a valid URL → forward it to the networking service (another process).
 
 The networking service starts the request using the TCP/IP stack.
+A network connection commonly use 3 application layer protocol (DNS, TLS, HTTP), each relaying on TCP/IP stack.
+
+in js we have a high level abasctraciton `fetch` API hiding the complexity. but under the hood there are multiple phase for a request.
+but lets look at a lowev level python implementation:
+
+```py
+import socket
+import ssl
+
+# --------------------------
+# 1. CREATE SOCKET (no TCP yet)
+# --------------------------
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# --------------------------
+# 2. WRAP IN TLS (optional for HTTPS)
+# --------------------------
+context = ssl.create_default_context()
+conn = context.wrap_socket(sock, server_hostname="example.com")
+
+# --------------------------
+# 3. CONNECT (DNS lookup + TCP handshake happens here)
+# --------------------------
+conn.connect(("example.com", 443))
+
+# --------------------------
+# 4. BUILD HTTP REQUEST BY HAND
+# --------------------------
+http_request = (
+    "POST /api/items HTTP/1.1\r\n"
+    "Host: example.com\r\n"
+    "Content-Type: application/json\r\n"
+    "Content-Length: 14\r\n"
+    "\r\n"
+    '{"name":"foo"}'
+)
+
+# --------------------------
+# 5. SEND HTTP PAYLOAD (headers + body)
+# --------------------------
+conn.sendall(http_request.encode())
+
+# --------------------------
+# 6. RECEIVE HTTP RESPONSE
+# --------------------------
+response = conn.recv(4096)
+print(response.decode())
+
+conn.close()
+```
+
+Now lets see each phase in depth
 
 ## Establishing the Connection: DNS, TCP, and TLS
 
@@ -24,26 +76,76 @@ Before your browser can send the HTTP request, it needs to establish a connectio
 
 ### 1. DNS Lookup: From Domain to IP Address
 
-Your browser needs an IP address to connect, but you typed `https://example.com`. The browser (or OS) queries DNS servers to resolve the domain name:
+Your browser needs an IP address to connect, but you typed `https://example.com`, so the browser (or OS) queries DNS servers to resolve the domain name.
 
-- The browser checks its DNS cache first
-- If not found, it asks the OS, which checks its own cache
-- Still not found? The OS queries configured DNS servers (your ISP's resolver, or public ones like 8.8.8.8)
-- DNS servers respond with an IP address (e.g., `93.184.216.34`)
+If we take the example earlier,  under the hood `conn.connect(("example.com", 443))` triggers the OS to call `getaddrinfo()` internally, which performs DNS resolution.
 
-This happens **before** any TCP connection is made. The Node.js example earlier showed this: `net.createConnection(80, 'example.com')` triggers the OS to call `getaddrinfo()` internally, which performs DNS resolution.
+**DNS Records:**
+
+First, it's important to understand how DNS servers store and organize domain information. DNS uses different **record types** stored in **zone files** to map domain names to various resources. Each record type serves a specific purpose, whether it's pointing to an IP address, defining an alias, or specifying authoritative name servers.
+
+Here is a simplified version of a zone file for example.com
+
+```text
+DNS Zone File: example.com
+┌──────────────────────┬──────┬───────┬──────────────────────────────────┐
+│ NAME                 │ TTL  │ TYPE  │ DATA                             │
+├──────────────────────┼──────┼───────┼──────────────────────────────────┤
+│ example.com.         │ 3600 │ A     │ 93.184.216.34                    │
+│ example.com.         │ 3600 │ AAAA  │ 2606:2800:220:1:248:1893:25c8... │
+│ www.example.com.     │ 3600 │ CNAME │ example.com.                     │
+│ example.com.         │ 3600 │ NS    │ ns1.example.com.                 │
+└──────────────────────┴──────┴───────┴──────────────────────────────────┘
+```
+
+**How they work:**
+
+- **A Record**: Domain → IPv4 address. Browser queries for an A record to get the server IP.
+- **AAAA Record**: Domain → IPv6 address. Same as A but for the newer IPv6 protocol.
+- **CNAME Record**: Domain alias → another domain. DNS follows the chain: `www.example.com` → `example.com` → `93.184.216.34`
+- **NS Record**: Tells which servers are authoritative for this domain (handle DNS queries for it).
+
+**DNS Resolution Flow:**
+
+DNS resolution checks caches at every level (browser, OS, resolver). On cache miss, it follows a hierarchical lookup: browser → local DNS resolver → root server → TLD server → authoritative server.
+
+```mermaid
+flowchart LR
+    Browser["🖥️ Browser<br/>example.com<br/><i>(cache miss)</i>"]
+    
+    subgraph LocalDNS["Local DNS Resolver<br/>(ISP or 8.8.8.8)"]
+        direction TB
+        Resolver["DNS Resolver<br/>Recursive Lookup"]
+    end
+    
+    subgraph DNSHierarchy["DNS Server Hierarchy"]
+        direction TB
+        Root["🌐 Root Server<br/>(.)"]
+        TLD["🌐 TLD Server<br/>(.com)"]
+        Auth["🌐 Authoritative Server<br/>(example.com)"]
+    end
+    
+    Browser -.->|"1. Query: example.com<br/>(after browser/OS cache miss)"| Resolver
+    Resolver -->|"2. Where is .com?"| Root
+    Root -->|"3. NS record for .com<br/>→ TLD server IP"| Resolver
+    Resolver -->|"4. Where is example.com?"| TLD
+    TLD -->|"5. NS record for example.com<br/>→ Auth server IP"| Resolver
+    Resolver -->|"6. A record for example.com?"| Auth
+    Auth -->|"7. A record: 93.184.216.34<br/>TTL: 3600s"| Resolver
+    Resolver -->|"8. IP: 93.184.216.34<br/>(cached at all levels)"| Browser
+    
+    style LocalDNS fill:#fff4e1,stroke:#cc8800,stroke-width:2px
+    style DNSHierarchy fill:#ffe1f5,stroke:#cc0066,stroke-width:2px
+    style Browser fill:#b3d9ff,stroke:#0066cc
+    style Resolver fill:#ffe6b3,stroke:#cc8800
+    style Root fill:#ffb3d9,stroke:#cc0066
+    style TLD fill:#ffcce6,stroke:#cc0066
+    style Auth fill:#ffe6f5,stroke:#cc0066
+```
 
 ### 2. TCP Handshake: Opening the Connection
 
-Now that you have the server's IP address, your OS kernel initiates a **3-way handshake** to open a TCP connection:
-
-1. **SYN**: Your machine sends a TCP segment with the SYN flag to the server's IP and port (e.g., port 443 for HTTPS)
-2. **SYN-ACK**: The server responds with SYN and ACK flags, acknowledging your request
-3. **ACK**: Your machine sends back an ACK to confirm the connection is open
-
-After these three steps, you have a reliable bidirectional TCP connection. Both sides have agreed on initial sequence numbers and are ready to exchange data.
-
-Here's a detailed view of a complete TCP communication flow, showing the handshake, data transfer, and connection termination:
+Now that we have the server’s IP address, the OS kernel opens a TCP connection by performing the 3-way handshake. Each step is a TCP segment whose header includes control-flag bits (such as SYN and ACK) that are set to 0 or 1.
 
 ```mermaid
 sequenceDiagram
@@ -55,151 +157,80 @@ sequenceDiagram
     Server->>Client: SYN-ACK (seq=300, ack=101)
     Client->>Server: ACK (seq=101, ack=301)
     Note over Client,Server: Connection Established ✓
-    
-    Note over Client,Server: Data Transfer
-    Client->>Server: PSH ACK (seq=101, ack=301, data="GET /index.html")
-    Server->>Client: ACK (seq=301, ack=115)
-    Server->>Client: PSH ACK (seq=301, ack=115, data="HTTP/1.1 200 OK...")
-    Client->>Server: ACK (seq=115, ack=501)
-    
-    Note over Client,Server: TCP 4-Way Termination (Connection Closure)
-    Client->>Server: FIN ACK (seq=115, ack=501)
-    Server->>Client: ACK (seq=501, ack=116)
-    Server->>Client: FIN ACK (seq=501, ack=116)
-    Client->>Server: ACK (seq=116, ack=502)
-    Note over Client,Server: Connection Closed ✓
+
 ```
 
-**Understanding the TCP Flow:**
-
-**Phase 1: 3-Way Handshake (Connection Establishment)**
-
-Before any data can be sent, client and server must establish a reliable connection:
-
-1. **SYN (Synchronize)**: The client initiates the connection by sending a SYN segment with its initial sequence number (`seq=100`). This number is randomly chosen and marks the starting point for tracking bytes sent by the client.
-
-2. **SYN-ACK (Synchronize-Acknowledge)**: The server responds with its own sequence number (`seq=300`) and acknowledges the client's SYN by setting `ack=101` (client's seq + 1). This confirms receipt and establishes the server's starting sequence.
-
-3. **ACK (Acknowledge)**: The client acknowledges the server's SYN with `ack=301` (server's seq + 1). At this point, both sides have agreed on starting sequence numbers and the connection is fully established.
-
-**Phase 2: Data Transfer**
-
-Now the connection is ready to carry application data (HTTP in this case):
-
-1. **Client Request**: The client sends HTTP data (`"GET /index.html"`) with the PSH flag (push data to application immediately). The sequence number is `101` (where we left off), and we're still acknowledging the server's `300`. Let's say this request is 14 bytes long.
-
-2. **Server ACK**: The server acknowledges receipt by sending `ack=115` (client's seq 101 + 14 bytes received). This confirms all bytes up to 115 have been received.
-
-3. **Server Response**: The server sends its HTTP response data (`"HTTP/1.1 200 OK..."`). Its sequence is still `301`, and it acknowledges the client's `115`. The response is 200 bytes long.
-
-4. **Client ACK**: The client acknowledges the server's data with `ack=501` (server's seq 301 + 200 bytes received).
-
-**Phase 3: 4-Way Termination (Connection Closure)**
-
-When the data exchange is complete, the connection is gracefully closed:
-
-1. **Client FIN**: The client initiates closure by sending a FIN flag (finished sending data). Sequence is `115`, acknowledging server's `501`.
-
-2. **Server ACK**: The server acknowledges the client's FIN with `ack=116` (client's seq + 1 for FIN flag).
-
-3. **Server FIN**: The server sends its own FIN, indicating it's also done sending data. Note that steps 2 and 3 could be combined in practice, but splitting them allows the server to finish sending any remaining data before closing.
-
-4. **Client ACK**: The client sends the final acknowledgment `ack=502` (server's seq + 1 for FIN). After this, the connection is fully closed.
-
-**Why 3-way to open, 4-way to close?** Opening is symmetrical—both sides SYN at once. Closing is asymmetrical—each direction of data flow is closed independently, allowing one side to keep sending even after the other has finished.
+1. **SYN**: Your machine sends a TCP segment with the SYN flag to the server's IP and port (e.g., port 443 for HTTPS)
+2. **SYN-ACK**: The server responds with SYN and ACK flags, acknowledging your request
+3. **ACK**: Your machine sends back an ACK to confirm the connection is open
 
 ### 3. TLS Negotiation: Securing the Connection
 
+The TLS is the protocol of encryption of HTTP***S**. Encrypted data
 For HTTPS, the browser and server must negotiate encryption **before** sending any HTTP data. This happens in the TLS handshake:
 
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    
+    Note over Client,Server: TLS Handshake (Establishing Encryption)
+    Client->>Server: ClientHello<br/>(TLS versions, cipher suites, random)
+    Server->>Client: ServerHello<br/>(chosen cipher, random)
+    Server->>Client: Certificate<br/>(public key, signed by CA)
+    Server->>Client: ServerHelloDone
+    
+    Note over Client: Verify certificate<br/>against trusted CAs
+    
+    Client->>Server: ClientKeyExchange<br/>(encrypted pre-master secret)
+    Client->>Server: ChangeCipherSpec
+    Client->>Server: Finished (encrypted)
+    
+    Note over Server: Derive session keys<br/>from randoms + pre-master
+    
+    Server->>Client: ChangeCipherSpec
+    Server->>Client: Finished (encrypted)
+    
+    Note over Client,Server: Secure Connection Established ✓<br/>All HTTP traffic now encrypted
+```
+
+**Understanding the TLS Handshake:**
+
 1. **ClientHello**: Browser announces supported TLS versions, cipher suites, and sends a random value
-2. **ServerHello**: Server picks a TLS version and cipher suite, sends its certificate (with public key) and another random value
+
+2. **ServerHello + Certificate**: Server picks a TLS version and cipher suite, sends its certificate (with public key) and another random value
+
 3. **Certificate Verification**: Browser validates the server's certificate against trusted Certificate Authorities (CAs)
-4. **Key Exchange**: Both sides derive shared encryption keys using the random values and public-key cryptography
-5. **Finished**: Both sides send encrypted messages to confirm the handshake succeeded
+
+4. **Key Exchange**: Client generates a pre-master secret, encrypts it with the server's public key, and sends it. Both sides derive shared session keys using the random values and pre-master secret
+
+5. **Finished**: Both sides send encrypted "Finished" messages to confirm the handshake succeeded and verify the keys work
 
 Now every HTTP message will be encrypted with the negotiated keys before being handed to TCP.
 
 ## TCP/IP Model Overview
 
-Web communication uses a stack of protocols. Each layer builds on top of the one below it, from your browser down to the physical wire.
+Web communication uses a stack of protocols. **DNS and TLS are an application-layer protocol** (like HTTP). Whatever the protocol, its messages still make a round trip “on the wire” by being **encapsulated** inside the lower layers (TCP/UDP → IP → link → physical). Each layer builds on top of the one below it, from your browser down to the physical wire.
 
-1. **Application Layer** is where your browser lives. It speaks protocols like HTTP, HTTPS, and TLS, working with raw **data** (your request).
+HTTPS request (bytes carried inside one Ethernet frame):
 
-2. **Transport Layer** runs in your OS kernel. It uses TCP or UDP to break that data into **segments**, adding port numbers and reliability.
-
-3. **Internet Layer**, also in the kernel, wraps those segments into **packets** using IP (IPv4 or IPv6), adding source and destination IP addresses so they can be routed across networks.
-
-4. **Link Layer** is handled by your network driver and NIC (Network Interface Card). It frames packets into **frames** with MAC addresses for Ethernet or Wi-Fi transmission.
-
-5. **Physical Layer** is pure hardware—your NIC converts those frames into actual **bits**: electrical signals over copper, light pulses through fiber, or radio waves through the air.
-
-As your HTTP request travels down the stack, each layer wraps it with its own header—turning **Data** into **Segments**, **Segments** into **Packets**, **Packets** into **Frames**, and finally **Frames** into **Bits** on the wire.
-
-Another way to look at this model:
-![TCP/IP model diagram showing application, transport, internet, link, and physical layers](../../assets/images/tcp-ip-model.png)
-
-## Encapsulation: How Data Moves Down the Stack
-
-Now that the connection is established (DNS resolved, TCP handshake complete, TLS negotiated), the browser is ready to send the actual HTTP request. Each layer adds its own header to the data before sending it—like wrapping a message in several envelopes, each with its own addressing.
-
-Let's follow a single HTTP request as it travels from your browser down to the wire.
-
-```mermaid
-flowchart LR
-    subgraph L1["Application Layer - Data"]
-        A["GET /page.html HTTP/1.1<br/>Host: example.com<br/>..."]
-    end
-    
-    subgraph L2["Transport Layer - Segment"]
-        direction LR
-        B1["TCP Header<br/>━━━━━━━━<br/>Src Port: 54321<br/>Dst Port: 443<br/>Seq, Ack<br/>Flags"]
-        B2["HTTP Data"]
-    end
-    
-    subgraph L3["Internet Layer - Packet"]
-        direction LR
-        C1["IP Header<br/>━━━━━━━<br/>Src IP: 192.168.1.5<br/>Dst IP: 93.184.216.34<br/>Protocol: TCP<br/>TTL: 64"]
-        C2["TCP Header"]
-        C3["HTTP Data"]
-    end
-    
-    subgraph L4["Link Layer - Frame"]
-        direction LR
-        D1["MAC Header<br/>━━━━━━━━<br/>Src MAC: aa:bb:cc:...<br/>Dst MAC: 11:22:33:...<br/>EtherType: IPv4"]
-        D2["IP Header"]
-        D3["TCP Header"]
-        D4["HTTP Data"]
-    end
-    
-    subgraph L5["Physical Layer - Bits"]
-        direction LR
-        E["01010110 01101001 00110100..."]
-    end
-    
-    L1 -.-> L2
-    L2 -.-> L3
-    L3 -.-> L4
-    L4 -.-> L5
-    
-    style L1 fill:#e1f5ff,stroke:#0066cc
-    style L2 fill:#fff4e1,stroke:#cc8800
-    style L3 fill:#ffe1f5,stroke:#cc0066
-    style L4 fill:#e1ffe8,stroke:#00cc66
-    style L5 fill:#f5f5f5,stroke:#666666
-    
-    style A fill:#e1f5ff
-    style B1 fill:#fff4e1
-    style B2 fill:#e1f5ff
-    style C1 fill:#ffe1f5
-    style C2 fill:#fff4e1
-    style C3 fill:#e1f5ff
-    style D1 fill:#e1ffe8
-    style D2 fill:#ffe1f5
-    style D3 fill:#fff4e1
-    style D4 fill:#e1f5ff
-    style E fill:#f5f5f5
+```text
+│ Ethernet Header │ IPv4 Header │ TCP Header │ TLS Record Header │ HTTP bytes │ FCS 
+│     ~14 B       │  20–60 B    │  20–60 B   │       5 B         │ variable   │ 4 B 
 ```
+
+Each layer processes a stream of **bytes** and understands only **its own header bytes**. Everything after that header is the layer’s **payload** (opaque bytes as far as that layer is concerned). The payload may *represent* structured data for the next layer up, but this layer doesn’t need to interpret it.
+
+The header exists so each layer can do its job: the sender sets it during **encapsulation**, and the receiver reads it during **decapsulation** to decide **who should handle the payload next**. Headers typically include:
+
+- **Header size / boundaries**: either a fixed header size (e.g., Ethernet without VLAN) or a field that says how long the header is (e.g., IPv4 IHL, TCP Data Offset), plus sometimes a **total length** (e.g., IPv4 Total Length) so you know where the packet ends.
+- **Encapsulated payload type (in this header)**: a field in the current layer’s header that tells what kind of payload is inside, so the receiver can pick the right parser (e.g., Ethernet **EtherType** → IPv4/IPv6, IPv4 **Protocol** / IPv6 **Next Header** → TCP/UDP/ICMP).
+- **Routing / delivery addresses**: the bytes used for forwarding and demultiplexing (MAC for the local hop, IP for end-to-end routing, ports for delivery to a process).
+- **Error detection**: many layers include an integrity check over “the part they care about” (often header + some/all payload). The receiver recomputes the check and compares it to the transmitted value; if it doesn’t match, the unit is typically dropped.
+
+## Encapsulation in detail
+
+Let's look deeper how our HTTP data makes it through the wire.
 
 ---
 
@@ -207,7 +238,7 @@ flowchart LR
 
 The browser builds an HTTP request as plain text. For `https://example.com/page.html`, it creates:
 
-```
+```http
 GET /page.html HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0...
@@ -218,7 +249,7 @@ Connection: keep-alive
 
 The browser then calls a **system call** (like `write()` or `send()`) to hand these bytes to the OS kernel. This is the boundary between user space (browser) and kernel space.
 
-If you're using HTTPS, the TLS layer encrypts these HTTP bytes before handing them to TCP. From TCP's perspective, it's just receiving encrypted bytes—it doesn't know or care that it's HTTP.
+If you're using HTTPS, the TLS layer encrypts these HTTP bytes before handing them to TCP. From TCP's perspective, it's just receiving encrypted bytes it doesn't know or care that it's HTTP.
 
 In Node.js, you can see the layers clearly if you open a TCP connection yourself and write the HTTP request as plain text:
 
@@ -245,38 +276,14 @@ const socket = net.createConnection(80, 'example.com', () => {
   // 3. Send the HTTP request bytes over the TCP stream
   socket.write(request);
 });
-
-// 4. Read the HTTP response bytes from the TCP stream
-socket.on('data', chunk => {
-  process.stdout.write(chunk.toString());
-});
-
-socket.on('end', () => {
-  console.log('\n--- connection closed ---');
-});
 ```
 
 ### 🟠 2. Transport Layer: TCP Segments
 
-The kernel's TCP implementation receives the data bytes from the application via the socket's send buffer. Here's what happens:
+The kernel's TCP implementation receives the data bytes from the application via the socket's send buffer.
+Unlike the unreliable IP layer below (which can drop, duplicate, or reorder packets), TCP guarantees that, reliability, ordering and integrity.
 
-**Segmentation**: TCP can't send all the HTTP bytes in one go. It splits them into segments based on:
-
-- MSS (Maximum Segment Size): typically 1460 bytes to fit inside a standard 1500-byte Ethernet frame
-- Send window: how much data the receiver is ready to accept (flow control)
-- Congestion window: how much the network can handle without packet loss
-
-For example, a 10KB HTTP request might be split into 7 segments.
-
-**Adding the TCP Header**: Each segment gets a 20-byte TCP header containing:
-
-- Source port (e.g., 54321) and destination port (e.g., 443 for HTTPS)
-- Sequence number: which byte in the stream this segment starts at
-- Acknowledgement number: which byte we've received from the other side
-- Flags: ACK, PSH (push this data to the app), FIN (closing), etc.
-- Window size: how much more data we can receive
-
-Here's what the TCP header looks like:
+TCP achieves this by wrapping outgoing bytes with a **TCP header** that contains all the metadata needed to track, verify, and reassemble the byte stream.
 
 ```schema
 ┌────────────────────────────── 32 bits ─────────────────────────────┐
@@ -297,47 +304,25 @@ Here's what the TCP header looks like:
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-**Field Breakdown:**
+**Ordering**: The sender assigns a **sequence number** to the bytes it sends so each segment can be placed at the correct position in the byte stream. The receiver buffer and and reorder.
 
-- **Source/Destination Port** (16 bits each): Identifies the sending and receiving applications (e.g., 443 = HTTPS, 80 = HTTP)
-- **Sequence Number** (32 bits): The byte number of the first byte of data in this segment. Used to track and reorder segments.
-- **Acknowledgment Number** (32 bits): The next byte number the senderexpects to receive. Confirms all bytes before this have been received.
-- **Data Offset** (4 bits): Header length in 32-bit words. Minimum is 5 (20 bytes), maximum is 15 (60 bytes with options).
-- **Reserved** (3 bits): Reserved for future use, must be zero.
-- **Flags** (9 bits): Control bits that manage the connection:
-  - **CWR** (Congestion Window Reduced): Sender reduced its sending rate
-  - **ECE** (ECN-Echo): ECN-capable and received congestion notification
-  - **URG** (Urgent): Urgent pointer field is valid
-  - **ACK** (Acknowledgment): Acknowledgment number field is valid
-  - **PSH** (Push): Push this data to the application immediately
-  - **RST** (Reset): Reset the connection (abort)
-  - **SYN** (Synchronize): Synchronize sequence numbers (establish connection)
-  - **FIN** (Finish): Sender is done sending data (close connection)
-- **Window Size** (16 bits): How many bytes the sender can receive (flow control). Can be scaled with TCP window scaling option.
-- **Checksum** (16 bits): Error detection for the header and data.
-- **Urgent Pointer** (16 bits): Offset of urgent data (only valid if URG flag is set).
-- **Options** (variable): Optional features like MSS, timestamps, window scaling. Padded to 32-bit boundary.
+**Reliability**: The sender keeps unacknowledged bytes in a send buffer and retransmits when it detects loss (timeouts and other signals). When acknowledgments arrive, the sender can discard the acknowledged bytes from its send buffer.
 
-For our example HTTP request, a TCP segment might look like:
+**Integrity**: The sender computes a **checksum** over the segment and includes it in the header so corruption can be detected in transit. Receivers re compute the checksum on their side, compare with the one in header and drop if different.
 
-- Source Port: `54321` (your browser's random port)
-- Destination Port: `443` (HTTPS)
-- Sequence Number: `101` (we've sent 101 bytes so far)
-- Acknowledgment Number: `301` (we've received up to byte 301 from the server)
-- Flags: `ACK` + `PSH` (acknowledging data and pushing new data)
-- Window Size: `65535` (we can receive 64KB more data)
+**Other mechanisms:**
 
-**Buffering and Timing**: TCP doesn't necessarily send data immediately. It might:
+- **Delivery to the right app** — **Source/Destination Port**: The sender sets a destination port to target the right service (e.g., 443 for HTTPS) and a source port to identify this connection locally.
 
-- Wait to accumulate more data (Nagle's algorithm)
-- Bundle multiple small writes into one segment
-- Wait for ACKs if the send window is full
+- **Flow control** — **Window Size**: The sender respects the advertised window and avoids sending more data than the peer can buffer.
 
-**Reliability**: TCP keeps a copy of each segment in the send buffer until it receives an ACK from the server. If no ACK arrives within the timeout, TCP retransmits the segment.
+- **Segmentation** — **MSS (Maximum Segment Size)**: Negotiated in **Options** to split the byte stream into segments that fit the network path (typically ~1460 bytes to fit in a 1500-byte Ethernet frame without IP fragmentation).
+
+- **Connection lifecycle** — **Flags** (SYN, ACK, FIN, RST, PSH): Control the state of the connection—establishing (SYN), acknowledging (ACK), closing (FIN), or aborting (RST).
 
 ### 🟣 3. Internet Layer: IP Packets
 
-The IP layer in the kernel receives each TCP segment and wraps it in an IP packet. This is where **routing** happens—deciding where to send this packet next.
+The IP layer in the kernel receives each transport segment and wraps it in an IP packet. Unlike TCP, IP doesn’t try to make delivery reliable. Instead, it provides **best-effort forwarding** across many networks.
 
 **Adding the IP Header**: A 20-byte header (for IPv4) is prepended with:
 
@@ -357,21 +342,31 @@ The IP layer in the kernel receives each TCP segment and wraps it in an IP packe
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-- Source IP address: your machine (e.g., `192.168.1.5`)
-- Destination IP address: the server (e.g., `93.184.216.34`)
-- Protocol field: set to `6` for TCP (tells the receiver what's inside)
-- TTL (Time To Live): starts at 64 or 128, decremented at each router hop to prevent infinite loops
-- Header checksum: for error detection
-- Total length: size of the entire packet (header + TCP segment)
+**Routing (sender-side)**: Before sending a packet, the host consults its **routing table**: a small list of “if the destination matches this prefix, send it to that next hop via this interface”. On a typical laptop, most off‑network destinations select the **default route**, which means “send to my gateway”.
 
-**Routing Decision**: The kernel looks up the destination IP in its **routing table**:
+Example routing table (simplified):
 
-- Is it on the local network? Send directly to that host
-- Otherwise, send to the default gateway (your router)
+```text
+Destination prefix     Next hop        Interface
+-------------------    -----------     ---------
+192.168.1.0/24         (on-link)        wlan0
+10.0.0.0/8             192.168.1.2      wlan0
+0.0.0.0/0              192.168.1.1      wlan0   (default route)
+```
 
-The routing table tells IP which **network interface** to use (Wi-Fi, Ethernet, VPN) and what the **next hop** should be.
+If the destination is `93.184.216.34`, it doesn’t match the first two entries, so the default route (`0.0.0.0/0`) is used: send the packet to `192.168.1.1` (your gateway) on `wlan0`.
 
-**MTU and Fragmentation**: If the packet is larger than the network's MTU (Maximum Transmission Unit) (typically 1500 bytes for Ethernet), IP might fragment it into smaller packets. However, modern TCP uses Path MTU Discovery to avoid this—it discovers the smallest MTU along the path and tells TCP to use a smaller MSS.
+At this point, the sender knows *where to send the packet next* (next hop + interface). Now it can construct the IP packet that will travel across the network.
+
+**MTU and fragmentation**: Links have a maximum size they can carry in one unit (MTU). If a packet is too large for the next hop, the sender can split it into smaller pieces and mark them so they can be stitched back together later, so senders often try to stay below the effective path MTU to avoid fragmentation.
+
+**Building the IP packet (sender-side)**: The kernel builds a packet by taking the payload (the transport segment) and prepending an IP header. Concretely, the sender:
+
+- Set **source** and **destination** IP addresses (found from routing table).
+- Set a **hop limit (TTL)** to bound how far the packet can travel.
+- Sets the Protocol field to identify the payload type (for example, TCP), so the receiver knows which transport handler should process it.
+- Fills in length fields so the receiver can determine the exact packet boundaries.
+- Set the computed checksum once the header fields are final, so the receiver (and intermediary hop) can verify header integrity.
 
 ### 🟢 4. Link Layer: Ethernet Frames
 
@@ -381,7 +376,7 @@ The kernel passes the IP packet to the **network driver** for your NIC (Network 
 
 1. Check the **ARP cache** for a recent mapping
 2. If not found, broadcast an ARP request: "Who has `192.168.1.1`?"
-3. The router responds: "I have `192.168.1.1`, my MAC is `11:22:33:44:55:66`"
+3. Wait for the ARP reply containing the MAC address (e.g., `11:22:33:44:55:66`)
 4. Cache this mapping for future use
 
 **Building the Ethernet Frame**: The driver adds a 14-byte Ethernet header:
@@ -390,9 +385,9 @@ The kernel passes the IP packet to the **network driver** for your NIC (Network 
 - Source MAC address: your NIC's hardware address
 - EtherType: `0x0800` for IPv4, `0x86DD` for IPv6
 
-It also adds a 4-byte **Frame Check Sequence (FCS)** at the end—a CRC checksum that lets the receiver detect corrupted frames.
+It also appends a 4-byte **Frame Check Sequence (FCS)** at the end a CRC checksum computed over the frame.
 
-**The Send Queue**: The driver places the frame in the NIC's **transmit queue** (a ring buffer in memory). The NIC reads frames from this queue using **DMA (Direct Memory Access)**—copying them directly without involving the CPU.
+**The Send Queue**: The driver places the frame in the NIC's **transmit queue** (a ring buffer in memory). The NIC reads frames from this queue using **DMA (Direct Memory Access)**, copying them directly without involving the CPU.
 
 ### ⚪ 5. Physical Layer: Signals
 
@@ -402,67 +397,11 @@ The NIC hardware takes each frame and converts the digital bits into physical si
 - **Fiber optic**: Bits become light pulses traveling through glass fiber
 - **Wi-Fi**: Bits become radio waves transmitted through the air (2.4 GHz or 5 GHz)
 
-Once transmitted, these signals carry your HTTP request to the router, then through a chain of routers across the internet, until they reach the destination server's NIC—where the entire process happens in reverse.
+Once transmitted, these signals leave your machine and enter the network medium (wire, fiber, or air). From there, the network can carry them onward toward the destination.
 
 ## Decapsulation: How Data Moves Up the Stack
 
 On the way back, everything happens in reverse: each layer **unwraps** its header, checks its own addressing, and passes the rest upward.
-
-```mermaid
-flowchart LR
-    subgraph L5["Physical Layer - Bits"]
-        direction LR
-        E["01010110 01101001 00110100..."]
-    end
-    
-    subgraph L4["Link Layer - Frame"]
-        direction LR
-        D1["MAC Header"]
-        D2["IP Header"]
-        D3["TCP Header"]
-        D4["HTTP Data"]
-    end
-    
-    subgraph L3["Internet Layer - Packet"]
-        direction LR
-        C1["IP Header"]
-        C2["TCP Header"]
-        C3["HTTP Data"]
-    end
-    
-    subgraph L2["Transport Layer - Segment"]
-        direction LR
-        B1["TCP Header"]
-        B2["HTTP Data"]
-    end
-    
-    subgraph L1["Application Layer - Data"]
-        A["HTTP/1.1 200 OK<br/>Content-Type: text/html<br/>..."]
-    end
-    
-    L5 -.-> L4
-    L4 -.-> L3
-    L3 -.-> L2
-    L2 -.-> L1
-    
-    style L5 fill:#f5f5f5,stroke:#666666
-    style L4 fill:#e1ffe8,stroke:#00cc66
-    style L3 fill:#ffe1f5,stroke:#cc0066
-    style L2 fill:#fff4e1,stroke:#cc8800
-    style L1 fill:#e1f5ff,stroke:#0066cc
-    
-    style E fill:#f5f5f5
-    style D1 fill:#e1ffe8
-    style D2 fill:#ffe1f5
-    style D3 fill:#fff4e1
-    style D4 fill:#e1f5ff
-    style C1 fill:#ffe1f5
-    style C2 fill:#fff4e1
-    style C3 fill:#e1f5ff
-    style B1 fill:#fff4e1
-    style B2 fill:#e1f5ff
-    style A fill:#e1f5ff
-```
 
 ### ⚪ 1. Physical Layer: Receiving Signals
 
@@ -491,6 +430,8 @@ In the kernel, the **IP layer** processes packets:
 - Verifies the destination **IP address** (is this packet for us?)
 - Checks the **protocol field** (6 = TCP, 17 = UDP, 1 = ICMP, etc.)
 - Strips the IP header and passes payload to the correct transport protocol
+  - If this machine is acting as a router, it may also decrement the hop limit (TTL) and either forward the packet onward or drop it if the hop limit reaches zero.
+  - If the packet arrived as fragments, the receiver reassembles them (or drops incomplete ones) before handing the payload up.
 
 ### 🟠 4. Transport Layer: Delivering to Application
 
@@ -500,8 +441,10 @@ The **TCP implementation in the kernel** processes segments:
   - source port / destination port
   - sequence / acknowledgement numbers
   - flags (SYN, ACK, FIN, etc.)
+  - Verifies integrity (e.g., checksum) and discards corrupted segments
+- Reorders segments, removes duplicates, and acknowledges received data so the sender can advance its send window
 - Finds the correct **socket** using the 4‑tuple: `(source IP, source port, dest IP, dest port)`
-- Reorders segments, handles retransmissions, removes duplicates
+
 - Exposes a clean **byte stream** to the application (via `read`/`recv`)
 
 ### 🔵 5. Application Layer: Parsing HTTP

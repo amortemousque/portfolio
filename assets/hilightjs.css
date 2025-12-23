@@ -68,8 +68,12 @@
   overflow-x: auto;
   background: var(--code-background);
   color: var(--code-color);
-  padding: 1rem;
-  margin-block-end: 1rem;
+  padding: var(--code-padding);
+  margin-block-end: var(--block-spacing);
+  border-radius: var(--radius);
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: var(--code-font-size);
+  line-height: var(--code-line-height);
 }
 .hljs-emphasis {
   font-style: italic;

@@ -190,91 +190,19 @@ conn.close()</code></pre><p>Now lets see each phase in depth</p>
 <p>Now every HTTP message will be encrypted with the negotiated keys before being handed to TCP.</p>
 <h2 class="title">TCP/IP Model Overview</h2>
 <p>Web communication uses a stack of protocols. <strong>DNS and TLS are an application-layer protocol</strong> (like HTTP). Whatever the protocol, its messages still make a round trip “on the wire” by being <strong>encapsulated</strong> inside the lower layers (TCP/UDP → IP → link → physical). Each layer builds on top of the one below it, from your browser down to the physical wire.</p>
-<pre><code class="language-text">HTTPS request (bytes carried inside one Ethernet frame):
-
-│ Ethernet Header │ IPv4 Header │ TCP Header │ TLS Record Header │ HTTP bytes │ FCS 
-│     ~14 B       │  20–60 B    │  20–60 B   │       5 B         │ variable   │ 4 B 
-</code></pre><ol>
-<li><p><strong>Application Layer</strong> is where your browser lives. It speaks protocols like HTTP, HTTPS, and TLS.</p>
-</li>
-<li><p><strong>Transport Layer</strong> runs in your OS kernel. It uses TCP or UDP to break data into <strong>segments</strong>. It ensures <strong>reliability and ordering</strong>: lost segments are <strong>retransmitted</strong>, and out-of-order segments are <strong>reassembled</strong> before being delivered to the application.</p>
-</li>
-<li><p><strong>Internet Layer</strong>, also in the kernel, wraps those segments into <strong>packets</strong> using IP (IPv4 or IPv6), adding source and destination IP addresses so they can be routed across networks.</p>
-</li>
-<li><p><strong>Link Layer</strong> is handled by your network driver and NIC (Network Interface Card). It frames IP packets into <strong>frames</strong> for the local network (Ethernet/Wi‑Fi), using <strong>MAC addresses</strong> to deliver the data to the <strong>next hop</strong> (either the destination host on the same LAN, or your default gateway/router).</p>
-</li>
-<li><p><strong>Physical Layer</strong> is pure hardware, your NIC converts those frames into actual <strong>bits</strong>: electrical signals over copper, light pulses through fiber, or radio waves through the air.</p>
-</li>
-</ol>
-<h3>Generic principle (true for every layer)</h3>
-<p>Each layer processes a stream of <strong>bytes</strong> and understands only <strong>its own header bytes</strong>. Everything after that header is the layer&#39;s <strong>payload</strong> (opaque bytes as far as that layer is concerned). The payload may <em>represent</em> structured data for the next layer up, but this layer doesn&#39;t need to interpret it.</p>
-<pre><code class="language-">Layer N:  [ My Header | Payload (opaque bytes) ]
-                       └─ Next layer's data ─┘</code></pre><p>The header exists so each layer can do its job: the sender sets it during <strong>encapsulation</strong>, and the receiver reads it during <strong>decapsulation</strong> to decide <strong>who should handle the payload next</strong>. Headers typically include:</p>
-<pre><code class="language-">┌──────────────────────────────────────────┬─────────────┐
-│              Header                      │   Payload   │
-├────────────────┬──────────────┬──────────┤             │
-│ Size/Length    │ Payload Type │ Address  │             │
-│ (boundaries)   │ (next parser)│ (routing)│             │
-└────────────────┴──────────────┴──────────┴─────────────┘</code></pre><ul>
+<p>HTTPS request (bytes carried inside one Ethernet frame):</p>
+<pre><code class="language-text">│ Ethernet Header │ IPv4 Header │ TCP Header │ TLS Record Header │ HTTP bytes │ FCS 
+│     ~14 B       │  20–60 B    │  20–60 B   │       5 B         │ variable   │ 4 B </code></pre><p>Each layer processes a stream of <strong>bytes</strong> and understands only <strong>its own header bytes</strong>. Everything after that header is the layer’s <strong>payload</strong> (opaque bytes as far as that layer is concerned). The payload may <em>represent</em> structured data for the next layer up, but this layer doesn’t need to interpret it.</p>
+<p>The header exists so each layer can do its job: the sender sets it during <strong>encapsulation</strong>, and the receiver reads it during <strong>decapsulation</strong> to decide <strong>who should handle the payload next</strong>. Headers typically include:</p>
+<ul>
 <li><strong>Header size / boundaries</strong>: either a fixed header size (e.g., Ethernet without VLAN) or a field that says how long the header is (e.g., IPv4 IHL, TCP Data Offset), plus sometimes a <strong>total length</strong> (e.g., IPv4 Total Length) so you know where the packet ends.</li>
-<li><strong>Encapsulated payload type (in this header)</strong>: a field in the current layer&#39;s header that tells what kind of payload is inside, so the receiver can pick the right parser (e.g., Ethernet <strong>EtherType</strong> → IPv4/IPv6, IPv4 <strong>Protocol</strong> / IPv6 <strong>Next Header</strong> → TCP/UDP/ICMP).</li>
+<li><strong>Encapsulated payload type (in this header)</strong>: a field in the current layer’s header that tells what kind of payload is inside, so the receiver can pick the right parser (e.g., Ethernet <strong>EtherType</strong> → IPv4/IPv6, IPv4 <strong>Protocol</strong> / IPv6 <strong>Next Header</strong> → TCP/UDP/ICMP).</li>
 <li><strong>Routing / delivery addresses</strong>: the bytes used for forwarding and demultiplexing (MAC for the local hop, IP for end-to-end routing, ports for delivery to a process).</li>
+<li><strong>Error detection</strong>: many layers include an integrity check over “the part they care about” (often header + some/all payload). The receiver recomputes the check and compares it to the transmitted value; if it doesn’t match, the unit is typically dropped.</li>
 </ul>
-<h2 class="title">Encapsulation: How Data Moves Down the Stack</h2>
-<p>Let&#39;s follow a single HTTP request as it travels from your browser down to the wire.</p>
-<pre class="mermaid">flowchart LR
-    subgraph L1["Application Layer - Data"]
-        A["GET /page.html HTTP/1.1<br/>Host: example.com<br/>..."]
-    end
-    
-    subgraph L2["Transport Layer - Segment"]
-        direction LR
-        B1["TCP Header<br/>━━━━━━━━<br/>Src Port: 54321<br/>Dst Port: 443<br/>Seq, Ack<br/>Flags"]
-        B2["HTTP Data"]
-    end
-    
-    subgraph L3["Internet Layer - Packet"]
-        direction LR
-        C1["IP Header<br/>━━━━━━━<br/>Src IP: 192.168.1.5<br/>Dst IP: 93.184.216.34<br/>Protocol: TCP<br/>TTL: 64"]
-        C2["TCP Header"]
-        C3["HTTP Data"]
-    end
-    
-    subgraph L4["Link Layer - Frame"]
-        direction LR
-        D1["MAC Header<br/>━━━━━━━━<br/>Src MAC: aa:bb:cc:...<br/>Dst MAC: 11:22:33:...<br/>EtherType: IPv4"]
-        D2["IP Header"]
-        D3["TCP Header"]
-        D4["HTTP Data"]
-    end
-    
-    subgraph L5["Physical Layer - Bits"]
-        direction LR
-        E["01010110 01101001 00110100..."]
-    end
-    
-    L1 -.-> L2
-    L2 -.-> L3
-    L3 -.-> L4
-    L4 -.-> L5
-    
-    style L1 fill:#e1f5ff,stroke:#0066cc
-    style L2 fill:#fff4e1,stroke:#cc8800
-    style L3 fill:#ffe1f5,stroke:#cc0066
-    style L4 fill:#e1ffe8,stroke:#00cc66
-    style L5 fill:#f5f5f5,stroke:#666666
-    
-    style A fill:#e1f5ff
-    style B1 fill:#fff4e1
-    style B2 fill:#e1f5ff
-    style C1 fill:#ffe1f5
-    style C2 fill:#fff4e1
-    style C3 fill:#e1f5ff
-    style D1 fill:#e1ffe8
-    style D2 fill:#ffe1f5
-    style D3 fill:#fff4e1
-    style D4 fill:#e1f5ff
-    style E fill:#f5f5f5</pre><hr>
+<h2 class="title">Encapsulation in detail</h2>
+<p>Let&#39;s look deeper how our HTTP data makes it through the wire.</p>
+<hr>
 <h3>🔵 1. Application Layer: HTTP Message</h3>
 <p>The browser builds an HTTP request as plain text. For <code>https://example.com/page.html</code>, it creates:</p>
 <pre><code class="language-http">GET /page.html HTTP/1.1
@@ -283,7 +211,7 @@ User-Agent: Mozilla/5.0...
 Accept: text/html,application/xhtml+xml...
 Connection: keep-alive
 </code></pre><p>The browser then calls a <strong>system call</strong> (like <code>write()</code> or <code>send()</code>) to hand these bytes to the OS kernel. This is the boundary between user space (browser) and kernel space.</p>
-<p>If you&#39;re using HTTPS, the TLS layer encrypts these HTTP bytes before handing them to TCP. From TCP&#39;s perspective, it&#39;s just receiving encrypted bytes—it doesn&#39;t know or care that it&#39;s HTTP.</p>
+<p>If you&#39;re using HTTPS, the TLS layer encrypts these HTTP bytes before handing them to TCP. From TCP&#39;s perspective, it&#39;s just receiving encrypted bytes it doesn&#39;t know or care that it&#39;s HTTP.</p>
 <p>In Node.js, you can see the layers clearly if you open a TCP connection yourself and write the HTTP request as plain text:</p>
 <pre><code class="language-js">const net = require('net');
 
@@ -306,24 +234,8 @@ const socket = net.createConnection(80, 'example.com', () => {
 
   // 3. Send the HTTP request bytes over the TCP stream
   socket.write(request);
-});
-
-// 4. Read the HTTP response bytes from the TCP stream
-socket.on('data', chunk => {
-  process.stdout.write(chunk.toString());
-});
-
-socket.on('end', () => {
-  console.log('\n--- connection closed ---');
 });</code></pre><h3>🟠 2. Transport Layer: TCP Segments</h3>
-<p>The kernel&#39;s TCP implementation receives the data bytes from the application via the socket&#39;s send buffer.</p>
-<p><strong>TCP&#39;s promise: reliable, ordered, and error-checked delivery of bytes.</strong></p>
-<p>Unlike the unreliable IP layer below (which can drop, duplicate, or reorder packets), TCP guarantees that:</p>
-<ul>
-<li>Every byte arrives <strong>exactly once</strong> (reliability)</li>
-<li>Bytes arrive in the <strong>same order</strong> they were sent (ordering)  </li>
-<li>Corrupted bytes are <strong>detected and discarded</strong> (integrity)</li>
-</ul>
+<p>The kernel&#39;s TCP implementation receives the data bytes from the application via the socket&#39;s send buffer.<br>Unlike the unreliable IP layer below (which can drop, duplicate, or reorder packets), TCP guarantees that, reliability, ordering and integrity.</p>
 <p>TCP achieves this by wrapping outgoing bytes with a <strong>TCP header</strong> that contains all the metadata needed to track, verify, and reassemble the byte stream.</p>
 <pre><code class="language-schema">┌────────────────────────────── 32 bits ─────────────────────────────┐
 │        Source Port               │        Destination Port         │
@@ -340,34 +252,22 @@ socket.on('end', () => {
 │                          Options (if any)                          │
 ├────────────────────────────────────────────────────────────────────┤
 │                                Data                                │
-└────────────────────────────────────────────────────────────────────┘</code></pre><p><strong>Ordering</strong> — Reassembling the byte stream in the correct sequence:</p>
+└────────────────────────────────────────────────────────────────────┘</code></pre><p><strong>Ordering</strong>: The sender assigns a <strong>sequence number</strong> to the bytes it sends so each segment can be placed at the correct position in the byte stream. The receiver buffer and and reorder.</p>
+<p><strong>Reliability</strong>: The sender keeps unacknowledged bytes in a send buffer and retransmits when it detects loss (timeouts and other signals). When acknowledgments arrive, the sender can discard the acknowledged bytes from its send buffer.</p>
+<p><strong>Integrity</strong>: The sender computes a <strong>checksum</strong> over the segment and includes it in the header so corruption can be detected in transit. Receivers re compute the checksum on their side, compare with the one in header and drop if different.</p>
+<p><strong>Other mechanisms:</strong></p>
 <ul>
-<li><strong>Sequence Number</strong>: Every segment&#39;s data is numbered, marking where it belongs in the stream. If segment #100 arrives before segment #50, TCP buffers #100 and waits for #50, delivering them to the application in order.</li>
-</ul>
-<p><strong>Reliability</strong> — Ensuring every byte arrives exactly once:</p>
-<ul>
-<li><strong>Acknowledgment Number</strong>: The receiver tells the sender which bytes it has successfully received. If the sender doesn&#39;t get an ACK within a timeout (or sees duplicate ACKs), it knows the segment was lost and <strong>retransmits</strong> it.</li>
-<li>TCP keeps copies of sent segments in a send buffer until they&#39;re acknowledged, then discards them.</li>
-</ul>
-<p><strong>Error-checking</strong> — Detecting corrupted data:</p>
-<ul>
-<li><strong>Checksum</strong>: Covers both header and data. If the receiver detects corruption, it silently drops the segment. The sender&#39;s timeout will trigger retransmission of clean data.</li>
-</ul>
-<p><strong>Supporting mechanisms:</strong></p>
-<ul>
-<li><p><strong>Delivery to the right app</strong> — <strong>Source/Destination Port</strong>: Together with IP addresses, these identify which socket/process should receive the data (e.g., port 443 for HTTPS).</p>
+<li><p><strong>Delivery to the right app</strong> — <strong>Source/Destination Port</strong>: The sender sets a destination port to target the right service (e.g., 443 for HTTPS) and a source port to identify this connection locally.</p>
 </li>
-<li><p><strong>Flow control</strong> — <strong>Window Size</strong>: The receiver advertises how much buffer space it has. The sender won&#39;t send more data than the receiver can handle, preventing buffer overflow.</p>
+<li><p><strong>Flow control</strong> — <strong>Window Size</strong>: The sender respects the advertised window and avoids sending more data than the peer can buffer.</p>
 </li>
 <li><p><strong>Segmentation</strong> — <strong>MSS (Maximum Segment Size)</strong>: Negotiated in <strong>Options</strong> to split the byte stream into segments that fit the network path (typically ~1460 bytes to fit in a 1500-byte Ethernet frame without IP fragmentation).</p>
 </li>
 <li><p><strong>Connection lifecycle</strong> — <strong>Flags</strong> (SYN, ACK, FIN, RST, PSH): Control the state of the connection—establishing (SYN), acknowledging (ACK), closing (FIN), or aborting (RST).</p>
 </li>
-<li><p><strong>Header length</strong> — <strong>Data Offset</strong>: Since TCP options are variable, this field tells the receiver where the header ends and data begins.</p>
-</li>
 </ul>
 <h3>🟣 3. Internet Layer: IP Packets</h3>
-<p>The IP layer in the kernel receives each TCP segment and wraps it in an IP packet. This is where <strong>routing</strong> happens—deciding where to send this packet next.</p>
+<p>The IP layer in the kernel receives each transport segment and wraps it in an IP packet. Unlike TCP, IP doesn’t try to make delivery reliable. Instead, it provides <strong>best-effort forwarding</strong> across many networks.</p>
 <p><strong>Adding the IP Header</strong>: A 20-byte header (for IPv4) is prepended with:</p>
 <pre><code class="language-schema">┌─────────┬───────┬──────┬──── 32 bits ──────────────────────────────┐
 │ Version │  IHL  │ DSCP │ ECN   │           Total Length            │
@@ -381,28 +281,30 @@ socket.on('end', () => {
 │                       Destination IP Address                       │
 ├────────────────────────────────────────────────────────────────────┤
 │                          Options (if any)                          │
-└────────────────────────────────────────────────────────────────────┘</code></pre><ul>
-<li>Source IP address: your machine (e.g., <code>192.168.1.5</code>)</li>
-<li>Destination IP address: the server (e.g., <code>93.184.216.34</code>)</li>
-<li>Protocol field: set to <code>6</code> for TCP (tells the receiver what&#39;s inside)</li>
-<li>TTL (Time To Live): starts at 64 or 128, decremented at each router hop to prevent infinite loops</li>
-<li>Header checksum: for error detection</li>
-<li>Total length: size of the entire packet (header + TCP segment)</li>
-</ul>
-<p><strong>Routing Decision</strong>: The kernel looks up the destination IP in its <strong>routing table</strong>:</p>
+└────────────────────────────────────────────────────────────────────┘</code></pre><p><strong>Routing (sender-side)</strong>: Before sending a packet, the host consults its <strong>routing table</strong>: a small list of “if the destination matches this prefix, send it to that next hop via this interface”. On a typical laptop, most off‑network destinations select the <strong>default route</strong>, which means “send to my gateway”.</p>
+<p>Example routing table (simplified):</p>
+<pre><code class="language-text">Destination prefix     Next hop        Interface
+-------------------    -----------     ---------
+192.168.1.0/24         (on-link)        wlan0
+10.0.0.0/8             192.168.1.2      wlan0
+0.0.0.0/0              192.168.1.1      wlan0   (default route)</code></pre><p>If the destination is <code>93.184.216.34</code>, it doesn’t match the first two entries, so the default route (<code>0.0.0.0/0</code>) is used: send the packet to <code>192.168.1.1</code> (your gateway) on <code>wlan0</code>.</p>
+<p>At this point, the sender knows <em>where to send the packet next</em> (next hop + interface). Now it can construct the IP packet that will travel across the network.</p>
+<p><strong>MTU and fragmentation</strong>: Links have a maximum size they can carry in one unit (MTU). If a packet is too large for the next hop, the sender can split it into smaller pieces and mark them so they can be stitched back together later, so senders often try to stay below the effective path MTU to avoid fragmentation.</p>
+<p><strong>Building the IP packet (sender-side)</strong>: The kernel builds a packet by taking the payload (the transport segment) and prepending an IP header. Concretely, the sender:</p>
 <ul>
-<li>Is it on the local network? Send directly to that host</li>
-<li>Otherwise, send to the default gateway (your router)</li>
+<li>Set <strong>source</strong> and <strong>destination</strong> IP addresses (found from routing table).</li>
+<li>Set a <strong>hop limit (TTL)</strong> to bound how far the packet can travel.</li>
+<li>Sets the Protocol field to identify the payload type (for example, TCP), so the receiver knows which transport handler should process it.</li>
+<li>Fills in length fields so the receiver can determine the exact packet boundaries.</li>
+<li>Set the computed checksum once the header fields are final, so the receiver (and intermediary hop) can verify header integrity.</li>
 </ul>
-<p>The routing table tells IP which <strong>network interface</strong> to use (Wi-Fi, Ethernet, VPN) and what the <strong>next hop</strong> should be.</p>
-<p><strong>MTU and Fragmentation</strong>: If the packet is larger than the network&#39;s MTU (Maximum Transmission Unit) (typically 1500 bytes for Ethernet), IP might fragment it into smaller packets. However, modern TCP uses Path MTU Discovery to avoid this—it discovers the smallest MTU along the path and tells TCP to use a smaller MSS.</p>
 <h3>🟢 4. Link Layer: Ethernet Frames</h3>
 <p>The kernel passes the IP packet to the <strong>network driver</strong> for your NIC (Network Interface Card). The driver needs to wrap it in an Ethernet frame, but first it needs to know the <strong>MAC address</strong> of the next hop.</p>
 <p><strong>ARP (Address Resolution Protocol)</strong>: IP addresses work across networks, but on a local network, devices use MAC addresses. If the kernel needs to send a packet to <code>192.168.1.1</code> (your router), it needs that router&#39;s MAC address:</p>
 <ol>
 <li>Check the <strong>ARP cache</strong> for a recent mapping</li>
 <li>If not found, broadcast an ARP request: &quot;Who has <code>192.168.1.1</code>?&quot;</li>
-<li>The router responds: &quot;I have <code>192.168.1.1</code>, my MAC is <code>11:22:33:44:55:66</code>&quot;</li>
+<li>Wait for the ARP reply containing the MAC address (e.g., <code>11:22:33:44:55:66</code>)</li>
 <li>Cache this mapping for future use</li>
 </ol>
 <p><strong>Building the Ethernet Frame</strong>: The driver adds a 14-byte Ethernet header:</p>
@@ -411,8 +313,8 @@ socket.on('end', () => {
 <li>Source MAC address: your NIC&#39;s hardware address</li>
 <li>EtherType: <code>0x0800</code> for IPv4, <code>0x86DD</code> for IPv6</li>
 </ul>
-<p>It also adds a 4-byte <strong>Frame Check Sequence (FCS)</strong> at the end—a CRC checksum that lets the receiver detect corrupted frames.</p>
-<p><strong>The Send Queue</strong>: The driver places the frame in the NIC&#39;s <strong>transmit queue</strong> (a ring buffer in memory). The NIC reads frames from this queue using <strong>DMA (Direct Memory Access)</strong>—copying them directly without involving the CPU.</p>
+<p>It also appends a 4-byte <strong>Frame Check Sequence (FCS)</strong> at the end a CRC checksum computed over the frame.</p>
+<p><strong>The Send Queue</strong>: The driver places the frame in the NIC&#39;s <strong>transmit queue</strong> (a ring buffer in memory). The NIC reads frames from this queue using <strong>DMA (Direct Memory Access)</strong>, copying them directly without involving the CPU.</p>
 <h3>⚪ 5. Physical Layer: Signals</h3>
 <p>The NIC hardware takes each frame and converts the digital bits into physical signals:</p>
 <ul>
@@ -420,62 +322,10 @@ socket.on('end', () => {
 <li><strong>Fiber optic</strong>: Bits become light pulses traveling through glass fiber</li>
 <li><strong>Wi-Fi</strong>: Bits become radio waves transmitted through the air (2.4 GHz or 5 GHz)</li>
 </ul>
-<p>Once transmitted, these signals carry your HTTP request to the router, then through a chain of routers across the internet, until they reach the destination server&#39;s NIC—where the entire process happens in reverse.</p>
+<p>Once transmitted, these signals leave your machine and enter the network medium (wire, fiber, or air). From there, the network can carry them onward toward the destination.</p>
 <h2 class="title">Decapsulation: How Data Moves Up the Stack</h2>
 <p>On the way back, everything happens in reverse: each layer <strong>unwraps</strong> its header, checks its own addressing, and passes the rest upward.</p>
-<pre class="mermaid">flowchart LR
-    subgraph L5["Physical Layer - Bits"]
-        direction LR
-        E["01010110 01101001 00110100..."]
-    end
-    
-    subgraph L4["Link Layer - Frame"]
-        direction LR
-        D1["MAC Header"]
-        D2["IP Header"]
-        D3["TCP Header"]
-        D4["HTTP Data"]
-    end
-    
-    subgraph L3["Internet Layer - Packet"]
-        direction LR
-        C1["IP Header"]
-        C2["TCP Header"]
-        C3["HTTP Data"]
-    end
-    
-    subgraph L2["Transport Layer - Segment"]
-        direction LR
-        B1["TCP Header"]
-        B2["HTTP Data"]
-    end
-    
-    subgraph L1["Application Layer - Data"]
-        A["HTTP/1.1 200 OK<br/>Content-Type: text/html<br/>..."]
-    end
-    
-    L5 -.-> L4
-    L4 -.-> L3
-    L3 -.-> L2
-    L2 -.-> L1
-    
-    style L5 fill:#f5f5f5,stroke:#666666
-    style L4 fill:#e1ffe8,stroke:#00cc66
-    style L3 fill:#ffe1f5,stroke:#cc0066
-    style L2 fill:#fff4e1,stroke:#cc8800
-    style L1 fill:#e1f5ff,stroke:#0066cc
-    
-    style E fill:#f5f5f5
-    style D1 fill:#e1ffe8
-    style D2 fill:#ffe1f5
-    style D3 fill:#fff4e1
-    style D4 fill:#e1f5ff
-    style C1 fill:#ffe1f5
-    style C2 fill:#fff4e1
-    style C3 fill:#e1f5ff
-    style B1 fill:#fff4e1
-    style B2 fill:#e1f5ff
-    style A fill:#e1f5ff</pre><h3>⚪ 1. Physical Layer: Receiving Signals</h3>
+<h3>⚪ 1. Physical Layer: Receiving Signals</h3>
 <p>The <strong>NIC hardware</strong> receives signals and decodes them:</p>
 <ul>
 <li>Receives raw electrical/radio/optical signals from the wire or air</li>
@@ -500,20 +350,29 @@ socket.on('end', () => {
 <li>Parses the <strong>IP header</strong></li>
 <li>Verifies the destination <strong>IP address</strong> (is this packet for us?)</li>
 <li>Checks the <strong>protocol field</strong> (6 = TCP, 17 = UDP, 1 = ICMP, etc.)</li>
-<li>Strips the IP header and passes payload to the correct transport protocol</li>
+<li>Strips the IP header and passes payload to the correct transport protocol<ul>
+<li>If this machine is acting as a router, it may also decrement the hop limit (TTL) and either forward the packet onward or drop it if the hop limit reaches zero.</li>
+<li>If the packet arrived as fragments, the receiver reassembles them (or drops incomplete ones) before handing the payload up.</li>
+</ul>
+</li>
 </ul>
 <h3>🟠 4. Transport Layer: Delivering to Application</h3>
 <p>The <strong>TCP implementation in the kernel</strong> processes segments:</p>
 <ul>
-<li>Parses the <strong>TCP header</strong>:<ul>
+<li><p>Parses the <strong>TCP header</strong>:</p>
+<ul>
 <li>source port / destination port</li>
 <li>sequence / acknowledgement numbers</li>
 <li>flags (SYN, ACK, FIN, etc.)</li>
+<li>Verifies integrity (e.g., checksum) and discards corrupted segments</li>
 </ul>
 </li>
-<li>Finds the correct <strong>socket</strong> using the 4‑tuple: <code>(source IP, source port, dest IP, dest port)</code></li>
-<li>Reorders segments, handles retransmissions, removes duplicates</li>
-<li>Exposes a clean <strong>byte stream</strong> to the application (via <code>read</code>/<code>recv</code>)</li>
+<li><p>Reorders segments, removes duplicates, and acknowledges received data so the sender can advance its send window</p>
+</li>
+<li><p>Finds the correct <strong>socket</strong> using the 4‑tuple: <code>(source IP, source port, dest IP, dest port)</code></p>
+</li>
+<li><p>Exposes a clean <strong>byte stream</strong> to the application (via <code>read</code>/<code>recv</code>)</p>
+</li>
 </ul>
 <h3>🔵 5. Application Layer: Parsing HTTP</h3>
 <p>Finally, the <strong>browser process</strong> reads from the socket:</p>

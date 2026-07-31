@@ -1,0 +1,1035 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "type": "text",
+      "id": "t1",
+      "x": 150,
+      "y": 30,
+      "text": "The Transformer — input pipeline",
+      "fontSize": 30,
+      "strokeColor": "#1e1e1e"
+    },
+    {
+      "type": "text",
+      "id": "t2",
+      "x": 155,
+      "y": 72,
+      "text": "prompt  ->  contextual embeddings   (decoder-only LLM)",
+      "fontSize": 15,
+      "strokeColor": "#5c5f66"
+    },
+    {
+      "type": "text",
+      "id": "t3",
+      "x": 155,
+      "y": 94,
+      "text": "T = 7 tokens   d = model dim   h = heads   dk = d/h",
+      "fontSize": 15,
+      "strokeColor": "#5c5f66"
+    },
+    {
+      "type": "rectangle",
+      "id": "b4",
+      "x": 40,
+      "y": 140,
+      "width": 320,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "label": {
+        "text": "PROMPT\n\"What is the capital of France?\"",
+        "fontSize": 18
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b5",
+      "x": 40,
+      "y": 250,
+      "width": 320,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "label": {
+        "text": "TOKENS\n[\"What\",\" is\",\" the\",\" capital\",\n\" of\",\" France\",\"?\"]      T = 7",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a6",
+      "x": 200,
+      "y": 228,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b4",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b5",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "tokenize  (BPE)",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b7",
+      "x": 40,
+      "y": 360,
+      "width": 320,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "label": {
+        "text": "TOKEN IDs\n[3923, 374, 279, 6864,\n315, 9822, 30]        [T]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a8",
+      "x": 200,
+      "y": 338,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b5",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b7",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "vocab lookup",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b9",
+      "x": 40,
+      "y": 470,
+      "width": 320,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "label": {
+        "text": "TOKEN EMBEDDINGS  X\nstatic, context-free    [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a10",
+      "x": 200,
+      "y": 448,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b7",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b9",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "x W_E    [V, d]",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b11",
+      "x": 40,
+      "y": 580,
+      "width": 320,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "label": {
+        "text": "X0  -  POSITION AWARE\norder encoded            [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a12",
+      "x": 200,
+      "y": 558,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b9",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b11",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "RoPE  /  + PE",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "zone",
+      "x": 410,
+      "y": 100,
+      "width": 800,
+      "height": 700,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#e5dbff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 1,
+      "strokeStyle": "dashed",
+      "opacity": 30
+    },
+    {
+      "type": "text",
+      "id": "t13",
+      "x": 430,
+      "y": 108,
+      "text": "TRANSFORMER BLOCK   x N   (N ~ 32-120)",
+      "fontSize": 20,
+      "strokeColor": "#7048e8"
+    },
+    {
+      "type": "rectangle",
+      "id": "b14",
+      "x": 440,
+      "y": 140,
+      "width": 340,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "strokeWidth": 2,
+      "label": {
+        "text": "LAYER NORM\nnormalise each token vector",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a15",
+      "x": 200,
+      "y": 668,
+      "width": 410,
+      "height": -528,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          46
+        ],
+        [
+          410,
+          46
+        ],
+        [
+          410,
+          -528
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#e03131",
+      "startBinding": {
+        "elementId": "b11",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b14",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "into block 1",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b16",
+      "x": 440,
+      "y": 250,
+      "width": 340,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "Q, K, V   (per head)\nQ=X.Wq   K=X.Wk   V=X.Wv\neach [T, dk]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a17",
+      "x": 610,
+      "y": 228,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b14",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b16",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "x Wq, Wk, Wv",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b18",
+      "x": 440,
+      "y": 360,
+      "width": 340,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "ATTENTION SCORES\n[T, T] = [7, 7]\n\"how relevant is j to i ?\"",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a19",
+      "x": 610,
+      "y": 338,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b16",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b18",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "Q . K^T / sqrt(dk)",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b20",
+      "x": 440,
+      "y": 470,
+      "width": 340,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "CAUSAL MASK\n-inf above the diagonal\ntoken i sees only tokens <= i",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a21",
+      "x": 610,
+      "y": 448,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b18",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b20",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "+ mask",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b22",
+      "x": 440,
+      "y": 580,
+      "width": 340,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "ATTENTION PATTERN\neach row sums to 1      [T, T]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a23",
+      "x": 610,
+      "y": 558,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b20",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b22",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "softmax, row-wise",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b24",
+      "x": 850,
+      "y": 140,
+      "width": 330,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "A . V\nweighted sum of Values\n[T, dk]   per head",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a25",
+      "x": 610,
+      "y": 668,
+      "width": 405,
+      "height": -528,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          46
+        ],
+        [
+          405,
+          46
+        ],
+        [
+          405,
+          -528
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#e03131",
+      "startBinding": {
+        "elementId": "b22",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b24",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b26",
+      "x": 850,
+      "y": 250,
+      "width": 330,
+      "height": 88,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "label": {
+        "text": "MULTI-HEAD OUTPUT\n[T, h.dk] . Wo  ->  [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a27",
+      "x": 1015,
+      "y": 228,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b24",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b26",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "concat h heads, x Wo",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b28",
+      "x": 850,
+      "y": 360,
+      "width": 330,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "strokeWidth": 2,
+      "label": {
+        "text": "RESIDUAL ADD\nX = X0 + Attn(X)",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a29",
+      "x": 1015,
+      "y": 338,
+      "width": 0,
+      "height": 22,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          22
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b26",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b28",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "+",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b30",
+      "x": 850,
+      "y": 460,
+      "width": 330,
+      "height": 66,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "strokeWidth": 2,
+      "label": {
+        "text": "LAYER NORM",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a31",
+      "x": 1015,
+      "y": 440,
+      "width": 0,
+      "height": 20,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          20
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b28",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b30",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b32",
+      "x": 850,
+      "y": 560,
+      "width": 330,
+      "height": 92,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "label": {
+        "text": "FEED FORWARD  (per token)\nx W1 -> [T, 4d]  ->  GELU\nx W2 -> [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a33",
+      "x": 1015,
+      "y": 526,
+      "width": 0,
+      "height": 34,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          34
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b30",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b32",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b34",
+      "x": 850,
+      "y": 670,
+      "width": 330,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#c3fae8",
+      "fillStyle": "solid",
+      "strokeColor": "#06b6d4",
+      "strokeWidth": 2,
+      "label": {
+        "text": "RESIDUAL ADD\nX = X + FFN(X)        [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a35",
+      "x": 1015,
+      "y": 652,
+      "width": 0,
+      "height": 18,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b32",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b34",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "+",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b36",
+      "x": 690,
+      "y": 850,
+      "width": 400,
+      "height": 84,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "label": {
+        "text": "CONTEXTUAL EMBEDDINGS\nevery token now carries its left-context   [T, d]",
+        "fontSize": 16
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a37",
+      "x": 1015,
+      "y": 750,
+      "width": 0,
+      "height": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          100
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#1e1e1e",
+      "startBinding": {
+        "elementId": "b34",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "b36",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "label": {
+        "text": "after N blocks",
+        "fontSize": 15
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "b38",
+      "x": 40,
+      "y": 700,
+      "width": 320,
+      "height": 150,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#e9ecef",
+      "fillStyle": "solid",
+      "strokeColor": "#868e96",
+      "strokeWidth": 2,
+      "label": {
+        "text": "KV CACHE\nK and V of past tokens never\nchange, so they are cached.\nEach step projects only the new\ntoken and attends over the cache.",
+        "fontSize": 15
+      }
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

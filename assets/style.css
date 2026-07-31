@@ -163,6 +163,230 @@ p:last-child {
   fill: var(--text-muted);
 }
 
+/* Inline SVG diagrams (neural network, etc.) */
+.post .nn-diagram {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-block: var(--block-spacing);
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+
+.post .nn-diagram line {
+  stroke: var(--text-muted);
+}
+
+.post .nn-diagram marker path {
+  fill: var(--text-muted);
+}
+
+.post .nn-diagram circle {
+  stroke: var(--color-primary);
+}
+
+.post .infer-diagram {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-block: var(--block-spacing);
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+
+.post .infer-diagram .pill rect {
+  fill: var(--background);
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  rx: 3;
+}
+
+.post .infer-diagram .pill text {
+  fill: var(--text-color);
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.post .infer-diagram .caption text {
+  fill: var(--text-color);
+  font-size: 14px;
+  text-anchor: middle;
+}
+
+/* Small multiples: dose / effectiveness plots */
+.post .problem-grid,
+.post .plot-grid {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-block: var(--block-spacing);
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+
+.post .plot-grid .ptitle {
+  fill: var(--text-color);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.post .plot-grid .axis line {
+  stroke: var(--text-muted);
+  stroke-width: 1.2;
+}
+
+.post .plot-grid .tick line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.post .plot-grid .tick text,
+.post .plot-grid .alabel {
+  fill: var(--text-muted);
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.post .plot-grid .note {
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.post .plot-grid polyline {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.post .plot-grid .blue {
+  stroke: #4a7fb5;
+}
+
+.post .plot-grid .red {
+  stroke: #d9534f;
+}
+
+.post .plot-grid .green {
+  stroke: #5f8a4a;
+}
+
+.post .plot-grid .blue-t {
+  fill: #4a7fb5;
+}
+
+.post .plot-grid .red-t {
+  fill: #d9534f;
+}
+
+.post .plot-grid .green-t {
+  fill: #5f8a4a;
+}
+
+.post .plot-grid .fit {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.post .plot-grid .fit-note {
+  fill: var(--text-muted);
+}
+
+.post .plot-grid .dot {
+  fill: var(--color-primary);
+  stroke: none;
+}
+
+.post .problem-grid .ptitle {
+  fill: var(--text-color);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.post .problem-grid .axis line {
+  stroke: var(--text-muted);
+  stroke-width: 1.2;
+}
+
+.post .problem-grid .tick line {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.post .problem-grid .tick text,
+.post .problem-grid .alabel {
+  fill: var(--text-muted);
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.post .problem-grid .note {
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.post .problem-grid polyline {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.post .problem-grid .blue {
+  stroke: #4a7fb5;
+}
+
+.post .problem-grid .red {
+  stroke: #d9534f;
+}
+
+.post .problem-grid .green {
+  stroke: #5f8a4a;
+}
+
+.post .problem-grid .blue-t {
+  fill: #4a7fb5;
+}
+
+.post .problem-grid .red-t {
+  fill: #d9534f;
+}
+
+.post .problem-grid .green-t {
+  fill: #5f8a4a;
+}
+
+.post .problem-grid .fit {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.post .problem-grid .fit-note {
+  fill: var(--text-muted);
+}
+
+.post .problem-grid .dot {
+  fill: var(--color-primary);
+  stroke: none;
+}
+.post .problem-grid .lede {
+  fill: var(--text-muted);
+  font-size: 14px;
+}
+
+.post .problem-grid .ylab {
+  text-anchor: end;
+}
+
+.post .problem-grid .dark {
+  stroke: var(--text-color);
+}
+
+
 /* Clusters / groups */
 .post .mermaid .cluster rect {
   fill: transparent;
